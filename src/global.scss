@@ -35,3 +35,24 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+/* Import from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+/* Apply Montserrat to everything */
+*,
+*::before,
+*::after {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Ensure Ionic text components also inherit */
+:root {
+  --ion-font-family: 'Montserrat', sans-serif !important;
+}
+
+ion-app, ion-content, ion-title, ion-label, ion-button, ion-text, ion-input, ion-item {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+

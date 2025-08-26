@@ -3,7 +3,12 @@
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
         <ion-list class="menu-list">
+          <!-- <ion-item class="logo-item" routerLink="/dashboard" routerDirection="root">
+            <img src="assets/img/logo.png" alt="Jeev Jantoo Logo" class="menu-logo" />
+          </ion-item> -->
+          <ion-item class="logo-item" routerLink="/dashboard" routerDirection="root">
           <ion-list-header class="menu-header">Jeev Jantoo</ion-list-header>
+          </ion-item>
           <ion-menu-toggle>
             <ion-item routerLink="/profile" routerDirection="root" class="menu-item">
               <ion-icon name="person-outline" slot="start"></ion-icon>
@@ -23,7 +28,7 @@
             </ion-item>
           </ion-menu-toggle>
           <ion-menu-toggle>
-            <ion-item href="mailto:support@jeevjantoo.com" class="menu-item">
+            <ion-item routerLink="/contact" routerDirection="root" class="menu-item">
               <ion-icon name="mail-outline" slot="start"></ion-icon>
               <ion-label>Contact</ion-label>
             </ion-item>

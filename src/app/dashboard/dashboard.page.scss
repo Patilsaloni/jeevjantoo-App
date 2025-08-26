@@ -5,8 +5,10 @@ ion-content {
 .welcome-card {
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
+  background: #ff9e49;
   transition: transform 0.3s ease;
+  text-align: center;
+  height: 25%;
 
   &:hover {
     transform: translateY(-5px);
@@ -15,9 +17,15 @@ ion-content {
   ion-card-title {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #3880ff;
+    right: 0;
+    text-align: right;
+    color: #000000;
   }
 
+  span{
+    color: rgb(255, 255, 255);
+
+  }
   .welcome-text {
     font-size: 1rem;
     color: #666;
@@ -25,22 +33,65 @@ ion-content {
   }
 
   .welcome-image {
-    max-height: 100%;
+  max-width: 75%;
+    width: 100%;
     object-fit: cover;
     border-radius: 10px;
+    left: -10px;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    // opacity: 0.7;
   }
 }
 
-.category-segment {
+.category-slider {
+  padding: 10px;
   margin: 20px 0;
-  --background: #ffffff;
-  --border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 
-  ion-segment-button {
-    --indicator-color: #3880ff;
-    --color-checked: #ffffff;
-    font-weight: bold;
+  swiper-container {
+    padding-bottom: 10px;
+  }
+
+  swiper-slide {
+    display: flex;
+    justify-content: center;
+  }
+
+  .category-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 80px;
+    background: #ffcc80;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &.active {
+      background: #ff6f00;
+      ion-label {
+        color: #ffffff;
+      }
+      ion-icon {
+        color: #ffffff;
+      }
+    }
+
+    ion-icon {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    ion-label {
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: #333;
+    }
   }
 }
 
@@ -55,6 +106,9 @@ ion-content {
   border-radius: 10px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
 
   &:hover {
     transform: translateY(-5px);

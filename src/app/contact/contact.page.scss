@@ -1,0 +1,52 @@
+ion-content {
+  --background: #f4f5f8;
+}
+
+.contact-card {
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  ion-card-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #3880ff;
+  }
+
+  ion-card-subtitle {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  ion-item {
+    --border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  ion-label {
+    font-weight: 500;
+    color: #333;
+  }
+
+  ion-textarea {
+    --padding-start: 10px;
+    --padding-end: 10px;
+  }
+
+  .animated-button {
+    font-weight: bold;
+    text-transform: uppercase;
+    --border-radius: 10px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}

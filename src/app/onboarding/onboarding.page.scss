@@ -1,8 +1,14 @@
+ion-content{
+    background: rgb(255, 229, 180) !important;
+}
+
 .welcome-card {
   margin-top: 20px;
   border-radius: 15px;
-//   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
+  box-shadow: none;
+  padding: 10px;
+  text-align: center;
+  background: transparent;
   transition: transform 0.3s ease;
 
   &:hover {
@@ -30,11 +36,11 @@
 
 .splash-container {
   position: relative;
-  height: 50%;
+  height: 60%;
 }
 
 .splash-image {
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   width: 100%;

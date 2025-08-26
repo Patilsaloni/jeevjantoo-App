@@ -1,47 +1,62 @@
 <ion-header>
   <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <!-- Hero Banner -->
-  <div class="hero-banner">
-    <h2>Find Your Furry Best Friend</h2>
-    <p>Adopt a pet and bring joy to your home</p>
-  </div>
-
-  <!-- Categories Section -->
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12">
-        <h3>Categories</h3>
-      </ion-col>
-      <ion-col size="2.4" *ngFor="let category of categories">
-        <ion-button fill="clear" class="category-button" (click)="filterPets(category.name)">
-          <div class="category-content">
-            <span>{{category.name}}</span>
-            <i class="fas {{category.icon}}"></i>
-          </div>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-  <!-- Pet Cards (2x2 Grid) -->
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12">
-        <h3>Available Pets</h3>
-      </ion-col>
-      <ion-col size="6" size-md="6" *ngFor="let pet of filteredPets | slice:0:4">
-        <ion-card class="pet-card">
-          <div class="pet-image" style="--background: #E6F0FA;">
-            <img [src]="pet.image" [alt]="pet.name">
-          </div>
+<ion-content class="ion-padding">
+  <ion-card class="welcome-card">
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12" size-md="4">
+          <ion-img src="assets/img/pets.png" alt="Pets" class="welcome-image"></ion-img>
+        </ion-col>
+        <ion-col size="12" size-md="8">
+          <ion-card-header>
+            <ion-card-title>Find Your Furry Best Friend</ion-card-title>
+          </ion-card-header>
           <ion-card-content>
-            <h2>{{pet.name}}</h2>
-            <p>{{pet.type}} - {{pet.age}}</p>
+            <p class="welcome-text">Adopt a pet and bring joy to your home. Browse our selection of lovable companions today!</p>
+          </ion-card-content>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+  <ion-segment (ionChange)="onSegmentChange($event)" value="all" class="category-segment">
+    <ion-segment-button value="all">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="dogs">
+      <ion-label>Dogs</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="cats">
+      <ion-label>Cats</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="birds">
+      <ion-label>Birds</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="others">
+      <ion-label>Others</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <h2 class="section-title">Available Pets</h2>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6" size-lg="4" *ngFor="let pet of filteredPets">
+        <ion-card class="pet-card">
+          <ion-img [src]="pet.image" [alt]="pet.name"></ion-img>
+          <ion-card-header>
+            <ion-card-title>{{ pet.name }}</ion-card-title>
+            <ion-card-subtitle>{{ pet.breed }} - {{ pet.age }} years</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-button color="primary" expand="block" class="animated-button">Adopt</ion-button>
           </ion-card-content>
         </ion-card>
       </ion-col>

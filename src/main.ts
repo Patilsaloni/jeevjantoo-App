@@ -1,6 +1,22 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { provideRouter } from '@angular/router';
+import { routes } from './app/app-routing.module';
+import { provideIonicAngular } from '@ionic/angular/standalone';
+import { RouteReuseStrategy } from '@angular/router';
+import { IonicRouteStrategy } from '@ionic/angular';
 
-import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.log(err));
+if (environment.production) {
+  enableProdMode();
+}
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes),
+    provideIonicAngular(),
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+  ]
+}).catch(err => console.error(err));

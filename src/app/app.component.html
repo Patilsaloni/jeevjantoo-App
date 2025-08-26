@@ -1,3 +1,36 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-content>
+        <ion-list class="menu-list">
+          <ion-list-header class="menu-header">Jeev Jantoo</ion-list-header>
+          <ion-menu-toggle>
+            <ion-item routerLink="/profile" routerDirection="root" class="menu-item">
+              <ion-icon name="person-outline" slot="start"></ion-icon>
+              <ion-label>Profile</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle>
+            <ion-item routerLink="/pets" routerDirection="root" class="menu-item">
+              <ion-icon name="paw-outline" slot="start"></ion-icon>
+              <ion-label>Adopt</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle>
+            <ion-item routerLink="/adoption" routerDirection="root" class="menu-item">
+              <ion-icon name="heart-outline" slot="start"></ion-icon>
+              <ion-label>Put for Adoption</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle>
+            <ion-item href="mailto:support@jeevjantoo.com" class="menu-item">
+              <ion-icon name="mail-outline" slot="start"></ion-icon>
+              <ion-label>Contact</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
 </ion-app>

@@ -1,0 +1,36 @@
+.splash-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 3em;
+  margin-bottom: 10px;
+  color: var(--ion-color-primary); // Orange
+  font-weight: bold;
+}
+
+p {
+  font-size: 1.2em;
+  margin-bottom: 40px;
+  color: var(--ion-color-medium); // Gray for contrast
+}
+
+ion-content {
+  --background: var(--ion-color-light); // Cream background
+}
+
+ion-button {
+  --border-radius: 12px; // Slightly curved corners
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --background: var(--ion-color-primary); // Orange button
+  --color: var(--ion-color-primary-contrast); // White text
+  text-transform: none;
+  font-size: 1.1em;
+  height: 48px;
+}

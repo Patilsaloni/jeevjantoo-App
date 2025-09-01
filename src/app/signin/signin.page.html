@@ -1,0 +1,46 @@
+<ion-content [fullscreen]="true" class="signin-content" scroll-y="true">
+  <div class="form-wrapper">
+    <div class="signin-card">
+      <!-- Logo -->
+      <div class="logo">
+        <ion-icon name="paw-outline" class="paw-icon"></ion-icon>
+        <h2 class="app-title">Animal Care</h2>
+      </div>
+
+      <!-- Tabs -->
+      <ion-segment [(ngModel)]="loginMode" class="login-tabs">
+        <ion-segment-button value="email">Email</ion-segment-button>
+        <ion-segment-button value="phone">Phone</ion-segment-button>
+      </ion-segment>
+
+      <!-- Forms -->
+      <form *ngIf="loginMode === 'email'" [formGroup]="emailForm" (ngSubmit)="onEmailLogin()">
+        <ion-item>
+          <ion-input formControlName="email" type="email" placeholder="Email"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input formControlName="password" type="password" placeholder="Password"></ion-input>
+        </ion-item>
+        <ion-button expand="block" class="submit-btn" type="submit" [disabled]="emailForm.invalid">
+          Sign In
+        </ion-button>
+      </form>
+
+      <form *ngIf="loginMode === 'phone'" [formGroup]="phoneForm" (ngSubmit)="onPhoneLogin()">
+        <ion-item>
+          <ion-input formControlName="phone" type="tel" placeholder="Enter Phone Number"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="otpSent">
+          <ion-input formControlName="otp" type="number" placeholder="Enter OTP"></ion-input>
+        </ion-item>
+        <ion-button expand="block" class="submit-btn" type="submit">
+          {{ otpSent ? 'Verify OTP' : 'Send OTP' }}
+        </ion-button>
+      </form>
+
+      <p class="signup-link">
+        Don’t have an account? <a (click)="navigateToSignUp()">Sign Up</a>
+      </p>
+    </div>
+  </div>
+</ion-content>

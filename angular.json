@@ -32,7 +32,7 @@
               }
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": []
+            "scripts": ["node_modules/ionicons/dist/ionicons.js"] 
           },
           "configurations": {
             "production": {
@@ -112,7 +112,7 @@
               }
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": []
+            "scripts": ["node_modules/ionicons/dist/ionicons.js"] 
           },
           "configurations": {
             "ci": {

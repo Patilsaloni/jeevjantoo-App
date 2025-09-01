@@ -1,3 +1,61 @@
+// /*
+//  * App Global CSS
+//  * ----------------------------------------------------------------------------
+//  * Put style rules here that you want to apply globally. These styles are for
+//  * the entire app and not just one component. Additionally, this file can be
+//  * used as an entry point to import other CSS/Sass files to be included in the
+//  * output CSS.
+//  * For more information on global stylesheets, visit the documentation:
+//  * https://ionicframework.com/docs/layout/global-stylesheets
+//  */
+
+// /* Core CSS required for Ionic components to work properly */
+// @import "@ionic/angular/css/core.css";
+
+// /* Basic CSS for apps built with Ionic */
+// @import "@ionic/angular/css/normalize.css";
+// @import "@ionic/angular/css/structure.css";
+// @import "@ionic/angular/css/typography.css";
+// @import "@ionic/angular/css/display.css";
+
+// /* Optional CSS utils that can be commented out */
+// @import "@ionic/angular/css/padding.css";
+// @import "@ionic/angular/css/float-elements.css";
+// @import "@ionic/angular/css/text-alignment.css";
+// @import "@ionic/angular/css/text-transformation.css";
+// @import "@ionic/angular/css/flex-utils.css";
+
+// /**
+//  * Ionic Dark Mode
+//  * -----------------------------------------------------
+//  * For more info, please see:
+//  * https://ionicframework.com/docs/theming/dark-mode
+//  */
+
+// /* @import "@ionic/angular/css/palettes/dark.always.css"; */
+// /* @import "@ionic/angular/css/palettes/dark.class.css"; */
+// @import "@ionic/angular/css/palettes/dark.system.css";
+
+// /* Import from Google Fonts */
+// @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+// /* Apply Montserrat to everything */
+// *,
+// *::before,
+// *::after {
+//   font-family: 'Montserrat', sans-serif !important;
+// }
+
+// /* Ensure Ionic text components also inherit */
+// :root {
+//   --ion-font-family: 'Montserrat', sans-serif !important;
+// }
+
+// ion-app, ion-content, ion-title, ion-label, ion-button, ion-text, ion-input, ion-item {
+//   font-family: 'Montserrat', sans-serif !important;
+// }
+
+
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -32,9 +90,8 @@
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+/* Comment out dark theme to use light by default */
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */
 
 /* Import from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
@@ -49,10 +106,17 @@
 /* Ensure Ionic text components also inherit */
 :root {
   --ion-font-family: 'Montserrat', sans-serif !important;
+  --ion-background-color: #f8f9fa;
+  --ion-card-background: #ffffff;
+  --ion-text-color: #000000;
+  --ion-item-background: #f1f3f5;
+  --ion-color-primary: #ff9800;
+  --ion-color-primary-shade: #e68900;
+  --ion-color-medium: #6c757d;
+  --ion-color-danger: #e53935;
 }
 
 ion-app, ion-content, ion-title, ion-label, ion-button, ion-text, ion-input, ion-item {
   font-family: 'Montserrat', sans-serif !important;
 }
-
 

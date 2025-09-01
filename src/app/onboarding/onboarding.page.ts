@@ -20,4 +20,7 @@ export class OnboardingPage implements OnInit {
   goToDashboard() {
     this.router.navigate(['/dashboard'], { replaceUrl: true });
   }
+  SignInPageIntrigation(){
+    this.router.navigate(['/signin'], { replaceUrl: true })
+  }
 }

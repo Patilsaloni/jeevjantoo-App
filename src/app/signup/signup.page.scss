@@ -1,0 +1,67 @@
+.signup-content {
+  --background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 16px;
+  min-height: 100%; // ✅ Keeps card centered
+}
+
+.signup-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  text-align: center;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.paw-icon {
+  font-size: 48px;
+  color: #ff7f50;
+}
+
+.app-title {
+  margin-top: 8px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+}
+
+ion-item {
+  margin-bottom: 12px;
+  --border-radius: 12px;
+  --background: #f8f8f8;
+}
+
+.submit-btn {
+  margin-top: 12px;
+  --border-radius: 20px;
+  --background: #ff7f50;
+  --color: #fff;
+}
+
+.signin-link {
+  margin-top: 14px;
+  font-size: 14px;
+  color: #555;
+}
+
+.signin-link a {
+  color: #ff7f50;
+  font-weight: 500;
+  cursor: pointer;
+}

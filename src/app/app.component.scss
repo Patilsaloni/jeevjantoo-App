@@ -5,4 +5,18 @@ html, body, ion-app, ion-content {
 
 ion-content {
   --keyboard-offset: 0px;
+  --overflow: hidden;
+}
+
+/* When keyboard opens, prevent jump */
+body.keyboard-open ion-content {
+  --keyboard-offset: 0px !important;
+  --overflow: hidden !important;
+  overflow: hidden !important;
+}
+
+body.keyboard-open .form-wrapper {
+  justify-content: flex-start !important;
+  padding-top: 60px; /* ensures inputs near bottom remain visible */
+  height: 100%;
 }

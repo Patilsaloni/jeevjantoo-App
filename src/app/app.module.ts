@@ -1,20 +1,17 @@
-// import { NgModule } from '@angular/core';
-// import { BrowserModule } from '@angular/platform-browser';
-// import { RouteReuseStrategy } from '@angular/router';
-// import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-// import { AppComponent } from './app.component';
-// import { AppRoutingModule } from './app-routing.module';
+// main.ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { importProvidersFrom } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+import { AppComponent } from '../app/app.component';
 
-// @NgModule({
-//   declarations: [], // Remove AppComponent from declarations
-//   imports: [
-//     BrowserModule,
-//     IonicModule.forRoot(),
-//     AppRoutingModule,
-//     AppComponent // Add AppComponent to imports
-//   ],
-//   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
-//   bootstrap: [AppComponent]
-// })
-// export class AppModule {}
-
+bootstrapApplication(AppComponent, {
+  providers: [
+    importProvidersFrom(
+      IonicModule.forRoot({
+        scrollAssist: false,
+        scrollPadding: false,
+        inputShims: false
+      })
+    )
+  ]
+});

@@ -1,15 +1,45 @@
+:host {
+  ion-content {
+    --keyboard-offset: 0px; // avoid shifting
+    --padding-bottom: 0px;
+    overflow: hidden;
+  }
+
+ .signup-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  z-index: 10;
+}
+
+
+  /* Prevent card from jumping when keyboard opens */
+  body.keyboard-open .signup-card {
+    transform: none !important;
+    margin-bottom: 0 !important;
+  }
+}
+
 .signup-content {
   --background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;       /* ✅ fixed to viewport height */
+  overflow: hidden;    /* prevent scroll jump */
 }
 
 .form-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px 16px;
-  min-height: 100%; // ✅ Keeps card centered
+  width: 100%;
+  max-width: 400px;
+  padding: 16px;
+  position: absolute;   /* ✅ anchor */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* keeps centered regardless of viewport change */
 }
 
 .signup-card {

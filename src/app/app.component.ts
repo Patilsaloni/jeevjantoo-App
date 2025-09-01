@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, Platform } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { Keyboard, KeyboardResize } from '@capacitor/keyboard';
 
@@ -12,10 +12,15 @@ import { Keyboard, KeyboardResize } from '@capacitor/keyboard';
 })
 export class AppComponent {
   constructor() {
-    console.log('AppComponent initialized');
+  Keyboard.setResizeMode({ mode: KeyboardResize.None });
+}
+ngOnInit() {
+  Keyboard.addListener('keyboardWillShow', () => {
+    document.body.classList.add('keyboard-open');
+  });
 
-    // ✅ Use enum instead of string
-    Keyboard.setResizeMode({ mode: KeyboardResize.Ionic });
-    // Or: KeyboardResize.Body / KeyboardResize.Native / KeyboardResize.None
-  }
+  Keyboard.addListener('keyboardWillHide', () => {
+    document.body.classList.remove('keyboard-open');
+  });
+}
 }

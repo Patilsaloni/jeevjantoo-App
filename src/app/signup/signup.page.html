@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true" class="signup-content" scroll-y="true">
+<ion-content [fullscreen]="true" class="signup-content">
   <div class="form-wrapper">
     <div class="signup-card">
       <!-- Logo -->
@@ -12,25 +12,28 @@
         <ion-item>
           <ion-input formControlName="name" type="text" placeholder="Full Name"></ion-input>
         </ion-item>
+
         <ion-item>
           <ion-input formControlName="email" type="email" placeholder="Email"></ion-input>
         </ion-item>
+
         <ion-item>
           <ion-input formControlName="phone" type="tel" placeholder="Phone Number"></ion-input>
         </ion-item>
+
         <ion-item>
           <ion-input formControlName="password" type="password" placeholder="Password"></ion-input>
         </ion-item>
+
         <ion-item>
           <ion-input formControlName="confirmPassword" type="password" placeholder="Confirm Password"></ion-input>
         </ion-item>
 
-        <ion-button expand="block" class="submit-btn" type="submit" [disabled]="signupForm.invalid">
+        <ion-button expand="block" type="submit" [disabled]="signupForm.invalid">
           Sign Up
         </ion-button>
       </form>
 
-      <!-- Already have an account -->
       <p class="signin-link">
         Already have an account? <a (click)="navigateToSignIn()">Sign In</a>
       </p>

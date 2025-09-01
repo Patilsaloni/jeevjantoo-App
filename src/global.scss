@@ -120,3 +120,8 @@ ion-app, ion-content, ion-title, ion-label, ion-button, ion-text, ion-input, ion
   font-family: 'Montserrat', sans-serif !important;
 }
 
+ion-content {
+  --keyboard-offset: 0px;
+}
+
+

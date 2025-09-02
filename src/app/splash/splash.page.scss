@@ -1,0 +1,48 @@
+.splash-content {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  overflow: hidden;
+  /* --background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); */
+}
+
+/* This wrapper fills the ion-content height */
+.full-height-wrapper {
+  display: flex;
+  justify-content: center; /* horizontal center */
+  align-items: center;     /* vertical center */
+  height: 100%;            /* fill ion-content height */
+  width: 100%;
+  text-align: center;
+}
+
+.splash-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.splash-logo {
+  width: 25vw;
+  max-width: 120px;
+  height: auto;
+  border-radius: 16px;
+  animation: pulse 2s infinite ease-in-out; /* Pulse animation for logo */
+}
+
+.app-title {
+  font-size: min(6vw, 28px); /* Fixed max-font-size to valid CSS */
+  color: #f89900;
+  font-weight: bold;
+  animation: pulse 2s infinite ease-in-out; /* Pulse animation for text */
+}
+
+/* Pulse animation for logo and text */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); } /* Scales up slightly */
+  100% { transform: scale(1); } /* Returns to original size */
+}

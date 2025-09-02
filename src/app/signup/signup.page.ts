@@ -102,3 +102,4 @@ export class SignupPage implements OnInit {
     this.router.navigate(['/signin'], { replaceUrl: true });
   }
 }
+  

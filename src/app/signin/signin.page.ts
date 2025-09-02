@@ -79,4 +79,12 @@ export class SigninPage implements OnInit {
   navigateToSignUp() {
     this.router.navigate(['/signup'], { replaceUrl: true });
   }
+
+  navigateToForgotPassword(){
+    this.router.navigate(['forgot-password'], {replaceUrl: true})
+  }
+
+  navigateToDashboard(){
+    this.router.navigate(['dashboard'], {replaceUrl: true})
+  }
 }

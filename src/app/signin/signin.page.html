@@ -1,10 +1,10 @@
 <ion-content [fullscreen]="true" class="signin-content" scroll-y="false">
   <div class="form-wrapper">
     <div class="signin-card">
-      <!-- Logo -->
+      <!-- Logo with favicon -->
       <div class="logo">
-        <ion-icon name="paw-outline" class="paw-icon"></ion-icon>
-        <h2 class="app-title">Animal Care</h2>
+        <img src="assets/icon/favicon.png" alt="Jeevjantoo Logo" class="favicon-logo" />
+        <h2 class="app-title">Sign In</h2>
       </div>
 
       <!-- Tabs -->
@@ -13,7 +13,7 @@
         <ion-segment-button value="phone">Phone</ion-segment-button>
       </ion-segment>
 
-      <!-- Forms -->
+      <!-- Email Login Form -->
       <form *ngIf="loginMode === 'email'" [formGroup]="emailForm" (ngSubmit)="onEmailLogin()">
         <ion-item>
           <ion-input formControlName="email" type="email" placeholder="Email"></ion-input>
@@ -21,11 +21,18 @@
         <ion-item>
           <ion-input formControlName="password" type="password" placeholder="Password"></ion-input>
         </ion-item>
-        <ion-button expand="block" class="submit-btn" type="submit" [disabled]="emailForm.invalid">
+
+        <!-- Forgot Password link -->
+        <p class="forgot-password" (click)="navigateToForgotPassword()">
+          Forgot Password?
+        </p>
+
+        <ion-button expand="block" class="submit-btn" type="submit" [disabled]="emailForm.invalid" (click)="navigateToDashboard()">
           Sign In
         </ion-button>
       </form>
 
+      <!-- Phone Login Form -->
       <form *ngIf="loginMode === 'phone'" [formGroup]="phoneForm" (ngSubmit)="onPhoneLogin()">
         <ion-item>
           <ion-input formControlName="phone" type="tel" placeholder="Enter Phone Number"></ion-input>

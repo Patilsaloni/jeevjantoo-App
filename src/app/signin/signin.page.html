@@ -23,26 +23,26 @@
         </ion-item>
 
         <!-- Forgot Password link -->
-        <p class="forgot-password" (click)="navigateToForgotPassword()">
-          Forgot Password?
-        </p>
+        <p class="forgot-link" (click)="navigateToForgotPassword()">Forgot Password?</p>
 
-        <ion-button expand="block" class="submit-btn" type="submit" [disabled]="emailForm.invalid" (click)="navigateToDashboard()">
+        <ion-button expand="block" class="submit-btn" type="submit" [disabled]="emailForm.invalid">
           Sign In
         </ion-button>
       </form>
 
-      <!-- Phone Login Form -->
-      <form *ngIf="loginMode === 'phone'" [formGroup]="phoneForm" (ngSubmit)="onPhoneLogin()">
+      <!-- Phone OTP Login Form -->
+      <form *ngIf="loginMode === 'phone'" [formGroup]="phoneForm">
         <ion-item>
           <ion-input formControlName="phone" type="tel" placeholder="Enter Phone Number"></ion-input>
         </ion-item>
+
+        <ion-button expand="block" *ngIf="!otpSent" (click)="onSendOtp()">Send OTP</ion-button>
+
         <ion-item *ngIf="otpSent">
           <ion-input formControlName="otp" type="number" placeholder="Enter OTP"></ion-input>
         </ion-item>
-        <ion-button expand="block" class="submit-btn" type="submit">
-          {{ otpSent ? 'Verify OTP' : 'Send OTP' }}
-        </ion-button>
+
+        <ion-button expand="block" *ngIf="otpSent" (click)="onPhoneLogin()">Verify OTP</ion-button>
       </form>
 
       <p class="signup-link">
@@ -50,4 +50,7 @@
       </p>
     </div>
   </div>
+
+  <!-- Invisible reCAPTCHA for Firebase -->
+  <div id="recaptcha-container"></div>
 </ion-content>

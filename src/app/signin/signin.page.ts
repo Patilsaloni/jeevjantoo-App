@@ -1,90 +1,192 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // ✅ Needed for ngModel
+import { IonicModule } from '@ionic/angular';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+
+// Firebase imports
+import { initializeApp } from 'firebase/app';
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import { environment } from '../../environments/environment';
+
+declare global {
+  interface Window {
+    recaptchaVerifier?: RecaptchaVerifier;
+  }
+}
+
+// Initialize Firebase app
+const app = initializeApp(environment.firebaseConfig);
+const auth = getAuth(app);
 
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.page.html',
   styleUrls: ['./signin.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule], // ✅ Added FormsModule
+  imports: [CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
 })
-export class SigninPage implements OnInit {
-  loginMode: string = 'phone'; // Default: Phone login
-  phoneForm: FormGroup; // ✅ renamed to phoneForm
+export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
+  loginMode: 'email' | 'phone' = 'email';
   emailForm: FormGroup;
+  phoneForm: FormGroup;
   otpSent = false;
+  confirmationResult: any;
+  recaptchaVerifier?: RecaptchaVerifier;
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    // 📌 Phone login form
-    this.phoneForm = this.fb.group({
-      phone: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^\d{10}$/),
-          Validators.minLength(10),
-          Validators.maxLength(10),
-        ],
-      ],
-      otp: [''],
-    });
+  private API_URL = 'http://localhost:3000/api/v1/users'; // 🔹 change to production URL
 
-    // 📌 Email login form
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private http: HttpClient
+  ) {
+    // Email form
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
+    });
+
+    // Phone form
+    this.phoneForm = this.fb.group({
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      otp: ['', Validators.required],
     });
   }
 
   ngOnInit() {}
 
-  // 📌 Send OTP
-  onSendOtp() {
-    if (this.phoneForm.get('phone')?.valid) {
-      console.log('Sending OTP to:', this.phoneForm.value.phone);
+  ngAfterViewInit() {
+    setTimeout(() => this.initializeRecaptcha(), 500);
+  }
+
+  ngOnDestroy() {
+    if (window.recaptchaVerifier) {
+      window.recaptchaVerifier.clear();
+      window.recaptchaVerifier = undefined;
+    }
+  }
+
+  initializeRecaptcha() {
+    if (!window.recaptchaVerifier) {
+      try {
+        this.recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          'recaptcha-container',
+          {
+            size: 'invisible',
+            callback: () => console.log('reCAPTCHA verified successfully'),
+          }
+        );
+
+        window.recaptchaVerifier = this.recaptchaVerifier;
+
+        this.recaptchaVerifier.render().then((widgetId) => {
+          console.log('reCAPTCHA rendered with widgetId:', widgetId);
+        });
+      } catch (error) {
+        console.error('Failed to initialize reCAPTCHA:', error);
+      }
+    }
+  }
+
+  // 🔹 Email login with backend
+onEmailLogin() {
+  if (this.emailForm.valid) {
+    const body = {
+      method: 'email',
+      email: this.emailForm.value.email,
+      password: this.emailForm.value.password
+    };
+
+    this.http.post(`${this.API_URL}/login`, body).subscribe({
+      next: (res: any) => {
+        console.log('Email login success:', res);
+        localStorage.setItem('token', res.token); // save JWT
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error('Email login error:', err);
+        alert(err.error?.error || 'Login failed');
+      },
+    });
+  } else {
+    alert('Please enter valid email and password');
+  }
+}
+
+
+  // 🔹 Send OTP via Firebase
+  async onSendOtp() {
+    if (!this.phoneForm.get('phone')?.valid) {
+      alert('Enter a valid 10-digit phone number');
+      return;
+    }
+
+    try {
+      const phoneNumber = '+91' + this.phoneForm.value.phone;
+      const appVerifier = window.recaptchaVerifier;
+
+      if (!appVerifier) {
+        alert('reCAPTCHA not initialized. Retrying...');
+        this.initializeRecaptcha();
+        return;
+      }
+
+      this.confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phoneNumber,
+        appVerifier
+      );
       this.otpSent = true;
-
-      this.phoneForm.get('otp')?.setValidators([
-        Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(6),
-        Validators.pattern(/^\d{6}$/),
-      ]);
-      this.phoneForm.get('otp')?.updateValueAndValidity();
-
-      // 🔹 TODO: Call backend API to send OTP
+      console.log('OTP sent successfully');
+    } catch (error: any) {
+      console.error('Error sending OTP:', error);
+      alert('Failed to send OTP: ' + error.message);
     }
   }
 
-  // 📌 Phone login
-  onPhoneLogin() {
-    if (this.phoneForm.valid && this.otpSent) {
-      console.log('Signing in with phone:', this.phoneForm.value);
-      // 🔹 TODO: Verify OTP API call
-    }
+  // 🔹 Verify OTP with Firebase + Backend
+async onPhoneLogin() {
+  if (!this.phoneForm.valid || !this.otpSent) {
+    alert('Please enter a valid OTP');
+    return;
   }
 
-  // 📌 Email login
-  onEmailLogin() {
-    if (this.emailForm.valid) {
-      console.log('Signing in with email:', this.emailForm.value);
-      // 🔹 TODO: Email/password API call
-    }
+  try {
+    const result = await this.confirmationResult.confirm(this.phoneForm.value.otp);
+    const idToken = await result.user.getIdToken();
+
+    // ✅ send method + idToken to backend
+    const body = {
+      method: 'phone',
+      idToken: idToken
+    };
+
+    this.http.post(`${this.API_URL}/login`, body).subscribe({
+      next: (res: any) => {
+        console.log('Phone login success:', res);
+        localStorage.setItem('token', res.token);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error('Phone login error:', err);
+        alert(err.error?.error || 'Invalid OTP');
+      },
+    });
+  } catch (error: any) {
+    console.error('Error verifying OTP:', error);
+    alert('Invalid OTP: ' + error.message);
   }
+}
+
 
   navigateToSignUp() {
-    this.router.navigate(['/signup'], { replaceUrl: true });
+    this.router.navigate(['/signup']);
   }
 
-  navigateToForgotPassword(){
-    this.router.navigate(['forgot-password'], {replaceUrl: true})
-  }
-
-  navigateToDashboard(){
-    this.router.navigate(['dashboard'], {replaceUrl: true})
+  navigateToForgotPassword() {
+    this.router.navigate(['/forgot-password']);
   }
 }

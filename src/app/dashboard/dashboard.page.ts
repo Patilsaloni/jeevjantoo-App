@@ -54,13 +54,14 @@ export class DashboardPage implements OnInit, AfterViewInit {
     { name: 'Bunny', breed: 'Rabbit', age: 1, category: 'others', image: 'assets/img/rabbit.jpg' }
   ];
 
-  categories: Category[] = [
-    { id: 'all', name: 'All', icon: 'paw-outline' },
-    { id: 'dogs', name: 'Dogs', icon: 'dog-outline' },
-    { id: 'cats', name: 'Cats', icon: 'cat-outline' },
-    { id: 'birds', name: 'Birds', icon: 'bird-outline' },
-    { id: 'others', name: 'Others', icon: 'paw-outline' }
-  ];
+ categories: Category[] = [
+  { id: 'all', name: 'All', icon: 'apps-outline' },
+  { id: 'dogs', name: 'Dogs', icon: 'paw-outline' },       // best fit for dogs
+  { id: 'cats', name: 'Cats', icon: 'logo-octocat' },      // cat-related icon
+  { id: 'birds', name: 'Birds', icon: 'egg-outline' },     // egg represents birds
+  { id: 'others', name: 'Others', icon: 'shapes-outline' } // misc. items
+];
+
 
   filteredPets: Pet[] = [...this.pets];
   activeCategory: string = 'all';
@@ -81,12 +82,16 @@ export class DashboardPage implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    if (this.categorySwiper) {
-      Object.assign(this.categorySwiper, this.swiperConfig);
-      this.categorySwiper.initialize();
-    }
+ ngAfterViewInit() {
+  if (this.categorySwiper) {
+    // assign config
+    Object.assign(this.categorySwiper, this.swiperConfig);
+
+    // ✅ trigger re-render the "web component" version
+    this.categorySwiper.initialize?.(); // optional chaining (only if exists)
   }
+}
+
 
   onCategoryChange(categoryId: string, index: number) {
     this.activeCategory = categoryId;

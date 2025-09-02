@@ -4,6 +4,7 @@
   align-items: center;
   height: 100vh;
   overflow: hidden;
+  // --background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
 }
 
 .form-wrapper {
@@ -55,27 +56,17 @@ ion-item {
 .submit-btn {
   margin-top: 12px;
   --border-radius: 20px;
-  --background: #fa9b10;  /* Brand color */
+  --background: #fa9b10; 
   --color: #fff;
 }
 
-.signup-link {
-  margin-top: 14px;
+.signup-link, .forgot-link {
   font-size: 14px;
-  color: #555;
+  margin-top: 8px;
 }
 
-.signup-link a {
-  color: #fa9b10;  /* Brand color */
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.forgot-password {
-  margin: 6px 0 12px 0;
-  font-size: 14px;
-  color: #fa9b10;   /* Brand color */
-  text-align: right;
+.signup-link a, .forgot-link {
+  color: #fa9b10;
   font-weight: 500;
   cursor: pointer;
 }
@@ -90,6 +81,6 @@ ion-segment-button {
 }
 
 ion-segment-button.ion-selected {
-  --background: #fa9b10;  /* Brand color for selected tab */
+  --background: #fa9b10;
   --color: #fff;
 }

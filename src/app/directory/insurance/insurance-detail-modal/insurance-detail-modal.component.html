@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ insurance?.name }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <h2>{{ insurance?.name }}</h2>
+  <p>{{ insurance?.description }}</p>
+
+  <ion-list>
+    <ion-item>
+      <ion-label>
+        <strong>Contact:</strong> {{ insurance?.contact }}
+      </ion-label>
+      <ion-button 
+        fill="outline" 
+        color="primary" 
+        (click)="callInsurance(insurance.contact)">
+        Call
+      </ion-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <strong>Location:</strong>
+        {{ insurance?.address }}
+      </ion-label>
+      <ion-button 
+        fill="outline" 
+        color="secondary" 
+        (click)="openMap(insurance.lat, insurance.lng)">
+        View on Map
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

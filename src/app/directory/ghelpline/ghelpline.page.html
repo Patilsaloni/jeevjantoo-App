@@ -1,13 +1,54 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>ghelpline</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Govt Helpline</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">ghelpline</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <!-- Search -->
+  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="loadHelplines()" placeholder="Search helpline..."></ion-searchbar>
+
+  <!-- Filters -->
+  <div class="filters">
+    <ion-select placeholder="Select City" [(ngModel)]="selectedCity" (ionChange)="loadHelplines()">
+      <ion-select-option value="">All Cities</ion-select-option>
+      <ion-select-option value="Indore">Indore</ion-select-option>
+      <ion-select-option value="Bhopal">Bhopal</ion-select-option>
+    </ion-select>
+
+    <ion-select placeholder="Service" [(ngModel)]="selectedService" (ionChange)="loadHelplines()">
+      <ion-select-option value="">All</ion-select-option>
+      <ion-select-option value="Animal Rescue">Animal Rescue</ion-select-option>
+      <ion-select-option value="Police">Police</ion-select-option>
+      <ion-select-option value="Fire">Fire</ion-select-option>
+      <ion-select-option value="Women Helpline">Women Helpline</ion-select-option>
+    </ion-select>
+  </div>
+
+  <!-- Loader -->
+  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+
+  <!-- Helpline List -->
+  <ion-card *ngFor="let h of helplines" class="helpline-card" (click)="openDetails(h)">
+    <ion-card-header class="card-header-gradient">
+      <ion-card-title>
+        <ion-icon name="call-outline"></ion-icon>
+        {{ h.service }}
+      </ion-card-title>
+      <ion-card-subtitle>{{ h.city }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p><ion-icon name="call-outline"></ion-icon> <strong>Contact:</strong> {{ h.contact }}</p>
+      <p *ngIf="h.working_hours"><ion-icon name="time-outline"></ion-icon> <strong>Hours:</strong> {{ h.working_hours }}</p>
+      <p *ngIf="h.distance"><ion-icon name="navigate-outline"></ion-icon> <strong>Distance:</strong> {{ h.distance.toFixed(1) }} km</p>
+    </ion-card-content>
+  </ion-card>
+
+  <p *ngIf="!loading && helplines.length === 0" class="no-data">
+    No helplines found.
+  </p>
 </ion-content>

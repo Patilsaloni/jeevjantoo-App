@@ -1,13 +1,50 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>boarding</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Boarding & Spa</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">boarding</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-spinner *ngIf="loading" style="display: block; margin: 50px auto;"></ion-spinner>
+
+  <div *ngIf="!loading && boardingSpas.length">
+    <ion-card *ngFor="let spa of boardingSpas" class="spa-card">
+
+      <ion-card-header>
+        <ion-card-title>
+          <!-- <ion-icon name="paw-outline"></ion-icon> -->
+          {{ spa.name }}
+        </ion-card-title>
+        <ion-card-subtitle>{{ spa.type | titlecase }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p *ngIf="spa.contact">
+          <!-- <ion-icon name="call-outline"></ion-icon> -->
+          <strong>Contact:</strong> {{ spa.contact }}
+        </p>
+        <p *ngIf="spa.distance">
+          <strong>Distance:</strong> {{ spa.distance.toFixed(2) }} km
+        </p>
+        <p *ngIf="spa.working_hours">
+          <strong>Hours:</strong> {{ spa.working_hours }}
+        </p>
+      </ion-card-content>
+
+      <div class="spa-card-footer">
+        <ion-button expand="block" color="primary" (click)="trackLocation(spa)">
+          <ion-icon slot="start" name="navigate-outline"></ion-icon>
+          Track Location
+        </ion-button>
+      </div>
+
+    </ion-card>
+  </div>
+
+  <p *ngIf="!loading && boardingSpas.length === 0" class="no-spa">
+    No boarding/spa found.
+  </p>
 </ion-content>

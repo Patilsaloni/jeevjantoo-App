@@ -1,13 +1,33 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>ngos</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>NGOs</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">ngos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+
+  <ion-grid *ngIf="!loading && ngos.length">
+    <ion-row>
+      <ion-col size="12" size-md="6" *ngFor="let ngo of ngos">
+        <ion-card class="ngo-card">
+          <ion-card-header>
+            <ion-card-title>{{ ngo.name }}</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <p><strong>Location:</strong> {{ ngo.location }}</p>
+            <p><strong>Contact:</strong> {{ ngo.contact }}</p>
+            <!-- <p><strong>Status:</strong> <span [ngClass]="{'active': ngo.status === 'active', 'inactive': ngo.status !== 'active'}">{{ ngo.status }}</span></p> -->
+            <p><strong>Reports:</strong> {{ ngo.report_count }}</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <p *ngIf="!loading && ngos.length === 0" class="no-data">No NGOs found.</p>
 </ion-content>

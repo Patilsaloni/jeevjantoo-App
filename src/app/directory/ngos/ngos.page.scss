@@ -1,0 +1,44 @@
+.ngo-card {
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  ion-card-title {
+    font-size: 1.3rem;
+    color: var(--ion-color-primary);
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 4px 0;
+    font-size: 0.95rem;
+  }
+
+  .active {
+    color: green;
+    font-weight: bold;
+  }
+
+  .inactive {
+    color: red;
+    font-weight: bold;
+  }
+}
+
+.spinner-center {
+  display: block;
+  margin: 50% auto 0;
+}
+
+.no-data {
+  text-align: center;
+  font-size: 1rem;
+  color: gray;
+  margin-top: 40px;
+}

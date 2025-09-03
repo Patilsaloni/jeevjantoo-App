@@ -1,0 +1,60 @@
+.ambulance-card {
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  margin-bottom: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  }
+
+  ion-card-header {
+    ion-card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+
+    ion-card-subtitle {
+      font-size: 0.95rem;
+      color: var(--ion-color-medium);
+      margin-top: 2px;
+    }
+  }
+
+  ion-card-content {
+    p {
+      margin: 6px 0;
+      font-size: 0.95rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+    }
+
+    iframe {
+      margin-top: 10px;
+    }
+  }
+
+  ion-card-footer {
+    padding: 10px;
+    background: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    ion-button {
+      font-weight: 600;
+      width: 100%;
+    }
+  }
+}
+
+.no-ambulance {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1rem;
+  color: var(--ion-color-medium);
+}

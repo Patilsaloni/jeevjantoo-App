@@ -14,7 +14,12 @@ export class DirectoryService {
     return this.http.get(`${this.apiBase}/counts`);
   }
 
-  getClinics(params?: any): Observable<any> {
-    return this.http.get(`${this.apiBase}/clinics`, { params });
-  }
+ getClinics(params?: any): Observable<any> {
+  let query = '';
+  if (params?.type) query += `type=${params.type}&`;
+  if (params?.city) query += `city=${params.city}&`;
+
+  return this.http.get(`${this.apiBase}/clinics?${query}`);
+}
+
 }

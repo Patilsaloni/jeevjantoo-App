@@ -1,8 +1,8 @@
+// src/app/directory/clinics/clinics.page.ts
 import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { DirectoryService } from 'src/app/services/directory.service';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-clinics',
@@ -14,21 +14,16 @@ import { ActivatedRoute } from '@angular/router';
 export class ClinicsPage implements OnInit {
   clinics: any[] = [];
   loading = true;
-  
-  constructor(
-    private route: ActivatedRoute,
-    private directoryService: DirectoryService
-  ) {}
+
+  constructor(private directoryService: DirectoryService) {}
 
   ngOnInit() {
-    const type = this.route.snapshot.queryParamMap.get('type'); // dynamic from Dashboard
-    const city = this.route.snapshot.queryParamMap.get('city'); // optional filter
-    this.loadClinics({ type, city });
+    this.loadClinics();
   }
 
-  loadClinics(params?: any) {
+  loadClinics() {
     this.loading = true;
-    this.directoryService.getClinics(params).subscribe({
+    this.directoryService.getClinics().subscribe({
       next: (res: any) => {
         this.clinics = res.data || [];
         this.loading = false;

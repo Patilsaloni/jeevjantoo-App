@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';   // Needed for [(ngModel)]
 import { IonicModule } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
-import { DashboardPage } from './dashboard.page';
+
 import { DashboardPageRoutingModule } from './dashboard-routing.module';
+import { DashboardPage } from './dashboard.page';
 
 @NgModule({
-  declarations: [], // Remove DashboardPage from declarations
   imports: [
-    CommonModule,
-    IonicModule,
-    RouterModule,
-    DashboardPageRoutingModule,
-    DashboardPage // Add DashboardPage to imports
-  ]
+    CommonModule,        // Fixes *ngFor / *ngIf
+    FormsModule,         // Fixes [(ngModel)]
+    IonicModule,         // Fixes all <ion-*> components
+    DashboardPageRoutingModule
+  ],
+  // declarations: [DashboardPage]
 })
 export class DashboardPageModule {}

@@ -1,56 +1,62 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
     <ion-title>Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-card class="welcome-card">
-    <ion-grid>
-      <ion-row class="ion-align-items-center">
-        <ion-col size="12" size-md="4">
-          <ion-img src="assets/img/pets.png" alt="Pets" class="welcome-image"></ion-img>
-        </ion-col>
-        <ion-col size="12" size-md="8">
-          <ion-card-header>
-            <ion-card-title>Find Your Furry <br><span> Best Friend</span></ion-card-title>
-          </ion-card-header>
-          <!-- <ion-card-content>
-            <p class="welcome-text">Adopt a pet and bring joy to your home. Browse our selection of lovable companions today!</p>
-          </ion-card-content> -->
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-card>
 
-  <swiper-container class="category-slider" [init]="false" #categorySwiper>
-    <swiper-slide *ngFor="let category of categories; let i = index" style="width: fit-content;">
-      <div class="category-button" [class.active]="activeCategory === category.id" (click)="onCategoryChange(category.id, i)">
-        <ion-icon [name]="category.icon" class="category-icon"></ion-icon>
-        <ion-label>{{ category.name }}</ion-label>
-      </div>
-    </swiper-slide>
-  </swiper-container>
-
-  <h2 class="section-title">Available Pets</h2>
-
+  <!-- Quick Stats -->
   <ion-grid>
     <ion-row>
-      <ion-col size="12" size-md="6" *ngFor="let pet of filteredPets | slice:0:4">
-        <ion-card class="pet-card">
-          <ion-img [src]="pet.image" [alt]="pet.name"></ion-img>
+      <ion-col size="6" *ngFor="let stat of stats">
+        <ion-card class="stat-card">
           <ion-card-header>
-            <ion-card-title>{{ pet.name }}</ion-card-title>
-            <ion-card-subtitle>{{ pet.breed }} - {{ pet.age }} years</ion-card-subtitle>
+            <ion-card-title>{{ stat.value }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-button color="primary" expand="block" class="animated-button">Adopt</ion-button>
+            <p>{{ stat.title }}</p>
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <!-- Directories (Clinics, NGOs, etc.) -->
+ <ion-grid>
+  <ion-row>
+    <ion-col size="6" *ngFor="let tile of tiles">
+      <ion-card button (click)="goToDirectory(tile.route, tile.type)">
+        <ion-card-content class="tile-card">
+          <ion-icon [name]="tile.icon" size="large"></ion-icon>
+          <h3>{{ tile.label }}</h3>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+
+  <!-- Latest Adoptions -->
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Latest Adoptions</ion-label>
+      <ion-button size="small" fill="clear" (click)="goToAdoptions()">View All</ion-button>
+    </ion-list-header>
+
+    <ion-item *ngFor="let pet of latestAdoptions" (click)="goToAdoptionDetail(pet)">
+      <ion-thumbnail slot="start">
+  <img [src]="(pet.photos && pet.photos.length > 0) ? pet.photos[0] : 'assets/placeholder-pet.jpg'" />
+</ion-thumbnail>
+
+      <ion-label>
+        <h2>{{ pet.pet_name || (pet.species | titlecase) }}</h2>
+        <p>
+  {{ pet.age_value ? pet.age_value + ' ' + pet.age_unit : 'Age unknown' }} - 
+  {{ pet.gender || 'Gender unknown' }}
+</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
 </ion-content>

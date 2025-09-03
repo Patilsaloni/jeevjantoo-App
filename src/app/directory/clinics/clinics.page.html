@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Clinics</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-spinner *ngIf="loading"></ion-spinner>
+  <p *ngIf="!loading && clinics.length === 0">No clinics found</p>
+
+  <ion-list *ngIf="!loading && clinics.length > 0">
+    <ion-item *ngFor="let clinic of clinics">
+      <ion-label>
+        <h2>{{ clinic.name }}</h2>
+        <p>{{ clinic.type }} - {{ clinic.city }}</p>
+        <p>{{ clinic.timings }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

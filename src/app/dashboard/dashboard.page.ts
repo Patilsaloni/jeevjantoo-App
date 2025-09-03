@@ -1,107 +1,108 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { NavController, IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { SwiperOptions } from 'swiper/types';
-import { register } from 'swiper/element/bundle';
-
-// Register Swiper web components
-register();
-
-interface Pet {
-  name: string;
-  breed: string;
-  age: number;
-  category: string;
-  image: string;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  icon: string;
-}
+import { DirectoryService } from 'src/app/services/directory.service';
+import { AdoptionService } from '../services/adoption.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, RouterModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [
+    CommonModule,
+    IonicModule
+  ]
 })
-export class DashboardPage implements OnInit, AfterViewInit {
-  @ViewChild('categorySwiper', { static: false }) categorySwiper!: any;
-
-  swiperConfig: SwiperOptions = {
-    slidesPerView: 3,
-    spaceBetween: 10,
-    pagination: false,
-    navigation: false,
-    breakpoints: {
-      320: { slidesPerView: 2 },
-      640: { slidesPerView: 3 },
-      1024: { slidesPerView: 5 }
-    }
-  };
-
-  pets: Pet[] = [
-    { name: 'Buddy', breed: 'Labrador', age: 2, category: 'dogs', image: 'assets/img/dog.jpg' },
-    { name: 'Whiskers', breed: 'Siamese', age: 1, category: 'cats', image: 'assets/img/cat.jpg' },
-    { name: 'Polly', breed: 'Parrot', age: 3, category: 'birds', image: 'assets/img/bird.jpg' },
-    { name: 'Bunny', breed: 'Rabbit', age: 1, category: 'others', image: 'assets/img/rabbit.jpg' }
+export class DashboardPage implements OnInit {
+  stats = [
+    { title: 'Clinics', value: 0 },
+    { title: 'NGOs', value: 0 },
+    { title: 'Adoptions', value: 0 },
+    { title: 'Events', value: 0 }
   ];
 
- categories: Category[] = [
-  { id: 'all', name: 'All', icon: 'apps-outline' },
-  { id: 'dogs', name: 'Dogs', icon: 'paw-outline' },       // best fit for dogs
-  { id: 'cats', name: 'Cats', icon: 'logo-octocat' },      // cat-related icon
-  { id: 'birds', name: 'Birds', icon: 'egg-outline' },     // egg represents birds
-  { id: 'others', name: 'Others', icon: 'shapes-outline' } // misc. items
-];
+  tiles = [
+    { label: 'Clinics', icon: 'medkit-outline', route: 'clinics', type: 'Clinics' },
+    { label: 'NGOs', icon: 'people-outline', route: 'ngos', type: 'NGOs' },
+    { label: 'Ambulance', icon: 'car-outline', route: 'ambulance' },
+    { label: 'Boarding', icon: 'home-outline', route: 'boarding' },
+    { label: 'Govt Helpline', icon: 'call-outline', route: 'ghelpline' },
+    { label: 'Feeding', icon: 'restaurant-outline', route: 'feeding' },
+    { label: 'Insurance', icon: 'shield-checkmark-outline', route: 'insurance' },
+    { label: 'Adoption', icon: 'paw-outline', route: 'adoptions' }
+  ];
 
+  latestAdoptions: any[] = [];
+  loadingStats = true;
+  loadingAdoptions = true;
 
-  filteredPets: Pet[] = [...this.pets];
-  activeCategory: string = 'all';
-
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private directoryService: DirectoryService,
+    private adoptionService: AdoptionService,
+    private navCtrl: NavController,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    console.log('DashboardPage initialized');
-    this.route.queryParams.subscribe(params => {
-      const category = params['category'];
-      if (category && category !== 'all') {
-        this.filteredPets = this.pets.filter(pet => pet.category === category);
-        this.activeCategory = category;
-      } else {
-        this.filteredPets = [...this.pets];
-        this.activeCategory = 'all';
+    this.loadStats();
+    this.loadLatestAdoptions();
+  }
+
+  loadStats() {
+    this.loadingStats = true;
+    this.directoryService.getCounts().subscribe({
+      next: (res: any) => {
+        this.stats[0].value = res.clinics ?? 0;
+        this.stats[1].value = res.ngos ?? 0;
+        this.stats[2].value = res.adoptions ?? 0;
+        this.stats[3].value = res.events ?? 0;
+        this.loadingStats = false;
+      },
+      error: (err: any) => {
+        console.error('Error loading stats', err);
+        this.stats.forEach(stat => stat.value = 0);
+        this.loadingStats = false;
       }
     });
   }
 
- ngAfterViewInit() {
-  if (this.categorySwiper) {
-    // assign config
-    Object.assign(this.categorySwiper, this.swiperConfig);
-
-    // ✅ trigger re-render the "web component" version
-    this.categorySwiper.initialize?.(); // optional chaining (only if exists)
+  loadLatestAdoptions() {
+    this.loadingAdoptions = true;
+    this.adoptionService.getAdoptions({ page: 1 }).subscribe({
+      next: (res: any) => {
+        this.latestAdoptions = res.data
+          ? res.data.slice(0, 5).map((pet: any) => ({
+              ...pet,
+              photos: pet.photos && pet.photos.length ? pet.photos : ['assets/placeholder-pet.jpg'],
+              age: pet.age || { value: '-', unit: '' },
+              gender: pet.gender || 'Unknown'
+            }))
+          : [];
+        this.loadingAdoptions = false;
+      },
+      error: (err: any) => {
+        console.error('Error loading adoptions', err);
+        this.latestAdoptions = [];
+        this.loadingAdoptions = false;
+      }
+    });
   }
-}
 
-
-  onCategoryChange(categoryId: string, index: number) {
-    this.activeCategory = categoryId;
-    if (categoryId === 'all') {
-      this.filteredPets = [...this.pets];
+  goToDirectory(route: string, type?: string) {
+    if(type) {
+      this.router.navigate([`/${route}`], { queryParams: { type } });
     } else {
-      this.filteredPets = this.pets.filter(pet => pet.category === categoryId);
+      this.router.navigate([`/${route}`]);
     }
-    if (this.categorySwiper) {
-      this.categorySwiper.slideTo(index);
-    }
+  }
+
+  goToAdoptions() {
+    this.router.navigate(['/adoptions']);
+  }
+
+  goToAdoptionDetail(pet: any) {
+    this.router.navigate([`/adoption-detail/${pet.id}`]);
   }
 }

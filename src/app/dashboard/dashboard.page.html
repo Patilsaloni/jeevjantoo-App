@@ -7,10 +7,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding premium-dashboard">
 
   <!-- Quick Stats -->
-  <ion-grid>
+  <ion-grid class="section-grid">
     <ion-row>
       <ion-col size="6" *ngFor="let stat of stats">
         <ion-card class="stat-card">
@@ -26,19 +26,18 @@
   </ion-grid>
 
   <!-- Directories (Clinics, NGOs, etc.) -->
- <ion-grid>
-  <ion-row>
-    <ion-col size="6" *ngFor="let tile of tiles">
-      <ion-card button (click)="goToDirectory(tile.route, tile.type)">
-        <ion-card-content class="tile-card">
-          <ion-icon [name]="tile.icon" size="large"></ion-icon>
-          <h3>{{ tile.label }}</h3>
-        </ion-card-content>
-      </ion-card>
-    </ion-col>
-  </ion-row>
-</ion-grid>
-
+  <ion-grid class="section-grid">
+    <ion-row>
+      <ion-col size="6" *ngFor="let tile of tiles">
+        <ion-card button (click)="goToDirectory(tile.route, tile.type)">
+          <ion-card-content class="tile-card">
+            <ion-icon [name]="tile.icon" size="large"></ion-icon>
+            <h3>{{ tile.label }}</h3>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
   <!-- Latest Adoptions -->
   <ion-list>
@@ -47,17 +46,16 @@
       <ion-button size="small" fill="clear" (click)="goToAdoptions()">View All</ion-button>
     </ion-list-header>
 
-    <ion-item *ngFor="let pet of latestAdoptions" (click)="goToAdoptionDetail(pet)">
+    <ion-item *ngFor="let pet of latestAdoptions" button (click)="goToAdoptionDetail(pet)">
       <ion-thumbnail slot="start">
-  <img [src]="(pet.photos && pet.photos.length > 0) ? pet.photos[0] : 'assets/placeholder-pet.jpg'" />
-</ion-thumbnail>
-
+        <img [src]="(pet.photos && pet.photos.length > 0) ? pet.photos[0] : 'assets/placeholder-pet.jpg'" />
+      </ion-thumbnail>
       <ion-label>
         <h2>{{ pet.pet_name || (pet.species | titlecase) }}</h2>
         <p>
-  {{ pet.age_value ? pet.age_value + ' ' + pet.age_unit : 'Age unknown' }} - 
-  {{ pet.gender || 'Gender unknown' }}
-</p>
+          {{ pet.age_value ? pet.age_value + ' ' + pet.age_unit : 'Age unknown' }} - 
+          {{ pet.gender || 'Gender unknown' }}
+        </p>
       </ion-label>
     </ion-item>
   </ion-list>

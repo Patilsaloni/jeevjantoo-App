@@ -2,12 +2,11 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: "AIzaSyCctqlVW24tDe10O1xGgCh_eUg6CEuu3NQ", // Use production API key if different
-    authDomain: "jeevjantoo.firebaseapp.com",
-    projectId: "jeevjantoo",
-    storageBucket: "jeevjantoo.firebasestorage.app",
-    messagingSenderId: "797145566954",
-    appId: "1:797145566954:web:a4d27ce20f95dfb9939193",
-    measurementId: "G-7S2S3808S5"
+    apiKey: "AIzaSyB5b9mW2JUyiIW9GZMNt71tuc71zefomlA",
+    authDomain: "jeevjantoo-af3a1.firebaseapp.com",
+    projectId: "jeevjantoo-af3a1",
+    storageBucket: "jeevjantoo-af3a1.firebasestorage.app",
+    messagingSenderId: "256459865200",
+    appId: "1:256459865200:web:d25153592d78d7a3f108b5"
   }
 };

@@ -1,28 +1,60 @@
+/* Page Background */
+.premium-dashboard {
+  --background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+  padding: 10px;
+}
+
+/* Section Grid Styling */
+.section-grid {
+  margin-bottom: 25px;
+  padding: 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.15);
+}
+
+/* Quick Stats Card */
 .stat-card {
   text-align: center;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  transition: all 0.3s ease;
+
+  /* Uniform height */
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .stat-card ion-card-title {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
+  font-weight: 600;
   color: var(--ion-color-primary);
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
-  transition: 0.3s;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.25);
 }
 
-
+/* Tile Card (Directories) */
 .tile-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 20px;
   text-align: center;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  /* Uniform height */
+  height: 160px;
 }
 
 .tile-card ion-icon {
@@ -32,10 +64,32 @@
 
 .tile-card h3 {
   margin: 0;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
 }
 
+.tile-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Latest Adoptions Thumbnails */
+ion-thumbnail img {
+  border-radius: 12px;
+  object-fit: cover;
+  height: 60px;
+  width: 60px;
+}
+
+/* Latest Adoptions List Items Hover */
+ion-item:hover {
+  background: rgba(0,0,0,0.03);
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+/* Responsive Adjustments for Tablets */
 @media (min-width: 768px) {
   ion-col[size="6"] {
     size: 3; /* 4 per row for tablets */

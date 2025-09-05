@@ -3,35 +3,47 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { IonicModule, ToastController, LoadingController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { v4 as uuidv4 } from 'uuid';
+import { FirebaseService } from '../../app/services/firebase.service';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [IonicModule, CommonModule, ReactiveFormsModule],
 })
 export class SignupPage implements OnInit {
-  signupForm!: FormGroup;
-  isSubmitted = false;
-
-  private apiUrl = 'http://localhost:3000/api/v1/users/register'; // backend endpoint
+  step = 1; // Track current step
+  signupFormStep1!: FormGroup;
+  signupFormStep2!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private firebaseService: FirebaseService
   ) {}
 
   ngOnInit() {
-    this.signupForm = this.fb.group(
+    // Step 1: Basic Info
+    this.signupFormStep1 = this.fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      gender: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    });
+
+    // Step 2: Address & Security
+    this.signupFormStep2 = this.fb.group(
       {
-        name: ['', [Validators.required, Validators.minLength(3)]],
-        email: ['', [Validators.required, Validators.email]],
-        phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        aadhar: ['', [Validators.required, Validators.pattern(/^[0-9]{12}$/)]],
+        area: ['', [Validators.required]],
+        city: ['', [Validators.required]],
+        state: ['', [Validators.required]],
+        pincode: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]],
       },
@@ -39,67 +51,73 @@ export class SignupPage implements OnInit {
     );
   }
 
-  // Custom Validator: check if password and confirmPassword match
+  // Password match validator
   passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { mismatch: true };
+    return form.get('password')?.value === form.get('confirmPassword')?.value
+      ? null
+      : { mismatch: true };
   }
 
-  // Handle Signup
-  async onSignUp() {
-    this.isSubmitted = true;
+  // Navigate between steps
+  goNext() {
+    if (this.signupFormStep1.valid) {
+      this.step = 2;
+    } else {
+      this.toastCtrl
+        .create({ message: 'Please fill all Step 1 fields correctly', duration: 2000, color: 'warning' })
+        .then(t => t.present());
+    }
+  }
 
-    if (!this.signupForm.valid) {
-      const toast = await this.toastCtrl.create({
-        message: '⚠️ Please fill all fields correctly.',
-        duration: 2000,
-        color: 'warning',
-      });
-      toast.present();
+  goBack() {
+    this.step = 1;
+  }
+
+  // Final Signup
+  async onSignUp() {
+    if (!this.signupFormStep2.valid) {
+      this.toastCtrl
+        .create({ message: 'Please fill all Step 2 fields correctly', duration: 2000, color: 'warning' })
+        .then(t => t.present());
       return;
     }
 
     const loading = await this.loadingCtrl.create({ message: 'Creating account...' });
     await loading.present();
 
-    // Only send required fields to backend
-    const { name, email, phone, password } = this.signupForm.value;
-    const payload = { name, email, phone, password };
+    const userData = {
+      ...this.signupFormStep1.value,
+      ...this.signupFormStep2.value,
+      status: 'Active',
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
 
-    this.http.post(this.apiUrl, payload).subscribe({
-      next: async (res: any) => {
-        await loading.dismiss();
+    const docID = uuidv4();
 
-        // Save JWT token
-        if (res.token) localStorage.setItem('authToken', res.token);
+    try {
+      await this.firebaseService.addInformation(docID, userData, 'user');
+      await loading.dismiss();
 
-        const toast = await this.toastCtrl.create({
-          message: '🎉 Signup successful! Redirecting...',
-          duration: 2000,
-          color: 'success',
-        });
-        toast.present();
+      this.toastCtrl
+        .create({ message: '🎉 Signup successful! Redirecting...', duration: 2000, color: 'success' })
+        .then(t => t.present());
 
-        this.router.navigate(['/signin'], { replaceUrl: true });
-      },
-      error: async (err) => {
-        await loading.dismiss();
-        console.error('❌ Signup API Error:', err);
+      this.signupFormStep1.reset();
+      this.signupFormStep2.reset();
+      this.step = 1;
+      this.router.navigate(['/signin'], { replaceUrl: true });
+    } catch (error) {
+      await loading.dismiss();
+      console.error('Firebase Error:', error);
 
-        const toast = await this.toastCtrl.create({
-          message: err.error?.error || '❌ Signup failed. Try again.',
-          duration: 3000,
-          color: 'danger',
-        });
-        toast.present();
-      },
-    });
+      this.toastCtrl
+        .create({ message: '❌ Signup failed. Try again.', duration: 3000, color: 'danger' })
+        .then(t => t.present());
+    }
   }
 
-  // Navigate to SignIn
   navigateToSignIn() {
     this.router.navigate(['/signin'], { replaceUrl: true });
   }
 }
-  

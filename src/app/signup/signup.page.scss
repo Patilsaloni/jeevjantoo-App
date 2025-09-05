@@ -1,47 +1,48 @@
 :host {
   ion-content {
-    --keyboard-offset: 0px; // avoid shifting
+    --keyboard-offset: 0px; /* avoid shifting */
     --padding-bottom: 0px;
     overflow: hidden;
   }
 
- .signup-card {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 400px;
-  z-index: 10;
-}
-
+  /* Signup card centered */
+  .signup-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    z-index: 10;
+    transition: transform 0.3s ease; /* smooth transition when keyboard opens */
+  }
 
   /* Prevent card from jumping when keyboard opens */
   body.keyboard-open .signup-card {
-    transform: none !important;
+    transform: translate(-50%, -40%) !important; /* slight shift up */
     margin-bottom: 0 !important;
   }
 }
 
+/* Fullscreen content */
 .signup-content {
-  // --background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;       /* ✅ fixed to viewport height */
+  height: 100vh;       /* fixed to viewport height */
   overflow: hidden;    /* prevent scroll jump */
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
 }
 
+/* Wrapper for form */
 .form-wrapper {
   width: 100%;
   max-width: 400px;
   padding: 16px;
-  position: absolute;   /* ✅ anchor */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* keeps centered regardless of viewport change */
+  position: relative;
 }
 
+/* Card style */
 .signup-card {
   width: 100%;
   max-width: 400px;
@@ -50,8 +51,10 @@
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
   padding: 24px;
   text-align: center;
+  overflow: hidden;
 }
 
+/* Logo */
 .logo {
   display: flex;
   flex-direction: column;
@@ -66,11 +69,6 @@
   margin-bottom: 8px;
 }
 
-.paw-icon {
-  font-size: 48px;
-  color: #ff7f50;
-}
-
 .app-title {
   margin-top: 8px;
   font-size: 22px;
@@ -78,19 +76,22 @@
   color: #333;
 }
 
+/* Input items */
 ion-item {
   margin-bottom: 12px;
   --border-radius: 12px;
   --background: #f8f8f8;
 }
 
-.submit-btn {
+/* Submit button */
+.submit-btn, ion-button {
   margin-top: 12px;
   --border-radius: 20px;
   --background: #ff7f50;
   --color: #fff;
 }
 
+/* Signin link */
 .signin-link {
   margin-top: 14px;
   font-size: 14px;
@@ -101,4 +102,16 @@ ion-item {
   color: #ff7f50;
   font-weight: 500;
   cursor: pointer;
+}
+
+/* Step transitions for two-step form */
+form {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+form.ng-hide {
+  opacity: 0;
+  transform: translateX(100%);
+  height: 0;
+  overflow: hidden;
 }

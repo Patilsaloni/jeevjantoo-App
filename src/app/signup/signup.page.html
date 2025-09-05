@@ -3,35 +3,115 @@
     <div class="signup-card">
       <!-- Logo -->
       <div class="logo">
-         <img src="assets/icon/favicon.png" alt="Jeevjantoo Logo" class="favicon-logo" />
-        <h2 class="app-title">SignUp</h2>
+        <img src="assets/icon/favicon.png" alt="Jeevjantoo Logo" class="favicon-logo" />
+        <h2 class="app-title">Sign Up</h2>
       </div>
 
-      <!-- Signup Form -->
-      <form [formGroup]="signupForm" (ngSubmit)="onSignUp()">
+      <!-- Step 1 Form -->
+      <form *ngIf="step === 1" [formGroup]="signupFormStep1">
         <ion-item>
-          <ion-input formControlName="name" type="text" placeholder="Full Name"></ion-input>
+          <ion-input formControlName="firstName" placeholder="First Name"></ion-input>
         </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep1.get('firstName')?.touched && signupFormStep1.get('firstName')?.invalid">
+          <p *ngIf="signupFormStep1.get('firstName')?.errors?.['required']">First Name is required.</p>
+          <p *ngIf="signupFormStep1.get('firstName')?.errors?.['minlength']">Minimum 2 characters required.</p>
+        </ion-text>
 
         <ion-item>
-          <ion-input formControlName="email" type="email" placeholder="Email"></ion-input>
+          <ion-input formControlName="lastName" placeholder="Last Name"></ion-input>
         </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep1.get('lastName')?.touched && signupFormStep1.get('lastName')?.invalid">
+          <p *ngIf="signupFormStep1.get('lastName')?.errors?.['required']">Last Name is required.</p>
+          <p *ngIf="signupFormStep1.get('lastName')?.errors?.['minlength']">Minimum 2 characters required.</p>
+        </ion-text>
 
         <ion-item>
-          <ion-input formControlName="phone" type="tel" placeholder="Phone Number"></ion-input>
+          <ion-label>Gender</ion-label>
+          <ion-select formControlName="gender" placeholder="Select Gender">
+            <ion-select-option value="Male">Male</ion-select-option>
+            <ion-select-option value="Female">Female</ion-select-option>
+            <ion-select-option value="Other">Other</ion-select-option>
+          </ion-select>
         </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep1.get('gender')?.touched && signupFormStep1.get('gender')?.invalid">
+          <p>Gender is required.</p>
+        </ion-text>
+
+        <ion-item>
+          <ion-input formControlName="email" placeholder="Email"></ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep1.get('email')?.touched && signupFormStep1.get('email')?.invalid">
+          <p *ngIf="signupFormStep1.get('email')?.errors?.['required']">Email is required.</p>
+          <p *ngIf="signupFormStep1.get('email')?.errors?.['email']">Invalid email format.</p>
+        </ion-text>
+
+        <ion-item>
+          <ion-input formControlName="phone" placeholder="Phone"></ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep1.get('phone')?.touched && signupFormStep1.get('phone')?.invalid">
+          <p *ngIf="signupFormStep1.get('phone')?.errors?.['required']">Phone number is required.</p>
+          <p *ngIf="signupFormStep1.get('phone')?.errors?.['pattern']">Enter a valid 10-digit number.</p>
+        </ion-text>
+
+        <ion-button expand="block" (click)="goNext()">Next →</ion-button>
+      </form>
+
+      <!-- Step 2 Form -->
+      <form *ngIf="step === 2" [formGroup]="signupFormStep2">
+        <ion-item>
+          <ion-input formControlName="aadhar" placeholder="Aadhar"></ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep2.get('aadhar')?.touched && signupFormStep2.get('aadhar')?.invalid">
+          <p *ngIf="signupFormStep2.get('aadhar')?.errors?.['required']">Aadhar is required.</p>
+          <p *ngIf="signupFormStep2.get('aadhar')?.errors?.['pattern']">Enter a valid 12-digit Aadhar number.</p>
+        </ion-text>
+
+        <ion-item>
+          <ion-input formControlName="area" placeholder="Area"></ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep2.get('area')?.touched && signupFormStep2.get('area')?.invalid">
+          <p>Area is required.</p>
+        </ion-text>
+
+        <ion-item>
+          <ion-input formControlName="city" placeholder="City"></ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep2.get('city')?.touched && signupFormStep2.get('city')?.invalid">
+          <p>City is required.</p>
+        </ion-text>
+
+        <ion-item>
+          <ion-input formControlName="state" placeholder="State"></ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep2.get('state')?.touched && signupFormStep2.get('state')?.invalid">
+          <p>State is required.</p>
+        </ion-text>
+
+        <ion-item>
+          <ion-input formControlName="pincode" placeholder="Pincode"></ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep2.get('pincode')?.touched && signupFormStep2.get('pincode')?.invalid">
+          <p *ngIf="signupFormStep2.get('pincode')?.errors?.['required']">Pincode is required.</p>
+          <p *ngIf="signupFormStep2.get('pincode')?.errors?.['pattern']">Enter a valid 6-digit Pincode.</p>
+        </ion-text>
 
         <ion-item>
           <ion-input formControlName="password" type="password" placeholder="Password"></ion-input>
         </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep2.get('password')?.touched && signupFormStep2.get('password')?.invalid">
+          <p *ngIf="signupFormStep2.get('password')?.errors?.['required']">Password is required.</p>
+          <p *ngIf="signupFormStep2.get('password')?.errors?.['minlength']">Minimum 6 characters required.</p>
+        </ion-text>
 
         <ion-item>
           <ion-input formControlName="confirmPassword" type="password" placeholder="Confirm Password"></ion-input>
         </ion-item>
+        <ion-text color="danger" *ngIf="signupFormStep2.errors?.['mismatch'] && signupFormStep2.get('confirmPassword')?.touched">
+          <p>Passwords do not match.</p>
+        </ion-text>
 
-        <ion-button expand="block" type="submit" [disabled]="signupForm.invalid">
-          Sign Up
-        </ion-button>
+        <ion-button expand="block" (click)="goBack()">← Back</ion-button>
+        <ion-button expand="block" (click)="onSignUp()">Sign Up</ion-button>
       </form>
 
       <p class="signin-link">

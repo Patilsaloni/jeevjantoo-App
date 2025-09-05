@@ -1,13 +1,12 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
-// Firebase imports
 import { initializeApp } from 'firebase/app';
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import { FirebaseService } from '../../app/services/firebase.service';
 import { environment } from '../../environments/environment';
 
 declare global {
@@ -16,9 +15,15 @@ declare global {
   }
 }
 
-// Initialize Firebase app
 const app = initializeApp(environment.firebaseConfig);
 const auth = getAuth(app);
+
+interface User {
+  id: string;
+  email?: string;
+  phone?: string;
+  [key: string]: any;
+}
 
 @Component({
   selector: 'app-signin',
@@ -28,27 +33,26 @@ const auth = getAuth(app);
   imports: [CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
 })
 export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
-  loginMode: 'email' | 'phone' = 'email';
+  loginMode: 'email' | 'phone' = 'email'; // Toggle between login types
   emailForm: FormGroup;
   phoneForm: FormGroup;
   otpSent = false;
   confirmationResult: any;
   recaptchaVerifier?: RecaptchaVerifier;
 
-  private API_URL = 'http://localhost:3000/api/v1/users'; // 🔹 change to production URL
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private firebaseService: FirebaseService,
+    private toastCtrl: ToastController
   ) {
-    // Email form
+    // Email login form
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
 
-    // Phone form
+    // Phone login form
     this.phoneForm = this.fb.group({
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       otp: ['', Validators.required],
@@ -56,137 +60,77 @@ export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {}
-
-  ngAfterViewInit() {
-    setTimeout(() => this.initializeRecaptcha(), 500);
-  }
-
-  ngOnDestroy() {
-    if (window.recaptchaVerifier) {
-      window.recaptchaVerifier.clear();
-      window.recaptchaVerifier = undefined;
-    }
-  }
+  ngAfterViewInit() { setTimeout(() => this.initializeRecaptcha(), 500); }
+  ngOnDestroy() { if (window.recaptchaVerifier) { window.recaptchaVerifier.clear(); window.recaptchaVerifier = undefined; } }
 
   initializeRecaptcha() {
     if (!window.recaptchaVerifier) {
-      try {
-        this.recaptchaVerifier = new RecaptchaVerifier(
-          auth,
-          'recaptcha-container',
-          {
-            size: 'invisible',
-            callback: () => console.log('reCAPTCHA verified successfully'),
-          }
-        );
-
-        window.recaptchaVerifier = this.recaptchaVerifier;
-
-        this.recaptchaVerifier.render().then((widgetId) => {
-          console.log('reCAPTCHA rendered with widgetId:', widgetId);
-        });
-      } catch (error) {
-        console.error('Failed to initialize reCAPTCHA:', error);
-      }
+      this.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
+      window.recaptchaVerifier = this.recaptchaVerifier;
+      this.recaptchaVerifier.render();
     }
   }
 
-  // 🔹 Email login with backend
-onEmailLogin() {
-  if (this.emailForm.valid) {
-    const body = {
-      method: 'email',
-      email: this.emailForm.value.email,
-      password: this.emailForm.value.password
-    };
-
-    this.http.post(`${this.API_URL}/login`, body).subscribe({
-      next: (res: any) => {
-        console.log('Email login success:', res);
-        localStorage.setItem('token', res.token); // save JWT
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err) => {
-        console.error('Email login error:', err);
-        alert(err.error?.error || 'Login failed');
-      },
-    });
-  } else {
-    alert('Please enter valid email and password');
+  async showToast(message: string, color: string = 'primary') {
+    const toast = await this.toastCtrl.create({ message, duration: 2000, color });
+    toast.present();
   }
-}
 
+  // ------------------- Email Login -------------------
+  async onEmailLogin() {
+    if (!this.emailForm.valid) return this.showToast('Enter valid email & password', 'warning');
+    try {
+      const { email, password } = this.emailForm.value;
+      const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email.trim(), password.trim());
 
-  // 🔹 Send OTP via Firebase
+      // Fetch Firestore user info
+      const users: User[] = await this.firebaseService.getInformation('user');
+      const currentUser = users.find(u => u.email === email.trim());
+
+      if (!currentUser) return this.showToast('User data not found in Firestore', 'danger');
+
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      this.router.navigate(['/dashboard']);
+    } catch (error: any) {
+      console.error('Email login failed:', error);
+      this.showToast(error.message || 'Login failed', 'danger');
+    }
+  }
+
+  // ------------------- Phone OTP Login -------------------
   async onSendOtp() {
-    if (!this.phoneForm.get('phone')?.valid) {
-      alert('Enter a valid 10-digit phone number');
-      return;
-    }
-
+    if (!this.phoneForm.get('phone')?.valid) return this.showToast('Enter valid 10-digit phone', 'warning');
     try {
       const phoneNumber = '+91' + this.phoneForm.value.phone;
-      const appVerifier = window.recaptchaVerifier;
-
-      if (!appVerifier) {
-        alert('reCAPTCHA not initialized. Retrying...');
-        this.initializeRecaptcha();
-        return;
-      }
-
-      this.confirmationResult = await signInWithPhoneNumber(
-        auth,
-        phoneNumber,
-        appVerifier
-      );
+      this.confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier!);
       this.otpSent = true;
-      console.log('OTP sent successfully');
+      this.showToast('OTP sent', 'success');
     } catch (error: any) {
-      console.error('Error sending OTP:', error);
-      alert('Failed to send OTP: ' + error.message);
+      console.error('OTP send failed:', error);
+      this.showToast(error.message || 'OTP failed', 'danger');
     }
   }
 
-  // 🔹 Verify OTP with Firebase + Backend
-async onPhoneLogin() {
-  if (!this.phoneForm.valid || !this.otpSent) {
-    alert('Please enter a valid OTP');
-    return;
+  async onPhoneLogin() {
+    if (!this.phoneForm.valid || !this.otpSent) return this.showToast('Enter valid OTP', 'warning');
+    try {
+      const result = await this.confirmationResult.confirm(this.phoneForm.value.otp);
+      const phone = result.user.phoneNumber;
+
+      // Fetch Firestore user info by phone
+      const users: User[] = await this.firebaseService.getInformation('user');
+      const currentUser = users.find(u => u.phone === phone);
+
+      if (!currentUser) return this.showToast('User data not found in Firestore', 'danger');
+
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      this.router.navigate(['/dashboard']);
+    } catch (error: any) {
+      console.error('OTP verification failed:', error);
+      this.showToast(error.message || 'Invalid OTP', 'danger');
+    }
   }
 
-  try {
-    const result = await this.confirmationResult.confirm(this.phoneForm.value.otp);
-    const idToken = await result.user.getIdToken();
-
-    // ✅ send method + idToken to backend
-    const body = {
-      method: 'phone',
-      idToken: idToken
-    };
-
-    this.http.post(`${this.API_URL}/login`, body).subscribe({
-      next: (res: any) => {
-        console.log('Phone login success:', res);
-        localStorage.setItem('token', res.token);
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err) => {
-        console.error('Phone login error:', err);
-        alert(err.error?.error || 'Invalid OTP');
-      },
-    });
-  } catch (error: any) {
-    console.error('Error verifying OTP:', error);
-    alert('Invalid OTP: ' + error.message);
-  }
-}
-
-
-  navigateToSignUp() {
-    this.router.navigate(['/signup']);
-  }
-
-  navigateToForgotPassword() {
-    this.router.navigate(['/forgot-password']);
-  }
+  navigateToSignUp() { this.router.navigate(['/signup']); }
+  navigateToForgotPassword() { this.router.navigate(['/forgot-password']); }
 }

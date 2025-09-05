@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="signin-content" scroll-y="false">
   <div class="form-wrapper">
     <div class="signin-card">
-      <!-- Logo with favicon -->
+      <!-- Logo -->
       <div class="logo">
         <img src="assets/icon/favicon.png" alt="Jeevjantoo Logo" class="favicon-logo" />
         <h2 class="app-title">Sign In</h2>
@@ -13,7 +13,7 @@
         <ion-segment-button value="phone">Phone</ion-segment-button>
       </ion-segment>
 
-      <!-- Email Login Form -->
+      <!-- Email Login -->
       <form *ngIf="loginMode === 'email'" [formGroup]="emailForm" (ngSubmit)="onEmailLogin()">
         <ion-item>
           <ion-input formControlName="email" type="email" placeholder="Email"></ion-input>
@@ -21,27 +21,20 @@
         <ion-item>
           <ion-input formControlName="password" type="password" placeholder="Password"></ion-input>
         </ion-item>
-
-        <!-- Forgot Password link -->
         <p class="forgot-link" (click)="navigateToForgotPassword()">Forgot Password?</p>
-
-        <ion-button expand="block" class="submit-btn" type="submit" [disabled]="emailForm.invalid">
-          Sign In
-        </ion-button>
+        <ion-button expand="block" type="submit" [disabled]="emailForm.invalid">Sign In</ion-button>
       </form>
 
-      <!-- Phone OTP Login Form -->
+      <!-- Phone Login -->
       <form *ngIf="loginMode === 'phone'" [formGroup]="phoneForm">
         <ion-item>
           <ion-input formControlName="phone" type="tel" placeholder="Enter Phone Number"></ion-input>
         </ion-item>
-
         <ion-button expand="block" *ngIf="!otpSent" (click)="onSendOtp()">Send OTP</ion-button>
 
         <ion-item *ngIf="otpSent">
           <ion-input formControlName="otp" type="number" placeholder="Enter OTP"></ion-input>
         </ion-item>
-
         <ion-button expand="block" *ngIf="otpSent" (click)="onPhoneLogin()">Verify OTP</ion-button>
       </form>
 
@@ -51,6 +44,6 @@
     </div>
   </div>
 
-  <!-- Invisible reCAPTCHA for Firebase -->
+  <!-- Invisible reCAPTCHA -->
   <div id="recaptcha-container"></div>
 </ion-content>

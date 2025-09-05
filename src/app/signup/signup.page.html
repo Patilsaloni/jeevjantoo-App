@@ -16,6 +16,7 @@
           <p *ngIf="signupFormStep1.get('firstName')?.errors?.['required']">First Name is required.</p>
           <p *ngIf="signupFormStep1.get('firstName')?.errors?.['minlength']">Minimum 2 characters required.</p>
         </ion-text>
+        
 
         <ion-item>
           <ion-input formControlName="lastName" placeholder="Last Name"></ion-input>

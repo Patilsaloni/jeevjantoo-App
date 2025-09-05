@@ -3,7 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { FirebaseService } from '../../app/services/firebase.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -18,42 +18,30 @@ export class ForgotPasswordPage implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient // Inject HttpClient to call API
+    private firebaseService: FirebaseService
   ) {
+    // Only email is needed now
     this.forgotForm = this.fb.group({
-      username: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, { validator: this.passwordMatchValidator });
+      email: ['', [Validators.required, Validators.email]]
+    });
   }
 
   ngOnInit() {}
 
-  // Validator to check if newPassword and confirmPassword match
-  passwordMatchValidator(form: FormGroup) {
-    return form.get('newPassword')?.value === form.get('confirmPassword')?.value 
-      ? null : { mismatch: true };
-  }
+  async onSubmit() {
+    if (!this.forgotForm.valid) return;
 
-  onSubmit() {
-    if (this.forgotForm.valid) {
-      const payload = {
-        username: this.forgotForm.value.username,
-        newPassword: this.forgotForm.value.newPassword
-      };
+    const email = this.forgotForm.value.email;
 
-      this.http.post('http://localhost:3000/api/v1/users/reset-password', payload)
-        .subscribe({
-          next: (res: any) => {
-            console.log(res.message);
-            alert(res.message); // Show success message
-            this.navigateToSignIn(); // Redirect to sign-in page
-          },
-          error: (err) => {
-            console.error(err.error);
-            alert(err.error.error || "Something went wrong"); // Show error message
-          }
-        });
+    try {
+      // Trigger Firebase email password reset
+      await this.firebaseService.resetPasswordWithEmail(email);
+      alert('Password reset email sent! Please check your inbox.');
+      this.navigateToSignIn();
+
+    } catch (error: any) {
+      console.error(error);
+      alert(error.message || 'Failed to send reset email.');
     }
   }
 

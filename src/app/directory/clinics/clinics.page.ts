@@ -1,38 +1,65 @@
-// src/app/directory/clinics/clinics.page.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { DirectoryService } from 'src/app/services/directory.service';
 import { CommonModule } from '@angular/common';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-clinics',
   templateUrl: './clinics.page.html',
   styleUrls: ['./clinics.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [IonicModule, CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ClinicsPage implements OnInit {
   clinics: any[] = [];
   loading = true;
 
-  constructor(private directoryService: DirectoryService) {}
+  constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit() {
     this.loadClinics();
   }
 
-  loadClinics() {
-    this.loading = true;
-    this.directoryService.getClinics().subscribe({
-      next: (res: any) => {
-        this.clinics = res.data || [];
-        this.loading = false;
-      },
-      error: err => {
-        console.error('Error loading clinics', err);
-        this.clinics = [];
-        this.loading = false;
+  async loadClinics() {
+  this.loading = true;
+  try {
+    this.clinics = await this.firebaseService.getInformation('veterinaryClinic');
+    
+    this.clinics.forEach(clinic => {
+      // Convert lat/lng to numbers if possible
+      const lat = parseFloat(clinic.lat);
+      const lng = parseFloat(clinic.lng);
+
+      if (!isNaN(lat) && !isNaN(lng)) {
+        clinic.lat = lat;
+        clinic.lng = lng;
+        clinic.hasLocation = true;
+      } else {
+        clinic.hasLocation = false;
       }
     });
+
+  } catch (error) {
+    console.error('Error loading clinics:', error);
+    this.clinics = [];
+  } finally {
+    this.loading = false;
+  }
+}
+
+openMap(clinic: any) {
+  if (clinic.hasLocation) {
+    const mapUrl = `https://www.google.com/maps?q=${clinic.lat},${clinic.lng}`;
+    window.open(mapUrl, '_blank');
+  } else {
+    alert('Location not available for this clinic');
+  }
+}
+
+
+  formatTiming(timeFrom: string, timeTo: string) {
+    if (!timeFrom || !timeTo) return 'Timing not available';
+    return `${timeFrom} - ${timeTo}`;
   }
 }

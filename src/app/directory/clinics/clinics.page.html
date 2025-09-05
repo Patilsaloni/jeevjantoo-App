@@ -7,17 +7,32 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-spinner *ngIf="loading"></ion-spinner>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+
   <p *ngIf="!loading && clinics.length === 0">No clinics found</p>
 
-  <ion-list *ngIf="!loading && clinics.length > 0">
-    <ion-item *ngFor="let clinic of clinics">
-      <ion-label>
-        <h2>{{ clinic.name }}</h2>
-        <p>{{ clinic.type }} - {{ clinic.city }}</p>
-        <p>{{ clinic.timings }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  <!-- Use ng-container to combine ngIf and ngFor -->
+  <ng-container *ngIf="!loading && clinics.length > 0">
+    <ion-card *ngFor="let clinic of clinics" class="premium-card">
+      <ion-card-header>
+        <ion-card-title>{{ clinic.name }}</ion-card-title>
+        <ion-card-subtitle>{{ clinic.type }} - {{ clinic.city }}, {{ clinic.state }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Area:</strong> {{ clinic.area }}</p>
+        <p><strong>Pincode:</strong> {{ clinic.pincode }}</p>
+        <p><strong>Contact:</strong> {{ clinic.contact }}</p>
+        <p><strong>Timings:</strong> {{ formatTiming(clinic.timeFrom, clinic.timeTo) }}</p>
+        <p *ngIf="clinic.remarks"><strong>Remarks:</strong> {{ clinic.remarks }}</p>
+      </ion-card-content>
+
+      <ion-item lines="none">
+        <ion-button expand="block" color="secondary" (click)="openMap(clinic)">
+          View on Map
+        </ion-button>
+      </ion-item>
+    </ion-card>
+  </ng-container>
 </ion-content>

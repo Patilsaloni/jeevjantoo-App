@@ -53,4 +53,11 @@ export class FirebaseService {
       throw new Error(error.message || 'Failed to send reset email');
     }
   }
+
+async getCategoryCount(collectionName: string): Promise<number> {
+  const colRef = collection(this.db, collectionName);
+  const snapshot = await getDocs(colRef);
+  return snapshot.size; // number of documents in collection
+}
+
 }

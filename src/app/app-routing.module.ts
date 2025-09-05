@@ -96,6 +96,14 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: 'splash'
+  },  {
+    path: 'tabs',
+    loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)
+  },
+  {
+    path: 'animalcare',
+    loadChildren: () => import('./animalcare/animalcare.module').then( m => m.AnimalcarePageModule)
   }
+
 ];
 

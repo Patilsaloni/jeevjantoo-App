@@ -7,8 +7,8 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.page.html',
-  styleUrls: ['./dashboard.page.scss'],
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -16,7 +16,8 @@ import { Router } from '@angular/router';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class DashboardPage implements OnInit {
+export class HomePage implements OnInit {
+
   stats = [
     { title: 'Clinics', value: 0 },
     { title: 'NGOs', value: 0 },

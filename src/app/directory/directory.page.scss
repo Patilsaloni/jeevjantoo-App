@@ -1,0 +1,61 @@
+.directory-row {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.directory-col {
+  flex: 0 0 48%; // 2 cards per row
+  max-width: 48%;
+}
+
+ion-card {
+  width: 100%;
+  aspect-ratio: 1 / 1; // square
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  ion-icon {
+    font-size: 45px;
+    color: white;
+    margin-bottom: 5px;
+  }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+    text-align: center;
+  }
+
+  &.effect {
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+    }
+    animation: pulse 2.5s infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  }
+}

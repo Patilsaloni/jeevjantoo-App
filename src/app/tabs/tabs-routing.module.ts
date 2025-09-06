@@ -8,20 +8,21 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'dashboard',
+        path: 'home',
         loadChildren: () =>
-          import('../home/dashboard.module').then(m => m.DashboardPageModule),
+          import('../home/home.module').then(m => m.HomePageModule),
       },
+
       {
         path: 'adoption',
         loadChildren: () =>
           import('../adoption/adoption.module').then(m => m.AdoptionPageModule),
       },
       {
-        path: 'care',
-        loadChildren: () =>
-          import('../animalcare/animalcare.module').then(m => m.AnimalcarePageModule),
-      },
+  path: 'directory',
+  loadChildren: () =>
+    import('../directory/directory.module').then(m => m.DirectoryPageModule),
+},
       {
         path: 'profile',
         loadChildren: () =>
@@ -29,9 +30,10 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'dashboard', // ✅ relative, not /tabs/dashboard
+        redirectTo: 'home',
         pathMatch: 'full',
       },
+
     ],
   },
 ];

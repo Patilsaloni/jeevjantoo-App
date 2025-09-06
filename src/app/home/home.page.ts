@@ -149,8 +149,13 @@ export class HomePage implements OnInit {
   goToAdoptionDetail(pet: any) {
     this.router.navigate([`/adoption-detail/${pet.id}`]);
   }
+  
+  navigateToDirectory(){
+    this.router.navigate(['/tabs/directory']);
+  }
 
   goToTab(tab: string) {
     this.router.navigate([`/${tab}`]);
   }
+
 }

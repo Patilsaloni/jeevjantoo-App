@@ -1,25 +1,21 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { DirectoryPage } from '../app/directory/directory.page';
 
-export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'splash',
-    pathMatch: 'full'
-  },
+const routes: Routes = [
+  { path: '', redirectTo: 'splash', pathMatch: 'full' },
+
   {
     path: 'splash',
-    loadComponent: () =>
-      import('./splash/splash.page').then(m => m.SplashPage),
+    loadComponent: () => import('./splash/splash.page').then(m => m.SplashPage),
   },
   {
     path: 'signin',
-    loadComponent: () =>
-      import('./signin/signin.page').then(m => m.SigninPage),
+    loadComponent: () => import('./signin/signin.page').then(m => m.SigninPage),
   },
   {
     path: 'signup',
-    loadComponent: () =>
-      import('./signup/signup.page').then(m => m.SignupPage),
+    loadComponent: () => import('./signup/signup.page').then(m => m.SignupPage),
   },
   {
     path: 'forgot-password',
@@ -39,6 +35,11 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: 'splash',
-  },
+  }
 ];
 
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { useHash: false })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}

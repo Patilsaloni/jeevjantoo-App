@@ -90,7 +90,7 @@ export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
       if (!currentUser) return this.showToast('User data not found in Firestore', 'danger');
 
       localStorage.setItem('user', JSON.stringify(currentUser));
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/tabs/dashboard']);
     } catch (error: any) {
       console.error('Email login failed:', error);
       this.showToast(error.message || 'Login failed', 'danger');
@@ -124,7 +124,9 @@ export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
       if (!currentUser) return this.showToast('User data not found in Firestore', 'danger');
 
       localStorage.setItem('user', JSON.stringify(currentUser));
-      this.router.navigate(['/dashboard']);
+      // Inside SigninPage
+      this.router.navigate(['/tabs/dashboard']);
+
     } catch (error: any) {
       console.error('OTP verification failed:', error);
       this.showToast(error.message || 'Invalid OTP', 'danger');

@@ -4,21 +4,41 @@ import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
   {
-    path: 'tabs',
+    path: '',
     component: TabsPage,
     children: [
-      { path: 'home', loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardPageModule) },
-      { path: 'adoption', loadChildren: () => import('../adoption/adoption.module').then(m => m.AdoptionPageModule) },
-      { path: 'care', loadChildren: () => import('../animalcare/animalcare.module').then(m => m.AnimalcarePageModule) },
-      { path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule) },
-      { path: '', redirectTo: '/tabs/home', pathMatch: 'full' }
-    ]
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('../home/dashboard.module').then(m => m.DashboardPageModule),
+      },
+      {
+        path: 'adoption',
+        loadChildren: () =>
+          import('../adoption/adoption.module').then(m => m.AdoptionPageModule),
+      },
+      {
+        path: 'care',
+        loadChildren: () =>
+          import('../animalcare/animalcare.module').then(m => m.AnimalcarePageModule),
+      },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('../profile/profile.module').then(m => m.ProfilePageModule),
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard', // ✅ relative, not /tabs/dashboard
+        pathMatch: 'full',
+      },
+    ],
   },
-   { path: '', redirectTo: '/tabs/home', pathMatch: 'full' }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }

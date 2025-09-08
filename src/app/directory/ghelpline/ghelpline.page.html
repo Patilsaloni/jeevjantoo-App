@@ -1,61 +1,49 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar class="premium-toolbar">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Govt Helpline</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <!-- Search -->
+<ion-content class="premium-helpline">
+  <!-- Search with glass effect -->
   <ion-searchbar
     [(ngModel)]="searchTerm"
     (ionInput)="loadHelplines()"
-    placeholder="Search helpline...">
+    placeholder="Search helpline..."
+    class="glass-search">
   </ion-searchbar>
-
-  <!-- Filters -->
-  <div class="filters">
-    <ion-select placeholder="Select City" [(ngModel)]="selectedCity" (ionChange)="loadHelplines()">
-      <ion-select-option value="">All Cities</ion-select-option>
-      <ion-select-option value="Indore">Indore</ion-select-option>
-      <ion-select-option value="Bhopal">Bhopal</ion-select-option>
-    </ion-select>
-
-    <ion-select placeholder="Service" [(ngModel)]="selectedService" (ionChange)="loadHelplines()">
-      <ion-select-option value="">All Services</ion-select-option>
-      <ion-select-option value="Animal Rescue">Animal Rescue</ion-select-option>
-      <ion-select-option value="Police">Police</ion-select-option>
-      <ion-select-option value="Fire">Fire</ion-select-option>
-      <ion-select-option value="Women Helpline">Women Helpline</ion-select-option>
-    </ion-select>
-  </div>
 
   <!-- Loader -->
   <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
 
   <!-- Helpline List -->
-  <ion-card *ngFor="let h of helplines" class="helpline-card" (click)="openDetails(h)">
-    <ion-card-header class="card-header-gradient">
-      <ion-card-title>
-        <ion-icon name="call-outline"></ion-icon>
-        {{ h.helplineServices }}
-      </ion-card-title>
-      <ion-card-subtitle>
-        {{ h.state }}, {{ h.city }}, {{ h.pincode }}
-      </ion-card-subtitle>
-    </ion-card-header>
+  <div class="helpline-cards" *ngIf="!loading && helplines.length > 0">
+    <ion-card *ngFor="let h of helplines" class="helpline-card" (click)="openDetails(h)">
+      <ion-card-header class="card-header-gradient">
+        <ion-card-title>
+          <ion-icon name="call-outline"></ion-icon>
+          {{ h.helplineServices }}
+        </ion-card-title>
+      </ion-card-header>
 
-    <ion-card-content>
-      <p><ion-icon name="call-outline"></ion-icon> <strong>Contact:</strong> {{ h.contact }}</p>
-      <p *ngIf="h.timeFrom && h.timeTo">
-        <ion-icon name="time-outline"></ion-icon> <strong>Time:</strong> {{ h.timeFrom }} - {{ h.timeTo }}
-      </p>
-      <p *ngIf="h.govtBody"><ion-icon name="business-outline"></ion-icon> <strong>Government Body:</strong> {{ h.govtBody }}</p>
-      <p *ngIf="h.remarks"><ion-icon name="document-text-outline"></ion-icon> <strong>Remarks:</strong> {{ h.remarks }}</p>
-    </ion-card-content>
-  </ion-card>
+      <ion-card-content>
+        <p><ion-icon name="call-outline"></ion-icon> <strong>Contact:</strong> {{ h.contact }}</p>
+        <p *ngIf="h.timeFrom && h.timeTo">
+          <ion-icon name="time-outline"></ion-icon> <strong>Time:</strong> {{ h.timeFrom }} - {{ h.timeTo }}
+        </p>
+        <p *ngIf="h.govtBody"><ion-icon name="business-outline"></ion-icon> <strong>Government Body:</strong> {{ h.govtBody }}</p>
+        <p *ngIf="h.remarks"><ion-icon name="document-text-outline"></ion-icon> <strong>Remarks:</strong> {{ h.remarks }}</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
   <p *ngIf="!loading && helplines.length === 0" class="no-data">
     No helplines found.

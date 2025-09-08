@@ -1,79 +1,109 @@
-.helpline-card {
-  border-radius: 18px;
-  overflow: hidden;
-  margin-bottom: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Toolbar Gradient */
+.premium-toolbar {
+  background: linear-gradient(135deg, #9befe0 0%, #6eb9ff 100%);
+  color: #000;  /* make default text black */
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
+  ion-title,
+  ion-icon,
+  ion-button {
+    color: #000 !important;  /* force black */
+  }
+}
+
+
+/* Helpline Page Styling */
+.premium-helpline {
+  padding: 1rem;
+
+  ion-searchbar {
+    margin-bottom: 1rem;
+    --border-radius: 15px;
+    --background: #f0f4f8;
+    --color: #000; /* black text */
   }
 
-  .card-header-gradient {
-    background: linear-gradient(135deg, #ff7e1b, #ffb085);
-    color: white;
-    padding: 12px;
+  .filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
 
-    ion-card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
+    ion-select {
+      flex: 1;
+      --border-radius: 12px;
+      --background: #f0f4f8;
+      --color: #000; /* black text */
+    }
+  }
 
-      ion-icon {
-        margin-right: 10px;
-        font-size: 1.2rem;
+  .helpline-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .helpline-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-top: 5px solid #6eb9ff; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    .card-header-gradient {
+      background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+
+      ion-card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff; /* keep white text in header */
+      }
+
+      ion-card-subtitle {
+        font-size: 1rem;
+        color: #f0f0f0;
       }
     }
 
-    ion-card-subtitle {
-      font-size: 0.95rem;
-      opacity: 0.85;
-    }
-  }
+    ion-card-content {
+      padding: 0.8rem 1rem;
+      color: #000; /* default black text */
 
-  ion-card-content {
-    p {
-      margin: 6px 0;
-      font-size: 0.95rem;
-      color: #333;
-      display: flex;
-      align-items: center;
+      p {
+        margin: 0.3rem 0;
+        font-size: 0.95rem;
+        color: #000; /* black text */
 
-      ion-icon {
-        margin-right: 8px;
-        color: var(--ion-color-primary);
-        font-size: 1.1rem;
+        ion-icon {
+          vertical-align: middle;
+          margin-right: 0.3rem;
+          color: #6eb9ff;
+        }
       }
     }
   }
-}
 
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 12px 0;
-
-  ion-select {
-    flex: 1 1 48%;
-    border-radius: 12px;
-    --background: #f5f7fa;
-    --padding-start: 12px;
+  .spinner-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
   }
-}
 
-.spinner-center {
-  display: block;
-  margin: 60px auto;
-}
-
-.no-data {
-  text-align: center;
-  margin-top: 50px;
-  font-size: 1rem;
-  color: var(--ion-color-medium);
-  font-weight: 500;
+  .no-data {
+    text-align: center;
+    font-size: 1rem;
+    color: #000; /* black text */
+    margin-top: 40px;
+  }
 }

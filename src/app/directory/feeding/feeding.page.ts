@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IonicModule, ModalController, ActionSheetController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DirectoryService } from 'src/app/services/directory.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-feeding',
@@ -13,15 +13,16 @@ import { DirectoryService } from 'src/app/services/directory.service';
 })
 export class FeedingPage implements OnInit {
   feedingPoints: any[] = [];
+  filteredPoints: any[] = [];
   loading = true;
 
   // 🔹 Filters
   searchTerm = '';
   selectedCity: string = '';
-  selectedType: string = ''; // 'individual' | 'ngo' | ''
+  selectedType: string = ''; // 'individual' | 'community' | ''
 
   constructor(
-    private directoryService: DirectoryService,
+    private firebaseService: FirebaseService,
     private actionSheetCtrl: ActionSheetController
   ) {}
 
@@ -29,28 +30,40 @@ export class FeedingPage implements OnInit {
     this.loadFeedingPoints();
   }
 
-  // 🔹 Fetch feeding points
-  loadFeedingPoints() {
+  // 🔹 Fetch feeding points from Firebase
+  async loadFeedingPoints() {
     this.loading = true;
+    try {
+      this.feedingPoints = await this.firebaseService.getInformation('feeding');
+      this.applyFilters();
+    } catch (err) {
+      console.error('Error fetching feeding points:', err);
+      this.feedingPoints = [];
+      this.filteredPoints = [];
+    } finally {
+      this.loading = false;
+    }
+  }
 
-    const params: any = {
-      q: this.searchTerm,
-      page: 1,
-      pageSize: 20
-    };
-    if (this.selectedCity) params.location = this.selectedCity;
-    if (this.selectedType === 'individual') params.is_individual = true;
-    if (this.selectedType === 'ngo') params.is_individual = false;
+  // 🔹 Apply filters
+  applyFilters() {
+    this.filteredPoints = this.feedingPoints.filter(fp => {
+      const matchSearch = this.searchTerm
+        ? fp.name?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          fp.address?.toLowerCase().includes(this.searchTerm.toLowerCase())
+        : true;
 
-    this.directoryService.getFeeding(params).subscribe({
-      next: (res: any) => {
-        this.feedingPoints = res.data || [];
-        this.loading = false;
-      },
-      error: () => {
-        this.feedingPoints = [];
-        this.loading = false;
-      }
+      const matchCity = this.selectedCity
+        ? fp.address?.toLowerCase().includes(this.selectedCity.toLowerCase())
+        : true;
+
+      const matchType = this.selectedType
+        ? (this.selectedType === 'individual'
+            ? fp.individual === 'Y'
+            : fp.individual === 'N')
+        : true;
+
+      return matchSearch && matchCity && matchType;
     });
   }
 
@@ -110,6 +123,6 @@ export class FeedingPage implements OnInit {
   // 🚩 Report
   report(fp: any) {
     alert(`Report submitted for: ${fp.name}`);
-    // TODO: send to backend API if needed
+    // TODO: send to Firebase / backend queue if needed
   }
 }

@@ -1,14 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
-
+import { CommonModule } from '@angular/common'; // for *ngIf
 
 @Component({
   selector: 'app-insurance-detail-modal',
   templateUrl: './insurance-detail-modal.component.html',
-  styleUrls: ['./insurance-detail-modal.component.scss'],
-  standalone: true,
-  imports: [IonicModule, CommonModule]
+  standalone: true, // <- required for Angular 15+ standalone component
+  imports: [
+    IonicModule, // all Ionic components like ion-header, ion-button, ion-card
+    CommonModule  // for *ngIf and other common directives
+  ]
 })
 export class InsuranceDetailModal {
   @Input() insurance: any;
@@ -19,13 +20,25 @@ export class InsuranceDetailModal {
     this.modalCtrl.dismiss();
   }
 
-  // 📞 Call helpline
   callInsurance(contact: string) {
-    window.open(`tel:${contact}`, '_system');
+    window.open(`tel:${contact}`, '_self');
   }
 
-  // 📍 Open location in Google Maps
+  openWebsite(url: string) {
+    window.open(url, '_blank');
+  }
+
   openMap(lat: number, lng: number) {
-    window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_system');
+    window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+  }
+
+  sharePlan(insurance: any) {
+    const text = `Check out this insurance plan: ${insurance.providerName} - ${insurance.planName}`;
+    navigator.share ? navigator.share({ text }) : alert(text);
+  }
+
+  reportIssue(insurance: any) {
+    alert('Report submitted for admin review');
   }
 }
+  

@@ -1,44 +1,98 @@
-.ngo-card {
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  }
-
-  ion-card-title {
-    font-size: 1.3rem;
-    color: var(--ion-color-primary);
-    margin-bottom: 8px;
-  }
-
-  p {
-    margin: 4px 0;
-    font-size: 0.95rem;
-  }
-
-  .active {
-    color: green;
-    font-weight: bold;
-  }
-
-  .inactive {
-    color: red;
-    font-weight: bold;
-  }
+.premium-toolbar {
+  background: linear-gradient(135deg, #9befe0 0%, #6eb9ff 100%);
+  color: #fff;
 }
 
-.spinner-center {
-  display: block;
-  margin: 50% auto 0;
-}
+.premium-ngos {
+  padding: 1rem;
 
-.no-data {
-  text-align: center;
-  font-size: 1rem;
-  color: gray;
-  margin-top: 40px;
+  .ngo-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .ngo-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border-top: 5px solid #6eb9ff;
+
+    &:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    ion-card-header {
+      background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      ion-card-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #333;
+      }
+
+      ion-card-subtitle {
+        font-size: 1rem;
+        color: #555;
+      }
+
+      ion-button {
+        --color: #fff;
+        --background: transparent;
+      }
+    }
+
+    ion-card-content {
+      padding: 0.8rem 1rem;
+      flex-grow: 1;
+
+      p {
+        margin: 0.3rem 0;
+        font-size: 0.95rem;
+        color: #333;
+      }
+    }
+
+    ion-card-footer {
+      padding: 0.5rem 1rem;
+
+      ion-button {
+        border-radius: 12px;
+        --background: #6eb9ff;
+        --color: #fff;
+        --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: all 0.2s ease;
+
+        &:hover {
+          --background: #5aa0e0;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
+  .spinner-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
+
+  .no-data {
+    text-align: center;
+    font-size: 1.2rem;
+    color: gray;
+    margin-top: 2rem;
+  }
 }

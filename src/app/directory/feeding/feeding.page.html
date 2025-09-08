@@ -12,27 +12,27 @@
   <!-- 🔍 Search -->
   <ion-searchbar
     [(ngModel)]="searchTerm"
-    (ionInput)="loadFeedingPoints()"
+    (ionInput)="applyFilters()"
     placeholder="Search by name, food item, address"
     show-clear-button="always">
   </ion-searchbar>
 
   <!-- 🔽 Filters -->
   <div class="filters">
-    <ion-select interface="popover" placeholder="Select City" [(ngModel)]="selectedCity" (ionChange)="loadFeedingPoints()">
+    <ion-select interface="popover" placeholder="Select City" [(ngModel)]="selectedCity" (ionChange)="applyFilters()">
       <ion-select-option value="">All Cities</ion-select-option>
       <ion-select-option value="Indore">Indore</ion-select-option>
       <ion-select-option value="Bhopal">Bhopal</ion-select-option>
     </ion-select>
 
-    <ion-segment [(ngModel)]="selectedType" (ionChange)="loadFeedingPoints()">
+    <ion-segment [(ngModel)]="selectedType" (ionChange)="applyFilters()">
       <ion-segment-button value="">
         <ion-label>All</ion-label>
       </ion-segment-button>
       <ion-segment-button value="individual">
         <ion-label>Individual</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="ngo">
+      <ion-segment-button value="community">
         <ion-label>NGO</ion-label>
       </ion-segment-button>
     </ion-segment>
@@ -42,11 +42,11 @@
   <ion-spinner *ngIf="loading" class="spinner-center" color="warning"></ion-spinner>
 
   <!-- 📌 Feeding List -->
-  <ion-card *ngFor="let fp of feedingPoints" class="feeding-card">
+  <ion-card *ngFor="let fp of filteredPoints" class="feeding-card">
     <ion-card-header class="feeding-header">
       <ion-card-title>{{ fp.name }}</ion-card-title>
-      <ion-badge class="type-badge" [color]="fp.is_individual ? 'warning' : 'tertiary'">
-        {{ fp.is_individual ? 'Individual' : 'NGO' }}
+      <ion-badge class="type-badge" [color]="fp.individual === 'Y' ? 'warning' : 'tertiary'">
+        {{ fp.individual === 'Y' ? 'Individual' : 'NGO' }}
       </ion-badge>
     </ion-card-header>
 
@@ -65,11 +65,11 @@
       </div>
 
       <!-- Address -->
-      <p class="address">📍 {{ fp.address }}, {{ fp.city }}</p>
+      <p class="address">📍 {{ fp.address }}{{ fp.city ? ', ' + fp.city : '' }}</p>
 
       <!-- Food Items -->
       <div class="food-tags">
-        <ion-chip *ngFor="let item of fp.food_items">{{ item }}</ion-chip>
+        <ion-chip *ngFor="let item of (fp.food_items?.split(',') || [])">{{ item }}</ion-chip>
       </div>
 
       <!-- Actions -->
@@ -78,12 +78,16 @@
           (click)="openInMaps(fp.lat, fp.lng)">
           Open in Google Maps
         </ion-button>
+        <ion-button expand="block" fill="outline" class="solid-btn"
+          (click)="openActions(fp)">
+          More Actions
+        </ion-button>
       </div>
     </ion-card-content>
   </ion-card>
 
   <!-- ❌ No Data -->
-  <div *ngIf="!loading && feedingPoints.length === 0" class="no-data">
+  <div *ngIf="!loading && filteredPoints.length === 0" class="no-data">
     <ion-icon name="alert-circle-outline"></ion-icon>
     <p>No feeding points found.</p>
   </div>

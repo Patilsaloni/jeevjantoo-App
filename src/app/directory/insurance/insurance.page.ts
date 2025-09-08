@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FirebaseService } from '../../services/firebase.service';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DirectoryService } from 'src/app/services/directory.service';
-import { InsuranceDetailModal } from '../insurance/insurance-detail-modal/insurance-detail-modal.component';
+import { InsuranceDetailModal } from './insurance-detail-modal/insurance-detail-modal.component';
 
 @Component({
   selector: 'app-insurance',
@@ -14,44 +14,56 @@ import { InsuranceDetailModal } from '../insurance/insurance-detail-modal/insura
 })
 export class InsurancePage implements OnInit {
   insurances: any[] = [];
-  filters: any = {
-    q: '',
-    city: '',
-    coverage_type: [],
-    minSum: 0,
-    maxPremium: 0
-  };
+  filteredInsurances: any[] = [];
   loading = true;
 
+  filters = {
+    q: '',
+    city: ''
+  };
+
   constructor(
-    private directoryService: DirectoryService,
+    private firebaseService: FirebaseService,
     private modalCtrl: ModalController
   ) {}
 
-  ngOnInit() {
-    this.loadInsurances();
+  async ngOnInit() {
+    await this.loadInsurances();
   }
 
-  loadInsurances() {
+  async loadInsurances() {
     this.loading = true;
-    this.directoryService.getMedicalInsurance(this.filters).subscribe({
-      next: (res: any) => {
-        this.insurances = res.data || [];
-        this.loading = false;
-      },
-      error: () => {
-        this.insurances = [];
-        this.loading = false;
-      }
+    try {
+      this.insurances = await this.firebaseService.getInformation('medical-insurance');
+      this.applyFilters();
+    } catch (err) {
+      console.error('Error fetching insurance:', err);
+      this.insurances = [];
+      this.filteredInsurances = [];
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  applyFilters() {
+    this.filteredInsurances = this.insurances.filter(ins => {
+      const matchQuery = this.filters.q
+        ? ins.providerName?.toLowerCase().includes(this.filters.q.toLowerCase())
+        : true;
+
+      const matchCity = this.filters.city
+        ? ins.city?.toLowerCase().includes(this.filters.city.toLowerCase())
+        : true;
+
+      return matchQuery && matchCity;
     });
   }
 
   async openDetail(item: any) {
-  const modal = await this.modalCtrl.create({
-    component: InsuranceDetailModal,
-    componentProps: { insurance: item }
-  });
-  await modal.present();
-}
-
+    const modal = await this.modalCtrl.create({
+      component: InsuranceDetailModal,
+      componentProps: { insurance: item }
+    });
+    await modal.present();
+  }
 }

@@ -1,29 +1,38 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>NGOs</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="premium-ngos">
   <!-- Loader -->
   <ion-spinner *ngIf="loading" name="crescent" class="spinner-center"></ion-spinner>
 
   <!-- NGO List -->
-  <div *ngIf="!loading && ngos.length > 0">
+  <div class="ngo-cards" *ngIf="!loading && ngos.length > 0">
     <ion-card class="ngo-card" *ngFor="let ngo of ngos">
       <ion-card-header>
         <ion-card-title>{{ ngo.name }}</ion-card-title>
+        <ion-card-subtitle>{{ ngo.city }}, {{ ngo.state }}</ion-card-subtitle>
       </ion-card-header>
+
       <ion-card-content>
         <p><strong>Individual:</strong> {{ ngo.individual }}</p>
-        <p><strong>State:</strong> {{ ngo.state }}</p>
-        <p><strong>City:</strong> {{ ngo.city }}</p>
         <p><strong>Pincode:</strong> {{ ngo.pincode }}</p>
         <p><strong>Contact:</strong> {{ ngo.contact }}</p>
         <p *ngIf="ngo.lat && ngo.lng"><strong>Location:</strong> {{ ngo.lat }}, {{ ngo.lng }}</p>
       </ion-card-content>
+
       <ion-card-footer>
-        <ion-button expand="block" color="primary" (click)="trackNGO(ngo)">
+        <ion-button expand="block" color="secondary" (click)="trackNGO(ngo)">
           Track NGO
         </ion-button>
       </ion-card-footer>
@@ -31,9 +40,7 @@
   </div>
 
   <!-- No NGOs -->
-  <div *ngIf="!loading && ngos.length === 0" class="no-ngo">
-    <ion-text color="medium">
-      No NGOs available at the moment.
-    </ion-text>
+  <div *ngIf="!loading && ngos.length === 0" class="no-data">
+    No NGOs available at the moment.
   </div>
 </ion-content>

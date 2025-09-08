@@ -4,11 +4,11 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="insurance-content">
-  <!-- Filters -->
+<ion-content class="ion-padding">
+  <!-- Search & Filters -->
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Filters</ion-card-title>
+      <ion-card-title>Search & Filters</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-item>
@@ -17,13 +17,7 @@
       <ion-item>
         <ion-input placeholder="City" [(ngModel)]="filters.city"></ion-input>
       </ion-item>
-      <ion-item>
-        <ion-input type="number" placeholder="Min Sum Insured" [(ngModel)]="filters.minSum"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input type="number" placeholder="Max Premium" [(ngModel)]="filters.maxPremium"></ion-input>
-      </ion-item>
-      <ion-button expand="block" color="success" (click)="loadInsurances()">
+      <ion-button expand="block" color="success" (click)="applyFilters()">
         Apply Filters
       </ion-button>
     </ion-card-content>
@@ -31,18 +25,16 @@
 
   <!-- Insurance List -->
   <ion-list *ngIf="!loading">
-    <ion-card *ngFor="let ins of insurances" (click)="openDetail(ins)" class="insurance-card">
+    <ion-card *ngFor="let ins of filteredInsurances" (click)="openDetail(ins)">
       <ion-card-header>
-        <ion-card-title>{{ ins.provider }}</ion-card-title>
-        <ion-card-subtitle>{{ ins.plan }}</ion-card-subtitle>
+        <ion-card-title>{{ ins.providerName }}</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-chip color="primary" *ngFor="let c of ins.coverage?.split(',')">{{c}}</ion-chip>
-        <p><b>Sum Insured:</b> ₹{{ ins.sum_insured }}</p>
-        <p><b>Premium:</b> ₹{{ ins.premium }}</p>
-        <p><b>City:</b> {{ ins.city }}</p>
-        <ion-button color="tertiary" size="small">Buy</ion-button>
-        <ion-button color="warning" size="small">Claim Process</ion-button>
+        <p><b>Coverage:</b> {{ ins.coverage }}</p>
+        <p *ngIf="ins.remarks"><b>Remarks:</b> {{ ins.remarks }}</p>
+        <p *ngIf="ins.status"><b>Status:</b> {{ ins.status }}</p>
+        <p *ngIf="ins.website"><b>Website:</b> {{ ins.website }}</p>
+        <p *ngIf="ins.contact"><b>Contact:</b> {{ ins.contact }}</p>
       </ion-card-content>
     </ion-card>
   </ion-list>

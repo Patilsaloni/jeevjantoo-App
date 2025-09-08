@@ -15,18 +15,32 @@
   }
 
   .clinic-card {
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;                  // make card a flex container
+    flex-direction: column;         // vertical layout
+    justify-content: space-between; // push footer to bottom
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-top: 5px solid #6eb9ff; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      transform: translateY(-7px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    ion-card-header {
+      background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
     }
 
     ion-card-title {
-      font-size: 1.3rem;
-      font-weight: 600;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #333;
     }
 
     ion-card-subtitle {
@@ -35,6 +49,9 @@
     }
 
     .clinic-info {
+      padding: 0.8rem 1rem;
+      flex-grow: 1; // let content take up remaining space
+
       p {
         margin: 0.3rem 0;
         font-size: 0.95rem;
@@ -43,11 +60,46 @@
     }
 
     ion-card-footer {
-      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
 
       ion-button {
-        border-radius: 8px;
+        border-radius: 12px;
+        --background: #6eb9ff;
+        --color: #fff;
+        --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: all 0.2s ease;
+
+        &:hover {
+          --background: #5aa0e0;
+          transform: translateY(-2px);
+        }
       }
+    }
+  }
+
+  .spinner-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
+
+  .add-clinic-btn {
+    --background: #ff8d6b;
+    --color: #fff;
+    --box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      --background: #ff6f4a;
+      transform: translateY(-3px);
     }
   }
 }

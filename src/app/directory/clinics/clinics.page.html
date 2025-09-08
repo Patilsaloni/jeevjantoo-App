@@ -1,26 +1,34 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Clinics</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
+<ion-content [fullscreen]="true" class="premium-clinics">
   <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
 
-  <p *ngIf="!loading && clinics.length === 0">No clinics found</p>
+  <p *ngIf="!loading && clinics.length === 0" class="no-data">No clinics found</p>
 
-  <!-- Use ng-container to combine ngIf and ngFor -->
-  <ng-container *ngIf="!loading && clinics.length > 0">
-    <ion-card *ngFor="let clinic of clinics" class="premium-card">
+  <div class="clinic-cards" *ngIf="!loading && clinics.length > 0">
+    <ion-card 
+      *ngFor="let clinic of clinics" 
+      class="clinic-card"
+      [style.background]="clinic.color"> <!-- Dynamic background color -->
+      
       <ion-card-header>
         <ion-card-title>{{ clinic.name }}</ion-card-title>
         <ion-card-subtitle>{{ clinic.type }} - {{ clinic.city }}, {{ clinic.state }}</ion-card-subtitle>
       </ion-card-header>
 
-      <ion-card-content>
+      <ion-card-content class="clinic-info">
         <p><strong>Area:</strong> {{ clinic.area }}</p>
         <p><strong>Pincode:</strong> {{ clinic.pincode }}</p>
         <p><strong>Contact:</strong> {{ clinic.contact }}</p>
@@ -28,11 +36,12 @@
         <p *ngIf="clinic.remarks"><strong>Remarks:</strong> {{ clinic.remarks }}</p>
       </ion-card-content>
 
-      <ion-item lines="none">
+      <ion-card-footer>
         <ion-button expand="block" color="secondary" (click)="openMap(clinic)">
           View on Map
         </ion-button>
-      </ion-item>
+      </ion-card-footer>
     </ion-card>
-  </ng-container>
+  </div>
+
 </ion-content>

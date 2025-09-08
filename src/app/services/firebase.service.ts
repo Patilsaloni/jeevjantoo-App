@@ -60,4 +60,6 @@ async getCategoryCount(collectionName: string): Promise<number> {
   return snapshot.size; // number of documents in collection
 }
 
+
+
 }

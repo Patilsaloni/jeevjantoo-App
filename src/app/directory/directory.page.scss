@@ -1,15 +1,21 @@
-/* Row spacing */
-.directory-row {
-  --ion-grid-column-gap: 10px; /* gap between columns */
-  --ion-grid-row-gap: 10px;    /* gap between rows */
+/* Black Toolbar */
+.premium-toolbar {
+  // background: #000000; /* Black header */
+  color: #fff;
 }
 
-/* Card styling */
+/* Grid spacing */
+.directory-row {
+  --ion-grid-column-gap: 12px;
+  --ion-grid-row-gap: 12px;
+}
+
+/* Cards */
 ion-card {
-  width: 100%;               /* takes full width of column */
-  aspect-ratio: 1 / 1;       /* keeps card square */
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -24,33 +30,33 @@ ion-card-content {
 }
 
 ion-icon {
-  font-size: 45px;
-  color: white;
-  margin-bottom: 5px;
+  font-size: 50px;
+  color: #fff;
+  margin-bottom: 8px;
 }
 
 h3 {
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
   text-align: center;
+  margin: 0;
 }
 
-/* Hover effect */
+/* Hover Effect */
 ion-card.effect:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.25);
   animation: pulse 2.5s infinite;
 }
 
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
   }
   50% {
     transform: scale(1.03);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
   }
 }

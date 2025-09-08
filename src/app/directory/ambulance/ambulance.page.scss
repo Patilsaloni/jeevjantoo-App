@@ -1,69 +1,94 @@
-.ambulance-card {
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-  margin-bottom: 20px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  overflow: hidden; // prevent child elements from overflowing card
+.premium-ambulances {
+  padding: 1rem;
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  .ambulance-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
   }
 
-  ion-card-header {
-    ion-card-title {
-      font-size: 1.3rem;
-      font-weight: 700;
+  .ambulance-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    border-top: 5px solid #6eb9ff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    ion-card-header {
+      background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
       display: flex;
       align-items: center;
-      color: var(--ion-color-primary); // highlight title
+      justify-content: space-between;
+
+      ion-card-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      ion-card-subtitle {
+        font-size: 1rem;
+        color: #f0f0f0;
+      }
+
+      ion-button {
+        --color: #fff;
+        --background: transparent;
+      }
     }
 
-    ion-card-subtitle {
-      font-size: 0.95rem;
-      color: var(--ion-color-medium);
-      margin-top: 2px;
+    ion-card-content {
+      padding: 0.8rem 1rem;
+      flex-grow: 1;
+
+      p {
+        margin: 0.3rem 0;
+        font-size: 0.95rem;
+        color: #333;
+      }
+    }
+
+    ion-card-footer {
+      padding: 0.5rem 1rem;
+
+      ion-button {
+        border-radius: 12px;
+        --background: #6eb9ff;
+        --color: #fff;
+        --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: all 0.2s ease;
+
+        &:hover {
+          --background: #5aa0e0;
+          transform: translateY(-2px);
+        }
+      }
     }
   }
 
-  ion-card-content {
-    p {
-      margin: 6px 0;
-      font-size: 0.95rem;
-      color: #444;
-      display: flex;
-      align-items: center;
-    }
-
-    iframe,
-    app-map {
-      margin-top: 10px;
-      border-radius: 12px;
-      width: 100%;
-      height: 250px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-  }
-
-  ion-card-footer {
-    padding: 10px;
-    background: #f5f5f5;
+  .spinner-center {
     display: flex;
     justify-content: center;
     align-items: center;
-
-    ion-button {
-      font-weight: 600;
-      width: 100%;
-      border-radius: 12px;
-    }
+    height: 50vh;
   }
-}
 
-.no-ambulance {
-  text-align: center;
-  margin-top: 50px;
-  font-size: 1rem;
-  color: var(--ion-color-medium);
-  font-style: italic;
+  .no-data {
+    text-align: center;
+    font-size: 1.2rem;
+    color: gray;
+    margin-top: 2rem;
+  }
 }

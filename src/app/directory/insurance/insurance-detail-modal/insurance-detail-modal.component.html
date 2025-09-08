@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>{{ insurance?.name }}</ion-title>
+    <ion-title>{{ insurance?.providerName }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">Close</ion-button>
     </ion-buttons>
@@ -9,32 +9,57 @@
 
 <ion-content class="ion-padding">
 
-  <h2>{{ insurance?.name }}</h2>
-  <p>{{ insurance?.description }}</p>
+  <!-- Plan Info -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ insurance?.planName }}</ion-card-title>
+      <ion-card-subtitle>{{ insurance?.coverage }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p><b>Sum Insured:</b> ₹{{ insurance?.sum_insured }}</p>
+      <p><b>Premium:</b> ₹{{ insurance?.premium }}</p>
+      <p><b>Description:</b> {{ insurance?.description }}</p>
+    </ion-card-content>
+  </ion-card>
 
+  <!-- Actions -->
   <ion-list>
     <ion-item>
       <ion-label>
         <strong>Contact:</strong> {{ insurance?.contact }}
       </ion-label>
-      <ion-button 
-        fill="outline" 
-        color="primary" 
-        (click)="callInsurance(insurance.contact)">
+      <ion-button fill="outline" color="primary" (click)="callInsurance(insurance.contact)">
         Call
       </ion-button>
     </ion-item>
 
-    <ion-item>
+    <ion-item *ngIf="insurance?.website">
       <ion-label>
-        <strong>Location:</strong>
-        {{ insurance?.address }}
+        <strong>Website:</strong> {{ insurance?.website }}
       </ion-label>
-      <ion-button 
-        fill="outline" 
-        color="secondary" 
-        (click)="openMap(insurance.lat, insurance.lng)">
+      <ion-button fill="outline" color="secondary" (click)="openWebsite(insurance.website)">
+        Visit
+      </ion-button>
+    </ion-item>
+
+    <ion-item *ngIf="insurance?.lat && insurance?.lng">
+      <ion-label>
+        <strong>Location:</strong> {{ insurance?.address }}
+      </ion-label>
+      <ion-button fill="outline" color="tertiary" (click)="openMap(insurance.lat, insurance.lng)">
         View on Map
+      </ion-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-button expand="full" color="warning" (click)="sharePlan(insurance)">
+        Share Plan
+      </ion-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-button expand="full" color="danger" (click)="reportIssue(insurance)">
+        Report Incorrect Info
       </ion-button>
     </ion-item>
   </ion-list>

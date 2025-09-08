@@ -67,4 +67,9 @@ export class AmbulancePage implements OnInit {
     const query = `${amb.lat},${amb.lng}`;
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   }
+  saveAmbulance(amb: any) {
+  console.log('Ambulance saved:', amb);
+  // You can later implement saving to Firebase or localStorage
+}
+
 }

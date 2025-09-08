@@ -1,53 +1,70 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { DirectoryService } from 'src/app/services/directory.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
+
+interface Ambulance {
+  id: string;
+  name: string;
+  contact: string;
+  status: string;
+  vehicle_number: string;
+  governing_body: string;
+  area: string;
+  lat?: number;
+  lng?: number;
+}
 
 @Component({
   selector: 'app-ambulance',
   templateUrl: './ambulance.page.html',
   styleUrls: ['./ambulance.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule],  // ✅ must include IonicModule
-   schemas: [CUSTOM_ELEMENTS_SCHEMA] 
+  imports: [IonicModule, CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AmbulancePage implements OnInit {
-  ambulances: any[] = [];
+  ambulances: Ambulance[] = [];
   loading = true;
 
-  constructor(private directoryService: DirectoryService) { }
+  constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit() {
     this.loadAmbulances();
   }
 
-  loadAmbulances() {
+  async loadAmbulances() {
     this.loading = true;
-    this.directoryService.getAmbulances({ page: 1, pageSize: 10 }).subscribe({
-      next: (res: any) => {
-        this.ambulances = (res.data || [])
-          .filter((amb: any) => amb.status === 'active')
-          .map((amb: any) => ({
-            name: amb.name,
-            location: amb.location || 'Unknown',
-            contact: amb.contact || 'N/A',
-            status: amb.status,
-            vehicle_number: amb.vehicle_number || 'N/A',
-            governing_body: amb.governing_body || 'N/A',
-            area: amb.area || 'N/A',
-            distance: amb.distance ? amb.distance.toFixed(2) + ' km' : 'N/A'
-          }));
-        this.loading = false;
-      },
-      error: () => {
-        this.ambulances = [];
-        this.loading = false;
-      }
-    });
+    try {
+      // 🔹 Make sure the collection name matches the one in admin
+      const res = await this.firebaseService.getInformation('ambulance'); 
+      this.ambulances = res
+        .filter((amb: any) => amb.status?.toLowerCase() === 'active')
+        .map((amb: any) => ({
+          id: amb.id,
+          name: amb.name || 'Unknown',
+          contact: amb.contact || 'N/A',
+          status: amb.status || 'inactive',
+          vehicle_number: amb.vehicleNumber || 'N/A',
+          governing_body: amb.govtBody || 'N/A',
+          area: amb.area || 'N/A',
+          lat: amb.lat,
+          lng: amb.lng
+        }));
+    } catch (err) {
+      console.error('Failed to load ambulances:', err);
+      this.ambulances = [];
+    } finally {
+      this.loading = false;
+    }
   }
 
-  trackAmbulance(amb: any) {
-    const location = encodeURIComponent(amb.location);
-    window.open(`https://www.google.com/maps/search/?api=1&query=${location}`, '_blank');
+  trackAmbulance(amb: Ambulance) {
+    if (amb.lat == null || amb.lng == null) {
+      alert('Location not available');
+      return;
+    }
+    const query = `${amb.lat},${amb.lng}`;
+    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   }
 }

@@ -8,20 +8,21 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-spinner *ngIf="loading"></ion-spinner>
-  
-  <div *ngIf="!loading && ambulances.length">
+  <!-- Loader -->
+  <ion-spinner *ngIf="loading" name="crescent" class="spinner-center"></ion-spinner>
+
+  <!-- Ambulance List -->
+  <div *ngIf="!loading && ambulances.length > 0">
     <ion-card class="ambulance-card" *ngFor="let amb of ambulances">
       <ion-card-header>
         <ion-card-title>{{ amb.name }}</ion-card-title>
       </ion-card-header>
       
       <ion-card-content>
-        <p>Contact: {{ amb.contact }}</p>
-        adolescent
-        <p>Vehicle: {{ amb.vehicle_number }}</p>
-        <p>Authority: {{ amb.governing_body }}</p>
-        <p>Location: {{ amb.area }}</p>
+        <p><strong>Contact:</strong> {{ amb.contact }}</p>
+        <p><strong>Vehicle:</strong> {{ amb.vehicle_number }}</p>
+        <p><strong>Authority:</strong> {{ amb.governing_body }}</p>
+        <p><strong>Location:</strong> {{ amb.area }}</p>
       </ion-card-content>
       
       <ion-card-footer>
@@ -31,8 +32,11 @@
       </ion-card-footer>
     </ion-card>
   </div>
-  
-  <div class="no-ambulance" *ngIf="!loading && !ambulances.length">
-    No ambulances available at the moment.
+
+  <!-- No Ambulances -->
+  <div class="no-ambulance" *ngIf="!loading && ambulances.length === 0">
+    <ion-text color="medium">
+      No ambulances available at the moment.
+    </ion-text>
   </div>
 </ion-content>

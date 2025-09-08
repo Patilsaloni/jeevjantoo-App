@@ -9,7 +9,11 @@
 
 <ion-content class="ion-padding">
   <!-- Search -->
-  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="loadHelplines()" placeholder="Search helpline..."></ion-searchbar>
+  <ion-searchbar
+    [(ngModel)]="searchTerm"
+    (ionInput)="loadHelplines()"
+    placeholder="Search helpline...">
+  </ion-searchbar>
 
   <!-- Filters -->
   <div class="filters">
@@ -20,7 +24,7 @@
     </ion-select>
 
     <ion-select placeholder="Service" [(ngModel)]="selectedService" (ionChange)="loadHelplines()">
-      <ion-select-option value="">All</ion-select-option>
+      <ion-select-option value="">All Services</ion-select-option>
       <ion-select-option value="Animal Rescue">Animal Rescue</ion-select-option>
       <ion-select-option value="Police">Police</ion-select-option>
       <ion-select-option value="Fire">Fire</ion-select-option>
@@ -36,15 +40,20 @@
     <ion-card-header class="card-header-gradient">
       <ion-card-title>
         <ion-icon name="call-outline"></ion-icon>
-        {{ h.service }}
+        {{ h.helplineServices }}
       </ion-card-title>
-      <ion-card-subtitle>{{ h.city }}</ion-card-subtitle>
+      <ion-card-subtitle>
+        {{ h.state }}, {{ h.city }}, {{ h.pincode }}
+      </ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
       <p><ion-icon name="call-outline"></ion-icon> <strong>Contact:</strong> {{ h.contact }}</p>
-      <p *ngIf="h.working_hours"><ion-icon name="time-outline"></ion-icon> <strong>Hours:</strong> {{ h.working_hours }}</p>
-      <p *ngIf="h.distance"><ion-icon name="navigate-outline"></ion-icon> <strong>Distance:</strong> {{ h.distance.toFixed(1) }} km</p>
+      <p *ngIf="h.timeFrom && h.timeTo">
+        <ion-icon name="time-outline"></ion-icon> <strong>Time:</strong> {{ h.timeFrom }} - {{ h.timeTo }}
+      </p>
+      <p *ngIf="h.govtBody"><ion-icon name="business-outline"></ion-icon> <strong>Government Body:</strong> {{ h.govtBody }}</p>
+      <p *ngIf="h.remarks"><ion-icon name="document-text-outline"></ion-icon> <strong>Remarks:</strong> {{ h.remarks }}</p>
     </ion-card-content>
   </ion-card>
 

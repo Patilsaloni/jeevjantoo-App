@@ -1,47 +1,77 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { DirectoryService } from 'src/app/services/directory.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
+
+interface Boarding {
+  id: string;
+  name: string;
+  contact: string;
+  state: string;
+  city: string;
+  area: string;
+  pincode: string;
+  timeFrom: string;
+  timeTo: string;
+  lat: number;
+  lng: number;
+  status: string;
+}
 
 @Component({
   selector: 'app-boarding',
   templateUrl: './boarding.page.html',
   styleUrls: ['./boarding.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [IonicModule, CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class BoardingPage implements OnInit {
 
-  boardingSpas: any[] = [];
+  boardingSpas: Boarding[] = [];
   loading = true;
 
-  constructor(private directoryService: DirectoryService) { }
+  constructor(private firebaseService: FirebaseService) { }
 
   ngOnInit() {
-    this.loadBoardingSpa();
+    this.loadBoardings();
   }
 
-  loadBoardingSpa() {
+  async loadBoardings() {
     this.loading = true;
-
-    this.directoryService.getBoardingSpa({ page: 1, pageSize: 10 }).subscribe({
-      next: (res: any) => {
-        this.boardingSpas = res.data || [];
-        this.loading = false;
-      },
-      error: () => {
-        this.boardingSpas = [];
-        this.loading = false;
-      }
-    });
-  }
-
-  trackLocation(spa: any) {
-    if (spa.lat && spa.lng) {
-      const url = `https://www.google.com/maps?q=${spa.lat},${spa.lng}`;
-      window.open(url, "_blank");
-    } else {
-      alert("Location not available");
+    try {
+      const res = await this.firebaseService.getInformation('boardings'); // Firestore collection
+      this.boardingSpas = res
+        .filter((b: any) => b.status?.toLowerCase() === 'active')
+        .map((b: any) => ({
+          id: b.id,
+          name: b.name || 'Unknown',
+          contact: b.contact || 'N/A',
+          state: b.state || 'N/A',
+          city: b.city || 'N/A',
+          area: b.area || 'N/A',
+          pincode: b.pincode || 'N/A',
+          timeFrom: b.timeFrom || 'N/A',
+          timeTo: b.timeTo || 'N/A',
+          lat: b.lat ?? 0,
+          lng: b.lng ?? 0,
+          status: b.status || 'inactive',
+        }));
+    } catch (err) {
+      console.error('Failed to load boardings:', err);
+      this.boardingSpas = [];
+    } finally {
+      this.loading = false;
     }
   }
+
+  trackLocation(spa: Boarding) {
+    if (!spa.lat || !spa.lng) {
+      alert("Location not available");
+      return;
+    }
+    const url = `https://www.google.com/maps/search/?api=1&query=${spa.lat},${spa.lng}`;
+    window.open(url, "_blank");
+  }
+
 }

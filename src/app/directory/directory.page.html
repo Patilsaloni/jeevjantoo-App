@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Boarding & Spa</ion-title>
+    <ion-title>Directory</ion-title>
     <ion-buttons slot="end">
       <ion-button>
         <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
@@ -16,7 +16,10 @@
   <ion-grid>
     <ion-row class="directory-row">
       <ion-col *ngFor="let item of directoryItems" size="6">
-        <ion-card class="effect" (click)="goToDirectoryDetail(item)" [ngStyle]="{'background': item.color}">
+        <ion-card 
+          class="effect"
+          (click)="goToDirectoryDetail(item)"
+          [ngStyle]="{'background': item.color}">
           <ion-card-content class="ion-text-center">
             <ion-icon [name]="item.icon" size="large"></ion-icon>
             <h3>{{ item.label }}</h3>

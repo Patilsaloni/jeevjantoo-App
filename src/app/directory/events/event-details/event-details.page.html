@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/directory/events"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Event Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="premium-event-details" [fullscreen]="true">
+  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+
+  <div *ngIf="!loading && event">
+    <ion-card class="event-card" [style.border-top-color]="event.color || '#6eb9ff'">
+      <ion-card-header>
+        <ion-card-title>{{ event.name }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content class="event-info">
+        <p><strong>Time:</strong> {{ event.timeFrom }}</p>
+        <p><strong>Location:</strong> {{ event.area }}</p>
+        <p><strong>Contact Person:</strong> {{ event.contactPerson }}</p>
+        <p *ngIf="event.remarks"><strong>Remarks:</strong> {{ event.remarks }}</p>
+      </ion-card-content>
+
+      <ion-card-footer>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="call-btn" (click)="callOrganizer()">
+                <ion-icon slot="start" name="call-outline"></ion-icon> Call
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="whatsapp-btn" (click)="openWhatsApp()">
+                <ion-icon slot="start" name="logo-whatsapp"></ion-icon> WhatsApp
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="map-btn" (click)="openMap()">
+                <ion-icon slot="start" name="navigate-outline"></ion-icon> Map
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="save-btn" (click)="saveEvent()">
+                <ion-icon slot="start" name="bookmark-outline"></ion-icon> Save
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="share-btn" (click)="shareEvent()">
+                <ion-icon slot="start" name="share-social-outline"></ion-icon> Share
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="report-btn" (click)="reportEvent()">
+                <ion-icon slot="start" name="alert-circle-outline"></ion-icon> Report
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-footer>
+    </ion-card>
+  </div>
+
+  <p *ngIf="!loading && !event" class="no-data">Event not found.</p>
+</ion-content>

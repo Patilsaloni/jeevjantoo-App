@@ -7,7 +7,11 @@ const routes: Routes = [
   {
     path: '',
     component: FeedingPage
+  },  {
+    path: 'feeding-details',
+    loadChildren: () => import('./feeding-details/feeding-details.module').then( m => m.FeedingDetailsPageModule)
   }
+
 ];
 
 @NgModule({

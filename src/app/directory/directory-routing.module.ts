@@ -14,11 +14,13 @@ const routes: Routes = [
       // Directory Main
       { path: 'directory', loadComponent: () => import('../directory/directory.page').then(m => m.DirectoryPage) },
 
-      // Directory Children (✅ sab yaha add karo)
+      // Directory Children
       { path: 'directory/clinics', loadComponent: () => import('../directory/clinics/clinics.page').then(m => m.ClinicsPage) },
       { path: 'directory/ngos', loadComponent: () => import('../directory/ngos/ngos.page').then(m => m.NgosPage) },
       { path: 'directory/events', loadComponent: () => import('../directory/events/events.page').then(m => m.EventsPage) },
+      { path: 'directory/events/:id', loadComponent: () => import('../directory/events/event-details/event-details.page').then(m => m.EventDetailsPage) }, // ✅ detail page
       { path: 'directory/abc', loadComponent: () => import('../directory/abc/abc.page').then(m => m.AbcPage) },
+      { path: 'directory/abc/:id', loadComponent: () => import('../directory/abc/abc-details/abc-details.page').then(m => m.AbcDetailsPage) }, // ✅ detail page
       { path: 'directory/ambulance', loadComponent: () => import('../directory/ambulance/ambulance.page').then(m => m.AmbulancePage) },
       { path: 'directory/boarding', loadComponent: () => import('../directory/boarding/boarding.page').then(m => m.BoardingPage) },
       { path: 'directory/ghelpline', loadComponent: () => import('../directory/ghelpline/ghelpline.page').then(m => m.GhelplinePage) },
@@ -31,3 +33,4 @@ const routes: Routes = [
     ]
   }
 ];
+

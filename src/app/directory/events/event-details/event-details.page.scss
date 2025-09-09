@@ -1,0 +1,71 @@
+.premium-event-details {
+  padding: 1rem;
+
+  .event-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-top: 5px solid #6eb9ff;
+
+    ion-card-header {
+      background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+      padding: 1rem;
+
+      ion-card-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #333;
+      }
+
+      ion-card-subtitle {
+        font-size: 1rem;
+        color: #555;
+      }
+    }
+
+    .event-info {
+      padding: 0.8rem 1rem;
+
+      p {
+        margin: 0.3rem 0;
+        font-size: 0.95rem;
+        color: #333;
+      }
+    }
+
+    ion-card-footer {
+      padding: 0.5rem 1rem;
+
+      ion-button {
+        width: 100%;
+        border-radius: 12px;
+        font-weight: 600;
+        color: #fff;
+        transition: all 0.2s ease;
+
+        &:hover { transform: translateY(-2px); }
+
+        &.call-btn { --background: #28a745; ion-icon { color: #d4edda; } }
+        &.whatsapp-btn { --background: #25d366; ion-icon { color: #dcf8c6; } }
+        &.map-btn { --background: #007bff; ion-icon { color: #cce5ff; } }
+        &.save-btn { --background: #ffc107; ion-icon { color: #fff3cd; } }
+        &.share-btn { --background: #6c757d; ion-icon { color: #e2e3e5; } }
+        &.report-btn { --background: #dc3545; ion-icon { color: #f8d7da; } }
+      }
+    }
+  }
+
+  .spinner-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+  }
+
+  .no-data {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    color: gray;
+  }
+}

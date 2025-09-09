@@ -1,0 +1,56 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="premium-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>ABC Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-abc-details">
+  <ion-spinner *ngIf="loading" class="spinner-center" name="dots"></ion-spinner>
+
+  <div *ngIf="!loading && abc">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ abc.type }}  {{ abc.location }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Location:</strong> {{ abc.city }}, {{ abc.state }}, {{ abc.pincode }}</p>
+        <p><strong>Type:</strong> {{ abc.type }}</p>
+        <p><strong>Person In-Charge:</strong> {{ abc.personIncharge }}</p>
+        <p><strong>Contact:</strong> {{ abc.contactNumber }}</p>
+        <p *ngIf="abc.remarks"><strong>Remarks:</strong> {{ abc.remarks }}</p>
+      </ion-card-content>
+
+      <ion-card-footer>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" color="primary" (click)="callPerson()">Call</ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="success" (click)="whatsappPerson()">WhatsApp</ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" color="tertiary" (click)="openMap()">Map</ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="warning" (click)="saveRecord()">Save</ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-button expand="block" color="danger" (click)="reportRecord()">Report Issue</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-footer>
+    </ion-card>
+  </div>
+
+  <p *ngIf="!loading && !abc" class="no-data">Record not found.</p>
+</ion-content>

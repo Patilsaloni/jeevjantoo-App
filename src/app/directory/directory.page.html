@@ -12,10 +12,11 @@
   </ion-toolbar>
 </ion-header>
 
+
 <ion-content class="directory-content ion-padding">
-  <ion-grid>
-    <ion-row class="directory-row">
-      <ion-col *ngFor="let item of directoryItems" size="6">
+  <ion-grid class="directory-grid">
+    <ion-row class="directory-row" justify-content-center>
+      <ion-col *ngFor="let item of directoryItems" size="6" size-md="4" size-lg="3">
         <ion-card 
           class="effect"
           (click)="goToDirectoryDetail(item)"

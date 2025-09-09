@@ -9,11 +9,9 @@ const routes: Routes = [
     children: [
       { path: 'home', loadChildren: () => import('../home/home.module').then(m => m.HomePageModule) },
       { path: 'adoption', loadChildren: () => import('../adoption/adoption.module').then(m => m.AdoptionPageModule) },
-      
-      // Directory main page (cards page)
-      { path: 'directory', loadComponent: () => import('../directory/directory.page').then(m => m.DirectoryPage) },
 
-      // Directory detail pages (sab /tabs ke andar children)
+      // Directory main pages
+      { path: 'directory', loadComponent: () => import('../directory/directory.page').then(m => m.DirectoryPage) },
       { path: 'directory/clinics', loadComponent: () => import('../directory/clinics/clinics.page').then(m => m.ClinicsPage) },
       { path: 'directory/ngos', loadComponent: () => import('../directory/ngos/ngos.page').then(m => m.NgosPage) },
       { path: 'directory/events', loadComponent: () => import('../directory/events/events.page').then(m => m.EventsPage) },
@@ -24,12 +22,24 @@ const routes: Routes = [
       { path: 'directory/feeding', loadComponent: () => import('../directory/feeding/feeding.page').then(m => m.FeedingPage) },
       { path: 'directory/insurance', loadComponent: () => import('../directory/insurance/insurance.page').then(m => m.InsurancePage) },
 
+      // Directory detail pages (parameterized)
+      { path: 'directory/abc/:id', loadComponent: () => import('../directory/abc/abc-details/abc-details.page').then(m => m.AbcDetailsPage) },
+      { path: 'directory/ambulance/:id', loadComponent: () => import('../directory/ambulance/ambulance-details/ambulance-details.page').then(m => m.AmbulanceDetailsPage) },
+      { path: 'directory/boarding/:id', loadComponent: () => import('../directory/boarding/boarding-details/boarding-details.page').then(m => m.BoardingDetailsPage) },
+      { path: 'directory/clinics/:id', loadComponent: () => import('../directory/clinics/clinics-details/clinics-details.page').then(m => m.ClinicsDetailsPage) },
+      { path: 'directory/events/:id', loadComponent: () => import('../directory/events/event-details/event-details.page').then(m => m.EventDetailsPage) },
+      { path: 'directory/feeding/:id', loadComponent: () => import('../directory/feeding/feeding-details/feeding-details.page').then(m => m.FeedingDetailsPage) },
+      { path: 'directory/insurance/:id', loadComponent: () => import('../directory/insurance/insurance-details/insurance-details.page').then(m => m.InsuranceDetailsPage) },
+      { path: 'directory/ngos/:id', loadComponent: () => import('../directory/ngos/ngos-details/ngos-details.page').then(m => m.NgosDetailsPage) },
+
       { path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule) },
 
-      { path: '', redirectTo: 'home', pathMatch: 'full' } // default tab
+      { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
   }
 ];
+
+
 
 
 @NgModule({

@@ -1,0 +1,119 @@
+.premium-clinic-details {
+  padding: 1rem;
+
+  .clinic-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid #6eb9ff;
+
+    ion-card-header {
+      background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+      padding: 1rem;
+    }
+
+    ion-card-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    ion-card-subtitle {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .clinic-info {
+      padding: 1rem;
+
+      p {
+        margin: 0.4rem 0;
+        font-size: 1rem;
+        color: #333;
+      }
+    }
+
+    .card-footer {
+      padding: 0.8rem 1rem;
+      background: #f9f9f9;
+      border-top: 1px solid #eee;
+
+      ion-grid {
+        ion-row {
+          ion-col {
+            padding: 0.3rem;
+
+            ion-button {
+              width: 100%;
+              height: 45px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              border-radius: 15px;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+              font-size: 0.9rem;
+              font-weight: 600;
+              color: #fff;
+              transition: transform 0.2s, box-shadow 0.2s;
+
+              ion-icon {
+                margin-right: 0.4rem;
+                font-size: 1.2rem;
+                vertical-align: middle;
+              }
+
+              &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+              }
+
+              &.map-btn {
+                --background: #007bff;
+                ion-icon { color: #cce5ff; }
+              }
+
+              &.call-btn {
+                --background: #28a745;
+                ion-icon { color: #d4edda; }
+              }
+
+              &.whatsapp-btn {
+                --background: #25d366;
+                ion-icon { color: #dcf8c6; }
+              }
+
+              &.save-btn {
+                --background: #ffc107;
+                ion-icon { color: #fff3cd; }
+              }
+
+              &.share-btn {
+                --background: #6c757d;
+                ion-icon { color: #e2e3e5; }
+              }
+
+              &.report-btn {
+                --background: #dc3545;
+                ion-icon { color: #f8d7da; }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .spinner-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+  }
+
+  .no-data {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    color: gray;
+  }
+}

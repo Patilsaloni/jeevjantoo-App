@@ -1,12 +1,21 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Medical Insurance</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <!-- Search & Filters -->
-  <ion-card>
+<ion-content [fullscreen]="true" class="insurance-page">
+
+  <!-- 🔍 Search & Filters -->
+  <ion-card class="filter-card">
     <ion-card-header>
       <ion-card-title>Search & Filters</ion-card-title>
     </ion-card-header>
@@ -17,27 +26,50 @@
       <ion-item>
         <ion-input placeholder="City" [(ngModel)]="filters.city"></ion-input>
       </ion-item>
-      <ion-button expand="block" color="success" (click)="applyFilters()">
+      <ion-button expand="block" color="secondary" (click)="applyFilters()">
         Apply Filters
       </ion-button>
     </ion-card-content>
   </ion-card>
 
-  <!-- Insurance List -->
-  <ion-list *ngIf="!loading">
-    <ion-card *ngFor="let ins of filteredInsurances" (click)="openDetail(ins)">
+  <!-- 🔄 Loading Spinner -->
+  <ion-spinner *ngIf="loading" class="spinner-center" name="crescent"></ion-spinner>
+
+  <!-- 📌 Insurance List -->
+  <div *ngIf="!loading && filteredInsurances.length > 0" class="insurance-cards">
+    <ion-card *ngFor="let ins of filteredInsurances" class="insurance-card">
+      
       <ion-card-header>
         <ion-card-title>{{ ins.providerName }}</ion-card-title>
+        <ion-card-subtitle *ngIf="ins.status">{{ ins.status }}</ion-card-subtitle>
       </ion-card-header>
+
       <ion-card-content>
-        <p><b>Coverage:</b> {{ ins.coverage }}</p>
+        <p *ngIf="ins.coverage"><b>Coverage:</b> {{ ins.coverage }}</p>
         <p *ngIf="ins.remarks"><b>Remarks:</b> {{ ins.remarks }}</p>
-        <p *ngIf="ins.status"><b>Status:</b> {{ ins.status }}</p>
-        <p *ngIf="ins.website"><b>Website:</b> {{ ins.website }}</p>
+        <p *ngIf="ins.website"><b>Website:</b> <a href="{{ ins.website }}" target="_blank">{{ ins.website }}</a></p>
         <p *ngIf="ins.contact"><b>Contact:</b> {{ ins.contact }}</p>
       </ion-card-content>
-    </ion-card>
-  </ion-list>
 
-  <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+      <ion-card-footer>
+        <ion-grid>
+          <ion-row>
+            <ion-col >
+              <ion-button expand="block" color="secondary" *ngIf="ins.website" (click)="openWebsite(ins.website)">
+                Website
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-footer>
+
+    </ion-card>
+  </div>
+
+  <!-- ❌ No Data -->
+  <div *ngIf="!loading && filteredInsurances.length === 0" class="no-data">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>No insurance providers found.</p>
+  </div>
+
 </ion-content>

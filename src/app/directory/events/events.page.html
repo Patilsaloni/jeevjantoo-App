@@ -1,9 +1,71 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
     <ion-title>Events</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <p>This is the Events page.</p>
+<ion-content [fullscreen]="true" class="premium-events">
+  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+
+  <ion-toolbar>
+    <ion-searchbar
+      placeholder="Search by name or place"
+      (ionInput)="filterEvents($event)">
+    </ion-searchbar>
+  </ion-toolbar>
+
+  <p *ngIf="!loading && filteredEvents.length === 0" class="no-data">No events available</p>
+
+  <div class="event-cards" *ngIf="!loading && filteredEvents.length > 0">
+    <ion-card *ngFor="let ev of filteredEvents" [style.border-top-color]="ev.color || '#6eb9ff'">
+      <ion-card-header>
+        <ion-card-title>{{ ev.name }}</ion-card-title>
+        <ion-card-subtitle>
+          {{ convertTo12HourFormat(ev.timeFrom) }} - {{ convertTo12HourFormat(ev.timeTo) }}
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content class="event-info">
+        <p><strong>Place:</strong> {{ ev.area }}</p>
+        <p><strong>Contact:</strong> {{ ev.contactPerson }}</p>
+      </ion-card-content>
+
+      <ion-card-footer>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" fill="outline" (click)="viewDetails(ev)">
+                View Details
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="success" (click)="openMap(ev)">
+                View on Map
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-footer>
+    </ion-card>
+  </div>
+
+  <!-- Map View -->
+  <div *ngIf="isMapView && filteredEvents.length > 0" class="map-container">
+    <google-map [center]="{lat: defaultLat, lng: defaultLng}" [zoom]="12" height="400px" width="100%">
+      <map-marker *ngFor="let ev of filteredEvents"
+        [position]="{lat: ev.lat, lng: ev.lng}"
+        (mapClick)="viewDetails(ev)">
+      </map-marker>
+    </google-map>
+  </div>
 </ion-content>

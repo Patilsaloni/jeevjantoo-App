@@ -2,6 +2,10 @@ import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule, AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-clinics',
@@ -15,10 +19,11 @@ export class ClinicsPage implements OnInit {
   clinics: any[] = [];
   loading = true;
 
-  constructor(
-    private firebaseService: FirebaseService,
-    private alertCtrl: AlertController
-  ) {}
+ constructor(
+  private firebaseService: FirebaseService,
+  private alertCtrl: AlertController,
+  private router: Router
+) {}
 
   ngOnInit() {
     this.loadClinics();
@@ -96,4 +101,8 @@ export class ClinicsPage implements OnInit {
     if (!timeFrom || !timeTo) return 'Timing not available';
     return `${timeFrom} - ${timeTo}`;
   }
+
+  viewDetails(clinic: any) {
+  this.router.navigate([`/tabs/directory/clinics/${clinic.id}`]);
+}
 }

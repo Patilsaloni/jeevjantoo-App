@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/directory/ngos"></ion-back-button>
+    </ion-buttons>
+    <ion-title>NGO Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="premium-ngo-details">
+
+  <!-- Loader -->
+  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+
+  <!-- NGO Details -->
+  <div *ngIf="!loading && ngo">
+    <ion-card class="ngo-card">
+      <ion-card-header>
+        <ion-card-title>{{ ngo.name }}</ion-card-title>
+        <ion-card-subtitle>{{ ngo.city }}, {{ ngo.state }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content class="ngo-info">
+        <p><strong>Individual:</strong> {{ ngo.individual }}</p>
+        <p><strong>Address:</strong> {{ ngo.city }}, {{ ngo.state }} - {{ ngo.pincode }}</p>
+        <p><strong>Contact:</strong> {{ ngo.contact }}</p>
+        <p *ngIf="ngo.remarks"><strong>Remarks:</strong> {{ ngo.remarks }}</p>
+      </ion-card-content>
+
+      <!-- Footer with all actions -->
+      <div class="card-footer">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="call-btn" (click)="callNGO()">
+                <ion-icon slot="start" name="call-outline"></ion-icon> Call
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="whatsapp-btn" (click)="openWhatsApp()">
+                <ion-icon slot="start" name="logo-whatsapp"></ion-icon> WhatsApp
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="map-btn" (click)="openMap()">
+                <ion-icon slot="start" name="navigate-outline"></ion-icon> Map
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="save-btn" (click)="saveNGO()">
+                <ion-icon slot="start" name="bookmark-outline"></ion-icon> Save
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="share-btn" (click)="shareNGO()">
+                <ion-icon slot="start" name="share-social-outline"></ion-icon> Share
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="report-btn" (click)="reportNGO()">
+                <ion-icon slot="start" name="alert-circle-outline"></ion-icon> Report
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-card>
+  </div>
+
+  <!-- No NGO -->
+  <p *ngIf="!loading && !ngo" class="no-data">NGO not found.</p>
+
+</ion-content>

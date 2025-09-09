@@ -2,6 +2,7 @@ import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { Router } from '@angular/router';
 
 interface Boarding {
   id: string;
@@ -31,7 +32,7 @@ export class BoardingPage implements OnInit {
   boardingSpas: Boarding[] = [];
   loading = true;
 
-  constructor(private firebaseService: FirebaseService) { }
+  constructor(private firebaseService: FirebaseService, private router: Router) {}
 
   ngOnInit() {
     this.loadBoardings();
@@ -73,5 +74,9 @@ export class BoardingPage implements OnInit {
     const url = `https://www.google.com/maps/search/?api=1&query=${spa.lat},${spa.lng}`;
     window.open(url, "_blank");
   }
+
+  viewDetails(spa: Boarding) {
+  this.router.navigate([`/tabs/directory/boarding/${spa.id}`]);
+}
 
 }

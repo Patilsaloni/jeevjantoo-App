@@ -1,24 +1,33 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Boarding & Spa</ion-title>
-  </ion-toolbar>
-</ion-header>
+ <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Boarding</ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-spinner *ngIf="loading" style="display: block; margin: 50px auto;"></ion-spinner>
+<ion-content [fullscreen]="true" class="premium-boarding-spa">
+  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
 
-  <div *ngIf="!loading && boardingSpas.length">
+  <p *ngIf="!loading && boardingSpas.length === 0" class="no-data">
+    No boarding/spa found
+  </p>
+
+  <div class="spa-cards" *ngIf="!loading && boardingSpas.length > 0">
     <ion-card *ngFor="let spa of boardingSpas" class="spa-card">
-
+      
       <ion-card-header>
         <ion-card-title>{{ spa.name }}</ion-card-title>
         <ion-card-subtitle>{{ spa.state }}, {{ spa.city }}</ion-card-subtitle>
       </ion-card-header>
 
-      <ion-card-content>
+      <ion-card-content class="spa-info">
         <p><strong>Area:</strong> {{ spa.area }}</p>
         <p><strong>Pincode:</strong> {{ spa.pincode }}</p>
         <p><strong>Contact:</strong> {{ spa.contact }}</p>
@@ -27,16 +36,22 @@
       </ion-card-content>
 
       <ion-card-footer>
-        <ion-button expand="block" color="primary" (click)="trackLocation(spa)">
-          <ion-icon slot="start" name="navigate-outline"></ion-icon>
-          Track Location
-        </ion-button>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" color="secondary" (click)="viewDetails(spa)">
+                Details
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="primary" (click)="trackLocation(spa)">
+                Map
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-card-footer>
 
     </ion-card>
   </div>
-
-  <p *ngIf="!loading && boardingSpas.length === 0" class="no-spa">
-    No boarding/spa found.
-  </p>
 </ion-content>

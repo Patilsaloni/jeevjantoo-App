@@ -1,4 +1,104 @@
-/* abc.page.scss */
-ion-content {
-  padding: 16px;
+.premium-abc {
+  padding: 1rem;
+  background: #f5f8ff;
+
+  .filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .no-data {
+    text-align: center;
+    font-size: 1.2rem;
+    color: gray;
+    margin-top: 2rem;
+  }
+
+  .abc-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .abc-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-top: 5px solid #6eb9ff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    ion-card-header {
+      background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+      padding: 1rem;
+    }
+
+    ion-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .abc-info {
+      padding: 0.8rem 1rem;
+      flex-grow: 1;
+
+      p {
+        margin: 0.2rem 0;
+        font-size: 0.95rem;
+        color: #333;
+      }
+    }
+
+    ion-card-footer {
+      padding: 0.5rem 1rem;
+
+      ion-button {
+        border-radius: 12px;
+        --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: all 0.2s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+        }
+      }
+
+      ion-button[color="secondary"] {
+        --background: #6eb9ff;
+        --color: #fff;
+        &:hover {
+          --background: #5aa0e0;
+        }
+      }
+
+      ion-button[color="primary"] {
+        --background: #4a90e2;
+        --color: #fff;
+        &:hover {
+          --background: #3b78c1;
+        }
+      }
+    }
+  }
+
+  .spinner-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
+}
+
+.premium-toolbar {
+  --color: #0f0f0f;
 }

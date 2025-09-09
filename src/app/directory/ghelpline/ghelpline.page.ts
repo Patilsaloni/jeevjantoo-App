@@ -3,7 +3,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { HelplineDetailModalComponent } from './helpline-detail-modal/helpline-detail-modal.component';
+import { HelplineDetailModalComponent } from '../ghelpline/ghelpline-details/ghelpline-details.page';
 
 // ✅ Define interface for helpline
 interface GovtHelpline {

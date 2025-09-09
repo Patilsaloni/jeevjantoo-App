@@ -1,28 +1,79 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar class="premium-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>ABC Directory</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-spinner *ngIf="loading" name="dots"></ion-spinner>
+<ion-content [fullscreen]="true" class="premium-abc">
+  <ion-spinner *ngIf="loading" class="spinner-center" name="dots"></ion-spinner>
 
-  <ion-grid *ngIf="!loading">
-    <ion-row>
-      <ion-col size="6" *ngFor="let abc of abcs">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>{{ abc.personIncharge }}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <p>Type: {{ abc.type }}</p>
-            <p>City: {{ abc.city }}</p>
-            <p>State: {{ abc.state }}</p>
-            <p>Pincode: {{ abc.pincode }}</p>
-            <p>Status: {{ abc.status }}</p>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <!-- Search Bar -->
+  <ion-searchbar
+    *ngIf="!loading"
+    placeholder="Search by location, type, or person"
+    (ionInput)="filterAbcs($event)"
+    animated>
+  </ion-searchbar>
+
+  <!-- Filters -->
+  <div class="filters" *ngIf="!loading">
+    <ion-item>
+      <ion-select placeholder="City" [(ngModel)]="cityFilter" (ionChange)="filterBySelect()">
+        <ion-select-option *ngFor="let city of cities" [value]="city">{{ city }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-select placeholder="Type" [(ngModel)]="typeFilter" (ionChange)="filterBySelect()">
+        <ion-select-option *ngFor="let type of types" [value]="type">{{ type }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+
+  <!-- No Data -->
+  <p *ngIf="!loading && filteredAbcs.length === 0" class="no-data">
+    No records available
+  </p>
+
+  <!-- ABC Cards -->
+  <div class="abc-cards" *ngIf="!loading && filteredAbcs.length > 0">
+    <ion-card *ngFor="let abc of filteredAbcs" class="abc-card" [style.border-top-color]="abc.color || '#6eb9ff'">
+      <ion-card-header>
+        <ion-card-title>{{ abc.type }} - {{ abc.location }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content class="abc-info">
+        <p><strong>Person Incharge:</strong> {{ abc.personIncharge }}</p>
+        <p><strong>City:</strong> {{ abc.city }}</p>
+        <p><strong>State:</strong> {{ abc.state }}</p>
+        <p><strong>Pincode:</strong> {{ abc.pincode }}</p>
+        <p><strong>Location:</strong> {{ abc.location }}</p>
+      </ion-card-content>
+
+      <ion-card-footer>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" color="secondary" (click)="viewDetails(abc)">
+                Details
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="primary" (click)="openMap(abc.location, abc.lat, abc.lng)">
+                Map
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-footer>
+    </ion-card>
+  </div>
 </ion-content>

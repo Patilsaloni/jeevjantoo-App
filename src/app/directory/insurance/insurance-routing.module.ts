@@ -7,7 +7,11 @@ const routes: Routes = [
   {
     path: '',
     component: InsurancePage
+  },  {
+    path: 'insurance-details',
+    loadChildren: () => import('./insurance-details/insurance-details.module').then( m => m.InsuranceDetailsPageModule)
   }
+
 ];
 
 @NgModule({

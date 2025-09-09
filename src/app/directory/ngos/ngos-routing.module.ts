@@ -7,7 +7,11 @@ const routes: Routes = [
   {
     path: '',
     component: NgosPage
+  },  {
+    path: 'ngos-details',
+    loadChildren: () => import('./ngos-details/ngos-details.module').then( m => m.NgosDetailsPageModule)
   }
+
 ];
 
 @NgModule({

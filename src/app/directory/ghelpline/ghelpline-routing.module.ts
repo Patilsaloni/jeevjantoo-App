@@ -7,7 +7,15 @@ const routes: Routes = [
   {
     path: '',
     component: GhelplinePage
+  },  {
+    path: 'ghelpline-details',
+    loadChildren: () => import('./ghelpline-details/ghelpline-details.module').then( m => m.GhelplineDetailsPageModule)
+  },
+  {
+    path: 'ghelpline-details',
+    loadChildren: () => import('./ghelpline-details/ghelpline-details.module').then( m => m.GhelplineDetailsPageModule)
   }
+
 ];
 
 @NgModule({

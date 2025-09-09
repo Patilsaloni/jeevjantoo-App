@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ boarding?.name || 'Boarding Details' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="premium-boarding-details">
+  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+
+  <div *ngIf="!loading && boarding" class="boarding-card">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ boarding.name }}</ion-card-title>
+        <ion-card-subtitle>{{ boarding.city }}, {{ boarding.state }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Area:</strong> {{ boarding.area }}</p>
+        <p><strong>Pincode:</strong> {{ boarding.pincode }}</p>
+        <p><strong>Contact:</strong> {{ boarding.contact }}</p>
+        <p><strong>Working Hours:</strong> {{ boarding.timeFrom }} - {{ boarding.timeTo }}</p>
+        <p *ngIf="boarding.remarks"><strong>Remarks:</strong> {{ boarding.remarks }}</p>
+      </ion-card-content>
+
+      <ion-card-footer>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" color="secondary" (click)="callBoarding(boarding.contact)">
+                Call
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="primary" (click)="openMap(boarding.lat, boarding.lng)">
+               Map
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" color="tertiary" (click)="saveBoarding(boarding)">
+                Save
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="danger" (click)="reportIssue(boarding)">
+                Report
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-footer>
+    </ion-card>
+  </div>
+
+  <p *ngIf="!loading && !boarding" class="no-data">Boarding/Spa details not found</p>
+</ion-content>

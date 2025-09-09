@@ -7,7 +7,11 @@ const routes: Routes = [
   {
     path: '',
     component: BoardingPage
+  },  {
+    path: 'boarding-details',
+    loadChildren: () => import('./boarding-details/boarding-details.module').then( m => m.BoardingDetailsPageModule)
   }
+
 ];
 
 @NgModule({

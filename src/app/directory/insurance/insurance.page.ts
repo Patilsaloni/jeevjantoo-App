@@ -3,14 +3,18 @@ import { FirebaseService } from '../../services/firebase.service';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { InsuranceDetailModal } from './insurance-detail-modal/insurance-detail-modal.component';
+import { InsuranceDetailsPage  } from '../insurance/insurance-details/insurance-details.page';
+
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @Component({
   selector: 'app-insurance',
   templateUrl: './insurance.page.html',
   styleUrls: ['./insurance.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+
 })
 export class InsurancePage implements OnInit {
   insurances: any[] = [];
@@ -61,9 +65,16 @@ export class InsurancePage implements OnInit {
 
   async openDetail(item: any) {
     const modal = await this.modalCtrl.create({
-      component: InsuranceDetailModal,
+      component: InsuranceDetailsPage ,
       componentProps: { insurance: item }
     });
     await modal.present();
   }
+  // Add this method inside the InsurancePage class
+openWebsite(url: string) {
+  if (url) {
+    window.open(url, '_blank'); // opens in a new browser tab
+  }
+}
+
 }

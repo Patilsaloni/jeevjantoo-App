@@ -2,6 +2,7 @@ import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { Router } from '@angular/router';
 
 interface Ambulance {
   id: string;
@@ -27,7 +28,7 @@ export class AmbulancePage implements OnInit {
   ambulances: Ambulance[] = [];
   loading = true;
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private firebaseService: FirebaseService, private router: Router) {}
 
   ngOnInit() {
     this.loadAmbulances();
@@ -70,6 +71,10 @@ export class AmbulancePage implements OnInit {
   saveAmbulance(amb: any) {
   console.log('Ambulance saved:', amb);
   // You can later implement saving to Firebase or localStorage
+}
+
+viewDetails(amb: Ambulance) {
+  this.router.navigate([`/tabs/directory/ambulance/${amb.id}`]);
 }
 
 }

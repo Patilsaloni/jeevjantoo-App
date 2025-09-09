@@ -1,6 +1,7 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
 
 interface NGO {
@@ -28,7 +29,10 @@ export class NgosPage implements OnInit {
   ngos: NGO[] = [];
   loading = true;
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(
+    private firebaseService: FirebaseService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadNGOs();
@@ -67,5 +71,9 @@ export class NgosPage implements OnInit {
     }
     const query = encodeURIComponent(`${ngo.lat},${ngo.lng}`);
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+  }
+
+  viewDetails(ngo: NGO) {
+    this.router.navigate(['/ngos-details', ngo.id]);
   }
 }

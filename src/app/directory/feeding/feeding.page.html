@@ -1,14 +1,19 @@
+
 <ion-header>
-  <ion-toolbar style="--background: #ff6b00; --color: #fff;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Feeding Points</ion-title>
-  </ion-toolbar>
-</ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Feeding Points</ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content [fullscreen]="true" class="feeding-page">
-
+<ion-content [fullscreen]="true" class="premium-feeding">
   <!-- 🔍 Search -->
   <ion-searchbar
     [(ngModel)]="searchTerm"
@@ -39,52 +44,48 @@
   </div>
 
   <!-- 🔄 Loader -->
-  <ion-spinner *ngIf="loading" class="spinner-center" color="warning"></ion-spinner>
+  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
 
   <!-- 📌 Feeding List -->
-  <ion-card *ngFor="let fp of filteredPoints" class="feeding-card">
-    <ion-card-header class="feeding-header">
-      <ion-card-title>{{ fp.name }}</ion-card-title>
-      <ion-badge class="type-badge" [color]="fp.individual === 'Y' ? 'warning' : 'tertiary'">
-        {{ fp.individual === 'Y' ? 'Individual' : 'NGO' }}
-      </ion-badge>
-    </ion-card-header>
+  <div class="feeding-cards" *ngIf="!loading && filteredPoints.length > 0">
+    <ion-card *ngFor="let fp of filteredPoints" class="feeding-card">
+      
+      <ion-card-header>
+        <ion-card-title>{{ fp.name }}</ion-card-title>
+        <ion-badge class="type-badge" [color]="fp.individual === 'Y' ? 'warning' : 'tertiary'">
+          {{ fp.individual === 'Y' ? 'Individual' : 'NGO' }}
+        </ion-badge>
+      </ion-card-header>
 
-    <ion-card-content>
-      <!-- Contact Row -->
-      <div class="row contact-row">
-        <span>📞 {{ fp.contact }}</span>
-        <div class="btn-right">
-          <ion-button size="small" fill="outline" class="outline-btn" (click)="call(fp.contact)">
-            Call
-          </ion-button>
-          <ion-button size="small" fill="outline" class="outline-btn" (click)="whatsapp(fp.contact)">
-            WhatsApp
-          </ion-button>
+      <ion-card-content>
+        <p><strong>Contact:</strong> {{ fp.contact }}</p>
+        <p><strong>Address:</strong> {{ fp.address }}{{ fp.city ? ', ' + fp.city : '' }}</p>
+
+        <!-- Food Items -->
+        <div class="food-tags">
+          <ion-chip *ngFor="let item of (fp.food_items?.split(',') || [])">{{ item }}</ion-chip>
         </div>
-      </div>
+      </ion-card-content>
 
-      <!-- Address -->
-      <p class="address">📍 {{ fp.address }}{{ fp.city ? ', ' + fp.city : '' }}</p>
+      <ion-card-footer>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" color="secondary" (click)="viewDetails(fp)">
+                Details
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="primary" (click)="openInMaps(fp.lat, fp.lng)">
+                Map
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-footer>
 
-      <!-- Food Items -->
-      <div class="food-tags">
-        <ion-chip *ngFor="let item of (fp.food_items?.split(',') || [])">{{ item }}</ion-chip>
-      </div>
-
-      <!-- Actions -->
-      <div class="row actions-row">
-        <ion-button expand="block" fill="solid" class="solid-btn"
-          (click)="openInMaps(fp.lat, fp.lng)">
-          Open in Google Maps
-        </ion-button>
-        <ion-button expand="block" fill="outline" class="solid-btn"
-          (click)="openActions(fp)">
-          More Actions
-        </ion-button>
-      </div>
-    </ion-card-content>
-  </ion-card>
+    </ion-card>
+  </div>
 
   <!-- ❌ No Data -->
   <div *ngIf="!loading && filteredPoints.length === 0" class="no-data">

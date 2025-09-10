@@ -1,17 +1,16 @@
-
 <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title>Feeding Points</ion-title>
-      <ion-buttons slot="end">
-        <ion-button>
-          <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Feeding Points</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content [fullscreen]="true" class="premium-feeding">
   <!-- 🔍 Search -->
@@ -22,34 +21,13 @@
     show-clear-button="always">
   </ion-searchbar>
 
-  <!-- 🔽 Filters -->
-  <div class="filters">
-    <ion-select interface="popover" placeholder="Select City" [(ngModel)]="selectedCity" (ionChange)="applyFilters()">
-      <ion-select-option value="">All Cities</ion-select-option>
-      <ion-select-option value="Indore">Indore</ion-select-option>
-      <ion-select-option value="Bhopal">Bhopal</ion-select-option>
-    </ion-select>
-
-    <ion-segment [(ngModel)]="selectedType" (ionChange)="applyFilters()">
-      <ion-segment-button value="">
-        <ion-label>All</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="individual">
-        <ion-label>Individual</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="community">
-        <ion-label>NGO</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </div>
-
   <!-- 🔄 Loader -->
   <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
 
   <!-- 📌 Feeding List -->
   <div class="feeding-cards" *ngIf="!loading && filteredPoints.length > 0">
     <ion-card *ngFor="let fp of filteredPoints" class="feeding-card">
-      
+
       <ion-card-header>
         <ion-card-title>{{ fp.name }}</ion-card-title>
         <ion-badge class="type-badge" [color]="fp.individual === 'Y' ? 'warning' : 'tertiary'">
@@ -61,9 +39,9 @@
         <p><strong>Contact:</strong> {{ fp.contact }}</p>
         <p><strong>Address:</strong> {{ fp.address }}{{ fp.city ? ', ' + fp.city : '' }}</p>
 
-        <!-- Food Items -->
+        <!-- ✅ Fixed Food Items -->
         <div class="food-tags">
-          <ion-chip *ngFor="let item of (fp.food_items?.split(',') || [])">{{ item }}</ion-chip>
+          <ion-chip *ngFor="let item of fp.food_items">{{ item }}</ion-chip>
         </div>
       </ion-card-content>
 

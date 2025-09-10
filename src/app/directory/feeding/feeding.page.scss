@@ -1,84 +1,124 @@
 .premium-feeding {
-  padding: 0.5rem;
+  padding: 1rem;
+  --ion-background-color: #f9f9f9;
 
   ion-searchbar {
     --background: #fff;
     border-radius: 12px;
-    margin: 10px;
-    --box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin: 10px 0;
+    --box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   }
 
   .filters {
-    padding: 10px;
+    margin: 10px 0;
 
     ion-select, ion-segment {
-      border-radius: 10px;
-      margin-top: 6px;
-      --indicator-color: #ff6b00;
       --background: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      --box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    ion-segment {
+      --indicator-color: #6eb9ff;
     }
   }
 
   .feeding-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1rem;
-    padding: 0.5rem;
   }
 
   .feeding-card {
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-top: 5px solid #6eb9ff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     }
 
     ion-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-      font-size: 1rem;
+      background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+
+      ion-card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #333;
+      }
+
+      .type-badge {
+        font-weight: 600;
+        font-size: 0.75rem;
+      }
     }
 
-    ion-card-title {
-      font-size: 1.2rem;
-    }
+    ion-card-content {
+      padding: 0.8rem 1rem;
 
-    .food-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin-top: 8px;
+      p {
+        margin: 0.3rem 0;
+        font-size: 0.95rem;
+        color: #333;
+      }
 
-      ion-chip {
-        background: #e0f7fa;
-        color: #00796b;
-        font-size: 12px;
-        font-weight: 500;
-        border-radius: 8px;
-        padding: 2px 6px;
+      .food-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 6px 0;
+
+        ion-chip {
+          background: #e0f7fa;
+          color: #00796b;
+          font-size: 12px;
+          font-weight: 500;
+          border-radius: 8px;
+          padding: 2px 6px;
+        }
       }
     }
 
     ion-card-footer {
-      padding: 0.5rem;
+      padding: 0.5rem 1rem;
+
       ion-button {
         border-radius: 12px;
-        --background: #ff6b00;
-        --color: #fff;
         --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         transition: all 0.2s ease;
 
         &:hover {
-          --background: #e65c00;
+          transform: translateY(-2px);
         }
       }
+
+      ion-button[color="primary"] {
+        --background: #6eb9ff;
+        --color: #fff;
+      }
+
+      ion-button[color="secondary"] {
+        --background: #d4ef9b;
+        --color: #333;
+      }
     }
+  }
+
+  .spinner-center {
+    display: block;
+    margin: 50px auto;
+    color: #6eb9ff;
   }
 
   .no-data {
@@ -88,14 +128,8 @@
 
     ion-icon {
       font-size: 40px;
-      color: #ff6b00;
+      color: #6eb9ff;
       margin-bottom: 8px;
     }
-  }
-
-  .spinner-center {
-    display: block;
-    margin: 40px auto;
-    color: #ff6b00;
   }
 }

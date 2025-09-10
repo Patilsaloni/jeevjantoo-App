@@ -1,10 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { IonicModule, ModalController, ActionSheetController } from '@ionic/angular';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { IonicModule, ActionSheetController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Router } from '@angular/router';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+// 🟢 Define Interface for Feeding Point
+interface FeedingPoint {
+  id: string;
+  name?: string;
+  contact?: string;
+  address?: string;
+  individual?: string; // 'Y' | 'N'
+  lat?: number | null;
+  lng?: number | null;
+  food_items: string[];  // ✅ always array
+  city?: string;
+}
 
 @Component({
   selector: 'app-feeding',
@@ -14,10 +26,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
   imports: [IonicModule, CommonModule, FormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-
 export class FeedingPage implements OnInit {
-  feedingPoints: any[] = [];
-  filteredPoints: any[] = [];
+  feedingPoints: FeedingPoint[] = [];
+  filteredPoints: FeedingPoint[] = [];
   loading = true;
 
   // Filters
@@ -35,11 +46,29 @@ export class FeedingPage implements OnInit {
     this.loadFeedingPoints();
   }
 
-  // Fetch feeding points from Firebase
+  // ✅ Fetch feeding points & normalize food_items
   async loadFeedingPoints() {
     this.loading = true;
     try {
-      this.feedingPoints = await this.firebaseService.getInformation('feeding');
+      let data: any[] = await this.firebaseService.getInformation('food') || [];
+
+      this.feedingPoints = data.map(fp => {
+        let items: string[] = [];
+
+        if (Array.isArray(fp.food_items)) {
+          items = fp.food_items;
+        } else if (typeof fp.food_items === 'string') {
+          items = fp.food_items.split(',').map((item: string) => item.trim());
+        }
+
+        return {
+          ...fp,
+          food_items: items,  // ✅ always string[]
+          lat: fp.lat ?? null,
+          lng: fp.lng ?? null
+        } as FeedingPoint;
+      });
+
       this.applyFilters();
     } catch (err) {
       console.error('Error fetching feeding points:', err);
@@ -50,12 +79,14 @@ export class FeedingPage implements OnInit {
     }
   }
 
-  // Apply search, city & type filters
+  // ✅ Apply search, city & type filters
   applyFilters() {
     this.filteredPoints = this.feedingPoints.filter(fp => {
       const matchSearch = this.searchTerm
         ? fp.name?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          fp.address?.toLowerCase().includes(this.searchTerm.toLowerCase())
+          fp.address?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          fp.food_items.some(item =>
+            item.toLowerCase().includes(this.searchTerm.toLowerCase()))
         : true;
 
       const matchCity = this.selectedCity
@@ -72,13 +103,13 @@ export class FeedingPage implements OnInit {
     });
   }
 
-  // Action Sheet (Call, WhatsApp, Maps, Report)
-  async openActions(fp: any) {
+  // 📱 Action Sheet (Call, WhatsApp, Maps, Report)
+  async openActions(fp: FeedingPoint) {
     const actionSheet = await this.actionSheetCtrl.create({
       header: fp.name,
       buttons: [
-        { text: '📞 Call', handler: () => this.call(fp.contact) },
-        { text: '💬 WhatsApp', handler: () => this.whatsapp(fp.contact) },
+        { text: '📞 Call', handler: () => this.call(fp.contact || '') },
+        { text: '💬 WhatsApp', handler: () => this.whatsapp(fp.contact || '') },
         { text: '📍 Open in Maps', handler: () => this.openInMaps(fp.lat, fp.lng) },
         { text: '🚩 Report', handler: () => this.report(fp) },
         { text: '❌ Cancel', role: 'cancel' }
@@ -87,12 +118,12 @@ export class FeedingPage implements OnInit {
     await actionSheet.present();
   }
 
-  // Call
+  // 📞 Call
   call(contact: string) {
     if (contact) window.open(`tel:${contact}`, '_system');
   }
 
-  // WhatsApp
+  // 💬 WhatsApp
   whatsapp(contact: string) {
     if (contact) {
       const phone = contact.replace(/\D/g, '');
@@ -100,22 +131,24 @@ export class FeedingPage implements OnInit {
     }
   }
 
-  // Maps
-  openInMaps(lat: number, lng: number) {
-    if (lat && lng) {
+  // 📍 Maps
+  openInMaps(lat?: number | null, lng?: number | null) {
+    if (lat != null && lng != null) {
       window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_system');
+    } else {
+      alert("Location not available");
     }
   }
 
-  // Report
-  report(fp: any) {
+  // 🚩 Report
+  report(fp: FeedingPoint) {
     alert(`Report submitted for: ${fp.name}`);
     // TODO: send to Firebase / backend queue
   }
 
-  // View details page
-  viewDetails(fp: any) {
-    this.router.navigate(['tabs/directory/feeding-details', fp.id]);
+  // 📄 View details page
+  viewDetails(fp: FeedingPoint) {
+  this.router.navigate([`tabs/directory/feeding/${fp.id}`]); // use backticks
+}
 
-  }
 }

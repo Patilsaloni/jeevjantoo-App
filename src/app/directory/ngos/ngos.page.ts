@@ -74,6 +74,6 @@ export class NgosPage implements OnInit {
   }
 
   viewDetails(ngo: NGO) {
-    this.router.navigate(['/ngos-details', ngo.id]);
+    this.router.navigate(['/tabs/directory/ngos/${ev.id}']);
   }
 }

@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import { AuthGuard } from '../guards/auth-guard'; 
 
 const routes: Routes = [
   {
     path: '',
     component: TabsPage,
+    canActivate: [AuthGuard],       // Protect parent route
+    // canActivateChild: [AuthGuard],  // Protect all child routes
     children: [
       { path: 'home', loadChildren: () => import('../home/home.module').then(m => m.HomePageModule) },
       { path: 'adoption', loadChildren: () => import('../adoption/adoption.module').then(m => m.AdoptionPageModule) },
@@ -32,15 +35,14 @@ const routes: Routes = [
       { path: 'directory/insurance/:id', loadComponent: () => import('../directory/insurance/insurance-details/insurance-details.page').then(m => m.InsuranceDetailsPage) },
       { path: 'directory/ngos/:id', loadComponent: () => import('../directory/ngos/ngos-details/ngos-details.page').then(m => m.NgosDetailsPage) },
 
+      // Profile
       { path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule) },
 
+      // Default redirect
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
   }
 ];
-
-
-
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DirectoryPage } from '../app/directory/directory.page';
+import { AuthGuard } from './guards/auth-guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'splash', pathMatch: 'full' },
@@ -31,6 +32,7 @@ const routes: Routes = [
     path: 'tabs',
     loadChildren: () =>
       import('./tabs/tabs.module').then(m => m.TabsPageModule),
+     canActivate: [AuthGuard]
   },
   {
     path: '**',

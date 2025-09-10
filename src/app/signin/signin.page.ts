@@ -5,7 +5,14 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { Router } from '@angular/router';
 
 import { initializeApp } from 'firebase/app';
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import { 
+  getAuth, 
+  RecaptchaVerifier, 
+  signInWithPhoneNumber, 
+  signInWithEmailAndPassword, 
+  UserCredential, 
+  signOut 
+} from 'firebase/auth';
 import { FirebaseService } from '../../app/services/firebase.service';
 import { environment } from '../../environments/environment';
 
@@ -33,7 +40,7 @@ interface User {
   imports: [CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
 })
 export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
-  loginMode: 'email' | 'phone' = 'email'; // Toggle between login types
+  loginMode: 'email' | 'phone' = 'email';
   emailForm: FormGroup;
   phoneForm: FormGroup;
   otpSent = false;
@@ -46,22 +53,35 @@ export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
     private firebaseService: FirebaseService,
     private toastCtrl: ToastController
   ) {
-    // Email login form
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
 
-    // Phone login form
     this.phoneForm = this.fb.group({
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       otp: ['', Validators.required],
     });
   }
 
-  ngOnInit() {}
-  ngAfterViewInit() { setTimeout(() => this.initializeRecaptcha(), 500); }
-  ngOnDestroy() { if (window.recaptchaVerifier) { window.recaptchaVerifier.clear(); window.recaptchaVerifier = undefined; } }
+  ngOnInit() {
+    // Redirect if already logged in
+    const user = localStorage.getItem('user');
+    if (user) {
+      this.router.navigate(['/tabs/home']);
+    }
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => this.initializeRecaptcha(), 500);
+  }
+
+  ngOnDestroy() {
+    if (window.recaptchaVerifier) {
+      window.recaptchaVerifier.clear();
+      window.recaptchaVerifier = undefined;
+    }
+  }
 
   initializeRecaptcha() {
     if (!window.recaptchaVerifier) {
@@ -76,20 +96,24 @@ export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
     toast.present();
   }
 
-  // ------------------- Email Login -------------------
+  // ---------------- Email Login ----------------
   async onEmailLogin() {
     if (!this.emailForm.valid) return this.showToast('Enter valid email & password', 'warning');
+
     try {
       const { email, password } = this.emailForm.value;
       const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email.trim(), password.trim());
 
-      // Fetch Firestore user info
+      // Fetch user data from Firestore
       const users: User[] = await this.firebaseService.getInformation('user');
       const currentUser = users.find(u => u.email === email.trim());
 
-      if (!currentUser) return this.showToast('User data not found in Firestore', 'danger');
+      if (!currentUser) return this.showToast('User not found in Firestore', 'danger');
 
+      // Save login info
       localStorage.setItem('user', JSON.stringify(currentUser));
+      localStorage.setItem('isAuthenticated', 'true');
+
       this.router.navigate(['/tabs/home']);
     } catch (error: any) {
       console.error('Email login failed:', error);
@@ -97,9 +121,10 @@ export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // ------------------- Phone OTP Login -------------------
+  // ---------------- Phone OTP ----------------
   async onSendOtp() {
     if (!this.phoneForm.get('phone')?.valid) return this.showToast('Enter valid 10-digit phone', 'warning');
+
     try {
       const phoneNumber = '+91' + this.phoneForm.value.phone;
       this.confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier!);
@@ -113,23 +138,37 @@ export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
 
   async onPhoneLogin() {
     if (!this.phoneForm.valid || !this.otpSent) return this.showToast('Enter valid OTP', 'warning');
+
     try {
       const result = await this.confirmationResult.confirm(this.phoneForm.value.otp);
-      const phone = result.user.phoneNumber;
+      const phone = result.user.phoneNumber?.replace('+91', '');
 
-      // Fetch Firestore user info by phone
       const users: User[] = await this.firebaseService.getInformation('user');
       const currentUser = users.find(u => u.phone === phone);
 
-      if (!currentUser) return this.showToast('User data not found in Firestore', 'danger');
+      if (!currentUser) return this.showToast('User not found in Firestore', 'danger');
 
+      // Save login info
       localStorage.setItem('user', JSON.stringify(currentUser));
-      // Inside SigninPage
-      this.router.navigate(['/tabs/home']);
+      localStorage.setItem('isAuthenticated', 'true');
 
+      this.router.navigate(['/tabs/home']);
     } catch (error: any) {
       console.error('OTP verification failed:', error);
       this.showToast(error.message || 'Invalid OTP', 'danger');
+    }
+  }
+
+  // ---------------- Logout ----------------
+  async logout() {
+    try {
+      await signOut(auth);
+      localStorage.removeItem('user');
+      localStorage.removeItem('isAuthenticated');
+      this.router.navigate(['/signin']);
+    } catch (error) {
+      console.error('Logout failed:', error);
+      this.showToast('Logout failed', 'danger');
     }
   }
 

@@ -22,7 +22,10 @@
   </ion-searchbar>
 
   <!-- Loader -->
-  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+  <!-- <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner> -->
+   <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
 
   <!-- Helpline List -->
   <div class="helpline-cards" *ngIf="!loading && helplines.length > 0">

@@ -13,7 +13,13 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="premium-abc">
-  <ion-spinner *ngIf="loading" class="spinner-center" name="dots"></ion-spinner>
+  <!-- Loader -->
+<div *ngIf="loading" class="spinner-overlay">
+  <ion-spinner name="crescent"></ion-spinner>
+</div>
+
+
+
 
   <!-- Search Bar -->
   <ion-searchbar

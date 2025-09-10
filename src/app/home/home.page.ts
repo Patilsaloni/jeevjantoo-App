@@ -90,27 +90,27 @@ export class HomePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadStats();
+    // this.loadStats();
     this.loadLatestAdoptions();
   }
 
-  loadStats() {
-    this.loadingStats = true;
-    this.directoryService.getCounts().subscribe({
-      next: (res: any) => {
-        this.stats[0].value = res.clinics ?? 0;
-        this.stats[1].value = res.ngos ?? 0;
-        this.stats[2].value = res.adoptions ?? 0;
-        this.stats[3].value = res.events ?? 0;
-        this.loadingStats = false;
-      },
-      error: (err: any) => {
-        console.error('Error loading stats', err);
-        this.stats.forEach(stat => stat.value = 0);
-        this.loadingStats = false;
-      }
-    });
-  }
+  // loadStats() {
+  //   this.loadingStats = true;
+  //   this.directoryService.getCounts().subscribe({
+  //     next: (res: any) => {
+  //       this.stats[0].value = res.clinics ?? 0;
+  //       this.stats[1].value = res.ngos ?? 0;
+  //       this.stats[2].value = res.adoptions ?? 0;
+  //       this.stats[3].value = res.events ?? 0;
+  //       this.loadingStats = false;
+  //     },
+  //     error: (err: any) => {
+  //       console.error('Error loading stats', err);
+  //       this.stats.forEach(stat => stat.value = 0);
+  //       this.loadingStats = false;
+  //     }
+  //   });
+  // }
 
   loadLatestAdoptions() {
     this.loadingAdoptions = true;

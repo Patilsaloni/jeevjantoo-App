@@ -83,6 +83,34 @@
     height: 50vh;
   }
 
+  .spinner-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;   /* full screen height */
+  width: 100vw;    /* full screen width */
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #fff; /* optional: white background while loading */
+  z-index: 9999;    /* keep above everything */
+}
+
+
+  .details-btn {
+  // --background: primary;   /* same blue */
+  --color: #fff;
+  border-radius: 12px;
+  --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+
+  &:hover {
+    --background: #5aa0e0;
+    transform: translateY(-2px);
+  }
+}
+
+
   .map-container {
     height: 400px;
     width: 100%;

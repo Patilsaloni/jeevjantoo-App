@@ -22,7 +22,9 @@
   </ion-searchbar>
 
   <!-- 🔄 Loader -->
-  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+   <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
 
   <!-- 📌 Feeding List -->
   <div class="feeding-cards" *ngIf="!loading && filteredPoints.length > 0">

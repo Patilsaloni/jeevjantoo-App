@@ -14,7 +14,10 @@
 
 <ion-content class="premium-ambulances">
   <!-- Loader -->
-  <ion-spinner *ngIf="loading" name="crescent" class="spinner-center"></ion-spinner>
+  <!-- Loader -->
+<div *ngIf="loading" class="spinner-overlay">
+  <ion-spinner name="crescent"></ion-spinner>
+</div>
 
   <!-- Ambulance List -->
   <div class="ambulance-cards" *ngIf="!loading && ambulances.length > 0">

@@ -88,6 +88,13 @@
     align-items: center;
     height: 50vh;
   }
+  .spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;   // full height of ion-content
+}
+
 
   .no-data {
     text-align: center;

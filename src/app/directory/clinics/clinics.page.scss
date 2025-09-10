@@ -83,6 +83,22 @@
     align-items: center;
     height: 50vh;
   }
+.spinner-container {
+  position: absolute;   // cover full content
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(255, 255, 255, 0.6); // optional dim background
+  z-index: 9999; // keep it above content
+}
+
+
 
   .add-clinic-btn {
     --background: #ff8d6b;

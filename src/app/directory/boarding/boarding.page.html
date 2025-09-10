@@ -13,8 +13,10 @@
   </ion-header>
 
 <ion-content [fullscreen]="true" class="premium-boarding-spa">
-  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
-
+   <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  
   <p *ngIf="!loading && boardingSpas.length === 0" class="no-data">
     No boarding/spa found
   </p>

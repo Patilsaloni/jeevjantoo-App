@@ -4,8 +4,9 @@
   .ngo-card {
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     border-top: 5px solid #6eb9ff;
+    background: #fff;
 
     ion-card-header {
       background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
@@ -14,12 +15,12 @@
       ion-card-title {
         font-size: 1.4rem;
         font-weight: 700;
-        color: #333;
+        color: #222;
       }
 
       ion-card-subtitle {
         font-size: 1rem;
-        color: #555;
+        color: #444;
       }
     }
 
@@ -27,33 +28,40 @@
       padding: 1rem;
 
       p {
-        margin: 0.4rem 0;
+        margin: 0.5rem 0;
         font-size: 1rem;
+        line-height: 1.5;
         color: #333;
+
+        strong {
+          color: #000;
+          font-weight: 600;
+        }
       }
     }
 
     .card-footer {
       padding: 0.8rem 1rem;
-      background: #f9f9f9;
+      background: #fafafa;
       border-top: 1px solid #eee;
 
       ion-grid {
         ion-row {
+          justify-content: center;
+
           ion-col {
             padding: 0.3rem;
 
             ion-button {
               width: 100%;
               height: 45px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
               border-radius: 15px;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.12);
               font-size: 0.9rem;
               font-weight: 600;
               color: #fff;
+              display: flex;
+              justify-content: center;
+              align-items: center;
               transition: transform 0.2s, box-shadow 0.2s;
 
               ion-icon {
@@ -63,15 +71,28 @@
 
               &:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
               }
 
-              &.call-btn { --background: #28a745; ion-icon { color: #d4edda; } }
-              &.whatsapp-btn { --background: #25d366; ion-icon { color: #dcf8c6; } }
-              &.map-btn { --background: #007bff; ion-icon { color: #cce5ff; } }
-              &.save-btn { --background: #ffc107; ion-icon { color: #fff3cd; } }
-              &.share-btn { --background: #6c757d; ion-icon { color: #e2e3e5; } }
-              &.report-btn { --background: #dc3545; ion-icon { color: #f8d7da; } }
+              &.call-btn {
+                --background: #28a745;
+              }
+              &.whatsapp-btn {
+                --background: #25d366;
+              }
+              &.map-btn {
+                --background: #007bff;
+              }
+              &.save-btn {
+                --background: #ffc107;
+                color: #333;
+              }
+              &.share-btn {
+                --background: #6c757d;
+              }
+              &.report-btn {
+                --background: #dc3545;
+              }
             }
           }
         }

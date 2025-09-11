@@ -12,7 +12,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
   imports: [IonicModule, CommonModule]
 })
 export class NgosDetailsPage implements OnInit {
-  ngo: any;
+  ngo: any = null;
   loading = true;
 
   constructor(
@@ -39,25 +39,50 @@ export class NgosDetailsPage implements OnInit {
   }
 
   callNGO() {
-    if (this.ngo?.contact) window.open(`tel:${this.ngo.contact}`, '_system');
-    else alert('Contact not available');
+    if (this.ngo?.contact) {
+      window.open(`tel:${this.ngo.contact}`, '_system');
+    } else {
+      alert('Contact not available');
+    }
   }
 
   openWhatsApp() {
     if (this.ngo?.contact) {
       const phone = this.ngo.contact.replace(/\D/g, '');
       window.open(`https://wa.me/${phone}`, '_blank');
-    } else alert('WhatsApp not available');
+    } else {
+      alert('WhatsApp not available');
+    }
   }
 
   openMap() {
     if (this.ngo?.lat && this.ngo?.lng) {
       const url = `https://www.google.com/maps?q=${this.ngo.lat},${this.ngo.lng}`;
       window.open(url, '_blank');
-    } else alert('Location not available');
+    } else {
+      alert('Location not available');
+    }
   }
 
-  saveNGO() { alert('Saved to favorites'); }
-  shareNGO() { alert('Share functionality'); }
-  reportNGO() { alert('Reported to admin'); }
+  saveNGO() {
+    // later integrate Firebase/local storage
+    alert('Saved to favorites');
+  }
+
+  shareNGO() {
+    if (navigator.share && this.ngo) {
+      navigator.share({
+        title: this.ngo.name,
+        text: `Check out ${this.ngo.name}`,
+        url: window.location.href
+      });
+    } else {
+      alert('Share not supported on this device');
+    }
+  }
+
+  reportNGO() {
+    // future: send to Firebase "reports" collection
+    alert('Reported to admin');
+  }
 }

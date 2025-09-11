@@ -1,12 +1,18 @@
 .premium-ambulance-details {
   padding: 1rem;
 
-  .spinner-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
-  }
+   .spinner-overlay {
+  position: fixed;   /* stay on top */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.7); // optional dim background
+  z-index: 9999;
+   }
 
   ion-card {
     display: flex;
@@ -15,13 +21,13 @@
     border-radius: 20px;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
     border-top: 5px solid #6eb9ff;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
     }
 
     ion-card-header {
@@ -63,35 +69,46 @@
 
       ion-button {
         border-radius: 12px;
-        --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        --color: #fff;
+        --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         transition: all 0.2s ease;
 
-        &:hover {
-          transform: translateY(-2px);
-        }
-
-        &.ion-color-primary {
+        &.btn-call {
           --background: #6eb9ff;
-          --color: #fff;
+
+          &:hover {
+            --background: #5aa0e0;
+          }
         }
 
-        &.ion-color-secondary {
-          --background: #9c27b0;
-          --color: #fff;
+        &.btn-map {
+          --background: #41c11e;
+
+          &:hover {
+            --background: #41c11e;
+          }
         }
 
-        &.ion-color-success {
-          --background: #4caf50;
-          --color: #fff;
+        &.btn-save {
+          --background: #ffdc6e;
+
+          // --color: #333;
+          &:hover {
+            --background: #e6c35a;
+          }
         }
 
-        &.ion-color-danger {
-          --background: #f44336;
-          --color: #fff;
+        &.btn-report {
+          --background: #ff8d6b;
+
+          &:hover {
+            --background: #e67457;
+          }
         }
       }
     }
   }
+
 
   .no-data {
     text-align: center;

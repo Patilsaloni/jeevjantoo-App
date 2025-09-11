@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{ boarding?.name || 'Boarding Details' }}</ion-title>
+    <ion-title>Boarding Details</ion-title>
     <ion-buttons slot="end">
       <ion-button>
         <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
@@ -13,7 +13,9 @@
 </ion-header>
 
 <ion-content class="premium-boarding-details">
-  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+  <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
 
   <div *ngIf="!loading && boarding" class="boarding-card">
     <ion-card>
@@ -34,30 +36,36 @@
         <ion-grid>
           <ion-row>
             <ion-col size="6">
-              <ion-button expand="block" color="secondary" (click)="callBoarding(boarding.contact)">
+              <ion-button expand="block" class="btn-call" (click)="callBoarding(boarding.contact)">
+                <ion-icon slot="start" name="call-outline"></ion-icon>
                 Call
               </ion-button>
             </ion-col>
             <ion-col size="6">
-              <ion-button expand="block" color="primary" (click)="openMap(boarding.lat, boarding.lng)">
-               Map
+              <ion-button expand="block" class="btn-map" (click)="openMap(boarding.lat, boarding.lng)">
+                <ion-icon slot="start" name="location-outline"></ion-icon>
+                Map
               </ion-button>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col size="6">
-              <ion-button expand="block" color="tertiary" (click)="saveBoarding(boarding)">
+              <ion-button expand="block" class="btn-save" (click)="saveBoarding(boarding)">
+                <ion-icon slot="start" name="bookmark-outline"></ion-icon>
                 Save
               </ion-button>
             </ion-col>
             <ion-col size="6">
-              <ion-button expand="block" color="danger" (click)="reportIssue(boarding)">
+              <ion-button expand="block" class="btn-report" (click)="reportIssue()">
+                <ion-icon slot="start" name="alert-circle-outline"></ion-icon>
                 Report
               </ion-button>
+
             </ion-col>
           </ion-row>
         </ion-grid>
       </ion-card-footer>
+
     </ion-card>
   </div>
 

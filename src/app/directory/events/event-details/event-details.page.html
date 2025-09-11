@@ -1,14 +1,21 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/directory/events"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Event Details</ion-title>
-  </ion-toolbar>
-</ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Event Details</ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
 <ion-content class="premium-event-details" [fullscreen]="true">
-  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+   <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
 
   <div *ngIf="!loading && event">
     <ion-card class="event-card" [style.border-top-color]="event.color || '#6eb9ff'">
@@ -23,7 +30,7 @@
         <p *ngIf="event.remarks"><strong>Remarks:</strong> {{ event.remarks }}</p>
       </ion-card-content>
 
-      <ion-card-footer>
+     <ion-card-footer>
         <ion-grid>
           <ion-row>
             <ion-col size="6">
@@ -41,7 +48,7 @@
           <ion-row>
             <ion-col size="6">
               <ion-button expand="block" class="map-btn" (click)="openMap()">
-                <ion-icon slot="start" name="navigate-outline"></ion-icon> Map
+                <ion-icon slot="start" name="location-outline"></ion-icon> Map
               </ion-button>
             </ion-col>
             <ion-col size="6">

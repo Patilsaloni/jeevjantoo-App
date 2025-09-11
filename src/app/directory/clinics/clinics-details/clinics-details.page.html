@@ -1,21 +1,28 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/directory/clinics"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Clinic Details</ion-title>
-  </ion-toolbar>
-</ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Clinic Details</ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
 <ion-content class="premium-clinic-details">
 
-  <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner>
+  <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
 
   <div *ngIf="!loading && clinic">
     <ion-card class="clinic-card">
       <ion-card-header>
         <ion-card-title>{{ clinic.name }}</ion-card-title>
-        <ion-card-subtitle>{{ clinic.type }} - {{ clinic.city }}, {{ clinic.state }}</ion-card-subtitle>
+        <ion-card-subtitle>{{ clinic.type }}</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content class="clinic-info">
@@ -27,54 +34,49 @@
 
       <!-- Footer with all actions -->
      <!-- Footer with all actions in 3 rows -->
-<div class="card-footer">
-  <ion-grid>
-    <ion-row>
-      <ion-col size="6">
-        <ion-button expand="block" class="map-btn" (click)="openMap()">
-          <!-- <ion-icon slot="start" name="navigate-outline"></ion-icon> -->
-           Map
-        </ion-button>
-      </ion-col>
-      <ion-col size="6">
-        <ion-button expand="block" class="call-btn" (click)="callClinic()">
-          <!-- <ion-icon slot="start" name="call-outline"></ion-icon> -->
-           Call
-        </ion-button>
-      </ion-col>
-    </ion-row>
+<ion-card-footer>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="call-btn" (click)="callClinic()">
+                <ion-icon slot="start" name="call-outline"></ion-icon> Call
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="whatsapp-btn" (click)="openWhatsApp()">
+                <ion-icon slot="start" name="logo-whatsapp"></ion-icon> WhatsApp
+              </ion-button>
+            </ion-col>
+          </ion-row>
 
-    <ion-row>
-      <ion-col size="6">
-        <ion-button expand="block" class="whatsapp-btn" (click)="openWhatsApp()">
-          <!-- <ion-icon slot="start" name="logo-whatsapp"></ion-icon>  -->
-          WhatsApp
-        </ion-button>
-      </ion-col>
-      <ion-col size="6">
-        <ion-button expand="block" class="save-btn" (click)="saveClinic()">
-          <ion-icon slot="start" name="bookmark-outline"></ion-icon> 
-          Save
-        </ion-button>
-      </ion-col>
-    </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="map-btn" (click)="openMap()">
+                <ion-icon slot="start" name="location-outline"></ion-icon> Map
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="save-btn" (click)="saveClinic()">
+                <ion-icon slot="start" name="bookmark-outline"></ion-icon> Save
+              </ion-button>
+            </ion-col>
+          </ion-row>
 
-    <ion-row>
-      <ion-col size="6">
-        <ion-button expand="block" class="share-btn" (click)="shareClinic()">
-          <!-- <ion-icon slot="start" name="share-social-outline"></ion-icon>  -->
-          Share
-        </ion-button>
-      </ion-col>
-      <ion-col size="6">
-        <ion-button expand="block" class="report-btn" (click)="reportClinic()">
-          <!-- <ion-icon slot="start" name="alert-circle-outline"></ion-icon>  -->
-          Report
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</div>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="share-btn" (click)="shareClinic()">
+                <ion-icon slot="start" name="share-social-outline"></ion-icon> Share
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="report-btn" (click)="reportClinic()">
+                <ion-icon slot="start" name="alert-circle-outline"></ion-icon> Report
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-footer>
+
 
 
     </ion-card>

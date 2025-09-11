@@ -3,6 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { AlertController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-abc-details',
@@ -19,7 +20,9 @@ export class AbcDetailsPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+     private alertCtrl: AlertController,
+  private toastCtrl: ToastController
   ) {}
 
   ngOnInit() {
@@ -43,13 +46,16 @@ export class AbcDetailsPage implements OnInit {
   }
 
   callPerson() {
-    if (this.abc?.contact) window.open(`tel:${this.abc.contact}`, '_system');
-    else alert('Contact not available');
+    if (this.abc?.contactNumber) {
+      window.open(`tel:${this.abc.contactNumber}`, '_system');
+    } else {
+      alert('Contact not available');
+    }
   }
 
   whatsappPerson() {
-    if (this.abc?.contact) {
-      const phone = this.abc.contact.replace(/\D/g, '');
+    if (this.abc?.contactNumber) {
+      const phone = this.abc.contactNumber.replace(/\D/g, '');
       window.open(`https://wa.me/${phone}`, '_blank');
     } else alert('WhatsApp not available');
   }
@@ -65,6 +71,42 @@ export class AbcDetailsPage implements OnInit {
   }
 
   saveRecord() { alert('Saved to favorites'); }
-  shareRecord() { alert('Share functionality'); }
-  reportRecord() { alert('Reported to admin'); }
+
+  shareRecord() { 
+    if (navigator.share) {
+      navigator.share({
+        title: this.abc.name,
+        text: `Check out this clinic: ${this.abc.name} in ${this.abc.city}`,
+        url: window.location.href
+      }).catch(err => console.error('Error sharing', err));
+    } else {
+      alert('Sharing not supported on this device');
+    }
+   }
+
+  async report() {
+    const alert = await this.alertCtrl.create({
+      header: 'Report Clinic',
+      inputs: [
+        { name: 'reason', type: 'text', placeholder: 'Enter reason for reporting' }
+      ],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        { 
+          text: 'Submit', 
+          handler: async (data) => {
+            console.log('Report submitted:', data.reason);
+            const toast = await this.toastCtrl.create({
+              message: 'Report submitted successfully!',
+              duration: 1500,
+              color: 'warning',
+              position: 'bottom'
+            });
+            toast.present();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
 }

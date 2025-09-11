@@ -46,28 +46,60 @@
       }
     }
 
-    ion-card-footer {
-      padding: 0.5rem 1rem;
+   ion-card-footer {
+  padding: 0.5rem 1rem;
 
-      ion-button {
-        border-radius: 12px;
-        --background: #6eb9ff;
-        --color: #fff;
-        --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        transition: all 0.2s ease;
+  ion-button {
+    border-radius: 12px;
+    --color: #fff;
+    --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
 
-        &:hover {
-          --background: #5aa0e0;
-          transform: translateY(-2px);
-        }
+    &.btn-call {
+      --background: #6eb9ff;
+      &:hover {
+        --background: #5aa0e0;
+      }
+    }
+
+    &.btn-map {
+      --background: #41c11e;
+      &:hover {
+        --background: #41c11e;
+      }
+    }
+
+    &.btn-save {
+      --background: #ffdc6e;
+      // --color: #333;
+      &:hover {
+        --background: #e6c35a;
+      }
+    }
+
+    &.btn-report {
+      --background: #ff8d6b;
+      &:hover {
+        --background: #e67457;
       }
     }
   }
+}
 
-  .spinner-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
   }
+
+  .spinner-overlay {
+  position: fixed;   /* stay on top */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.7); // optional dim background
+  z-index: 9999;
+}
+
+
 }

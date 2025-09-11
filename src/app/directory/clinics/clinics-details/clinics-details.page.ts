@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IonicModule, AlertController, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,8 @@ import { FirebaseService } from 'src/app/services/firebase.service';
   templateUrl: './clinics-details.page.html',
   styleUrls: ['./clinics-details.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [IonicModule, CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ClinicsDetailsPage implements OnInit {
   clinic: any;

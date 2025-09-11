@@ -70,7 +70,6 @@ export class AmbulancePage implements OnInit {
   }
   saveAmbulance(amb: any) {
   console.log('Ambulance saved:', amb);
-  // You can later implement saving to Firebase or localStorage
 }
 
 viewDetails(amb: Ambulance) {

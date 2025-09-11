@@ -33,82 +33,86 @@
       }
     }
 
-    .card-footer {
-      padding: 0.8rem 1rem;
-      background: #f9f9f9;
-      border-top: 1px solid #eee;
+    ion-card-footer {
+      padding: 0.5rem 1rem;
 
-      ion-grid {
-        ion-row {
-          ion-col {
-            padding: 0.3rem;
+      ion-button {
+        width: 100%;
+        border-radius: 12px;
+        font-weight: 600;
+        color: #fff;
+        transition: all 0.2s ease;
 
-            ion-button {
-              width: 100%;
-              height: 45px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              border-radius: 15px;
-              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-              font-size: 0.9rem;
-              font-weight: 600;
-              color: #fff;
-              transition: transform 0.2s, box-shadow 0.2s;
+        &:hover {
+          transform: translateY(-2px);
+        }
 
-              ion-icon {
-                margin-right: 0.4rem;
-                font-size: 1.2rem;
-                vertical-align: middle;
-              }
+        &.call-btn {
+          --background: #6eb9ff;
 
-              &:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-              }
+          ion-icon {
+            color: #d4edda;
+          }
+        }
 
-              &.map-btn {
-                --background: #007bff;
-                ion-icon { color: #cce5ff; }
-              }
+        &.whatsapp-btn {
+          --background: #21C063;
 
-              &.call-btn {
-                --background: #28a745;
-                ion-icon { color: #d4edda; }
-              }
+          ion-icon {
+            color: #dcf8c6;
+          }
+        }
 
-              &.whatsapp-btn {
-                --background: #25d366;
-                ion-icon { color: #dcf8c6; }
-              }
+        &.map-btn {
+          --background: #40c11d;
 
-              &.save-btn {
-                --background: #ffc107;
-                ion-icon { color: #fff3cd; }
-              }
+          ion-icon {
+            color: #cce5ff;
+          }
+        }
 
-              &.share-btn {
-                --background: #6c757d;
-                ion-icon { color: #e2e3e5; }
-              }
+        &.save-btn {
+          --background: #ffdc6e;
 
-              &.report-btn {
-                --background: #dc3545;
-                ion-icon { color: #f8d7da; }
-              }
-            }
+          ion-icon {
+            color: #fff3cd;
+          }
+        }
+
+        &.share-btn {
+          --background: #6284ad;
+
+          ion-icon {
+            color: #e2e3e5;
+          }
+        }
+
+        &.report-btn {
+          --background: #ff8d6b;
+
+          ion-icon {
+            color: #f8d7da;
           }
         }
       }
     }
+
   }
 
-  .spinner-center {
+  .spinner-overlay {
+    position: fixed;
+    /* stay on top */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 60vh;
+    background: rgba(255, 255, 255, 0.7); // optional dim background
+    z-index: 9999;
   }
+
 
   .no-data {
     text-align: center;

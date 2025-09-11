@@ -15,13 +15,13 @@
     border-radius: 20px;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     border-top: 5px solid #6eb9ff;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
     }
 
     ion-card-header {
@@ -51,43 +51,82 @@
     }
 
     ion-card-footer {
-      padding: 0.5rem 1rem;
+      // padding: 0.5rem 1rem;
 
       ion-button {
+        width: 100%;
         border-radius: 12px;
-        --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        font-weight: 600;
+        color: #fff;
         transition: all 0.2s ease;
 
         &:hover {
           transform: translateY(-2px);
         }
 
-        &.ion-color-primary {
+        &.call-btn {
           --background: #6eb9ff;
-          --color: #fff;
+
+          ion-icon {
+            color: #d4edda;
+          }
         }
 
-        &.ion-color-success {
-          --background: #4caf50;
-          --color: #fff;
+        &.whatsapp-btn {
+          --background: #21C063;
+
+          ion-icon {
+            color: #dcf8c6;
+          }
         }
 
-        &.ion-color-secondary {
-          --background: #9c27b0;
-          --color: #fff;
+        &.map-btn {
+          --background: #40c11d;
+
+          ion-icon {
+            color: #cce5ff;
+          }
         }
 
-        &.ion-color-warning {
-          --background: #ff9800;
-          --color: #fff;
+        &.save-btn {
+          --background: #ffdc6e;
+
+          ion-icon {
+            color: #fff3cd;
+          }
         }
 
-        &.ion-color-danger {
-          --background: #f44336;
-          --color: #fff;
+        &.share-btn {
+          --background: #6284ad;
+
+          ion-icon {
+            color: #e2e3e5;
+          }
+        }
+
+        &.report-btn {
+          --background: #ff8d6b;
+
+          ion-icon {
+            color: #f8d7da;
+          }
         }
       }
     }
+  }
+
+  .spinner-overlay {
+    position: fixed;
+    /* stay on top */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7); // optional dim background
+    z-index: 9999;
   }
 
   .no-data {

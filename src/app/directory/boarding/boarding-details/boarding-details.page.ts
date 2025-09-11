@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule, Platform } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { AlertController, ToastController } from '@ionic/angular';
 
 interface Boarding {
   id: string;
@@ -26,6 +27,7 @@ interface Boarding {
   standalone: true,
   imports: [IonicModule, CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  
 })
 export class BoardingDetailsPage implements OnInit {
   boarding: Boarding | null = null;
@@ -35,7 +37,9 @@ export class BoardingDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private firebaseService: FirebaseService,
-    private platform: Platform
+    private platform: Platform,
+     private alertCtrl: AlertController,
+  private toastCtrl: ToastController
   ) {}
 
   ngOnInit() {
@@ -99,11 +103,32 @@ export class BoardingDetailsPage implements OnInit {
 
   saveBoarding(boarding: Boarding) {
     console.log('Saved/Shared:', boarding);
-    alert('Saved/Shared successfully!');
+    alert('Saved successfully!');
   }
 
-  reportIssue(boarding: Boarding) {
-    console.log('Report issue:', boarding);
-    alert('Issue reported to admin!');
+  async reportIssue() {
+    const alert = await this.alertCtrl.create({
+      header: 'Report Clinic',
+      inputs: [
+        { name: 'reason', type: 'text', placeholder: 'Enter reason for reporting' }
+      ],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        { 
+          text: 'Submit', 
+          handler: async (data) => {
+            console.log('Report submitted:', data.reason);
+            const toast = await this.toastCtrl.create({
+              message: 'Report submitted successfully!',
+              duration: 1500,
+              color: 'warning',
+              position: 'bottom'
+            });
+            toast.present();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

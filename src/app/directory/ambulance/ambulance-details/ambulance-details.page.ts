@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule, Platform } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { AlertController, ToastController } from '@ionic/angular';
 
 interface Ambulance {
   id: string;
@@ -22,7 +23,7 @@ interface Ambulance {
   styleUrls: ['./ambulance-details.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] // ✅ Add this line
+  schemas: [CUSTOM_ELEMENTS_SCHEMA] 
 })
 export class AmbulanceDetailsPage implements OnInit {
   ambulance: Ambulance | null = null;
@@ -32,7 +33,9 @@ export class AmbulanceDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private firebaseService: FirebaseService,
-    private platform: Platform
+    private platform: Platform,
+     private alertCtrl: AlertController,
+  private toastCtrl: ToastController
   ) {}
 
   ngOnInit() {
@@ -99,8 +102,29 @@ export class AmbulanceDetailsPage implements OnInit {
     alert('Saved/Shared successfully!');
   }
 
-  reportIssue(ambulance: Ambulance) {
-    console.log('Report issue:', ambulance);
-    alert('Issue reported to admin!');
+  async reportIssue() {
+    const alert = await this.alertCtrl.create({
+      header: 'Report Clinic',
+      inputs: [
+        { name: 'reason', type: 'text', placeholder: 'Enter reason for reporting' }
+      ],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        { 
+          text: 'Submit', 
+          handler: async (data) => {
+            console.log('Report submitted:', data.reason);
+            const toast = await this.toastCtrl.create({
+              message: 'Report submitted successfully!',
+              duration: 1500,
+              color: 'warning',
+              position: 'bottom'
+            });
+            toast.present();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

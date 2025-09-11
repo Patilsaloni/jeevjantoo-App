@@ -33,7 +33,7 @@
       }
     }
 
-    ion-card-footer {
+      ion-card-footer {
       padding: 0.5rem 1rem;
 
       ion-button {
@@ -45,22 +45,28 @@
 
         &:hover { transform: translateY(-2px); }
 
-        &.call-btn { --background: #28a745; ion-icon { color: #d4edda; } }
-        &.whatsapp-btn { --background: #25d366; ion-icon { color: #dcf8c6; } }
-        &.map-btn { --background: #007bff; ion-icon { color: #cce5ff; } }
-        &.save-btn { --background: #ffc107; ion-icon { color: #fff3cd; } }
-        &.share-btn { --background: #6c757d; ion-icon { color: #e2e3e5; } }
-        &.report-btn { --background: #dc3545; ion-icon { color: #f8d7da; } }
+        &.call-btn { --background: #6eb9ff; ion-icon { color: #d4edda; } }
+        &.whatsapp-btn { --background: #21C063; ion-icon { color: #dcf8c6; } }
+        &.map-btn { --background: #40c11d; ion-icon { color: #cce5ff; } }
+        &.save-btn { --background: #ffdc6e; ion-icon { color: #fff3cd; } }
+        &.share-btn { --background: #6284ad; ion-icon { color: #e2e3e5; } }
+        &.report-btn { --background: #ff8d6b; ion-icon { color: #f8d7da; } }
       }
     }
   }
 
-  .spinner-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 60vh;
-  }
+   .spinner-overlay {
+  position: fixed;   /* stay on top */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.7); // optional dim background
+  z-index: 9999;
+}
 
   .no-data {
     text-align: center;

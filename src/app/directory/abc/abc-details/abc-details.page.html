@@ -1,15 +1,21 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar class="premium-toolbar">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>ABC Details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="premium-abc-details">
-  <ion-spinner *ngIf="loading" class="spinner-center" name="dots"></ion-spinner>
-
+   <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
   <div *ngIf="!loading && abc">
     <ion-card>
       <ion-card-header>
@@ -28,23 +34,40 @@
         <ion-grid>
           <ion-row>
             <ion-col size="6">
-              <ion-button expand="block" color="primary" (click)="callPerson()">Call</ion-button>
+              <ion-button expand="block" class="call-btn" (click)="callPerson()">
+                <ion-icon slot="start" name="call-outline"></ion-icon> Call
+              </ion-button>
             </ion-col>
             <ion-col size="6">
-              <ion-button expand="block" color="success" (click)="whatsappPerson()">WhatsApp</ion-button>
+              <ion-button expand="block" class="whatsapp-btn" (click)="whatsappPerson()">
+                <ion-icon slot="start" name="logo-whatsapp"></ion-icon> WhatsApp
+              </ion-button>
             </ion-col>
           </ion-row>
+
           <ion-row>
             <ion-col size="6">
-              <ion-button expand="block" color="tertiary" (click)="openMap()">Map</ion-button>
+              <ion-button expand="block" class="map-btn" (click)="openMap()">
+                <ion-icon slot="start" name="location-outline"></ion-icon> Map
+              </ion-button>
             </ion-col>
             <ion-col size="6">
-              <ion-button expand="block" color="warning" (click)="saveRecord()">Save</ion-button>
+              <ion-button expand="block" class="save-btn" (click)="saveRecord()">
+                <ion-icon slot="start" name="bookmark-outline"></ion-icon> Save
+              </ion-button>
             </ion-col>
           </ion-row>
+
           <ion-row>
-            <ion-col size="12">
-              <ion-button expand="block" color="danger" (click)="reportRecord()">Report Issue</ion-button>
+            <ion-col size="6">
+              <ion-button expand="block" class="share-btn" (click)="shareRecord()">
+                <ion-icon slot="start" name="share-social-outline"></ion-icon> Share
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="report-btn" (click)="report()">
+                <ion-icon slot="start" name="alert-circle-outline"></ion-icon> Report
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>

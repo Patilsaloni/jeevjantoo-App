@@ -13,9 +13,9 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="premium-ambulance-details">
-  <!-- Loader -->
-  <ion-spinner *ngIf="loading" name="crescent" class="spinner-center"></ion-spinner>
-
+  <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
   <!-- Ambulance Details -->
   <ion-card *ngIf="!loading && ambulance">
     <ion-card-header>
@@ -32,34 +32,38 @@
     </ion-card-content>
 
     <ion-card-footer>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6">
-            <ion-button expand="block" color="secondary" (click)="callAmbulance(ambulance.contact)">
-              Call
-            </ion-button>
-          </ion-col>
-          <ion-col size="6">
-            <ion-button expand="block" color="primary" (click)="openMap(ambulance.lat, ambulance.lng)">
-              Map
-            </ion-button>
-          </ion-col>
-        </ion-row>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="btn-call" (click)="callAmbulance(ambulance.contact)">
+                <ion-icon slot="start" name="call-outline"></ion-icon>
+                Call
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="btn-map" (click)="openMap(ambulance.lat, ambulance.lng)">
+                <ion-icon slot="start" name="location-outline"></ion-icon>
+                Map
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" class="btn-save" (click)="saveAmbulance(ambulance)">
+                <ion-icon slot="start" name="bookmark-outline"></ion-icon>
+                Save
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="btn-report" (click)="reportIssue()">
+                <ion-icon slot="start" name="alert-circle-outline"></ion-icon>
+                Report
+              </ion-button>
 
-        <ion-row class="mt-2">
-          <ion-col size="6">
-            <ion-button expand="block" color="success" (click)="saveAmbulance(ambulance)">
-              Save
-            </ion-button>
-          </ion-col>
-          <ion-col size="6">
-            <ion-button expand="block" color="danger" (click)="reportIssue(ambulance)">
-              Report
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-footer>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-footer>
   </ion-card>
 
   <!-- No Data -->

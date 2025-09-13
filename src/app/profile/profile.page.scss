@@ -1,45 +1,84 @@
 ion-content {
-  --background: #f4f5f8;
+    min-height: 100vh;
+  padding: 0;
 }
 
-.profile-card {
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
-  transition: transform 0.3s ease;
+/* Profile Header Design */
+.profile-header {
+  background: #ffd8a1;
+    padding: 34px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  &:hover {
-    transform: translateY(-5px);
-  }
+.avatar-circle {
+  background: #ff9d32;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.avatar-icon {
+  color: #fff;
+  font-size: 2.6rem;
+}
 
-  ion-card-title {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #3880ff;
-  }
+.username-text {
+  color: #222;
+  font-size: 1.14rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-align: center;
+}
 
-  ion-item {
-    --border-radius: 8px;
-    margin-bottom: 10px;
-  }
+/* Profile Page Menu List */
+.profile-list {
+  background: #fff;
+  margin: 0 auto;
+  margin-top: 0;
+  padding: 28px 0 0 0;
+  max-width: 370px;
+  border-radius: 18px;
+}
 
-  ion-label {
-    font-size: 1rem;
-    color: #333;
-  }
+.profile-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition: background 0.13s;
+  border-bottom: 1px solid #f4f5f8;
+  min-width: 0;
+}
 
-  ion-icon {
-    color: #3880ff;
-  }
+.profile-item:last-child {
+  border-bottom: none;
+}
 
-  .animated-button {
-    font-weight: bold;
-    text-transform: uppercase;
-    --border-radius: 10px;
-    transition: transform 0.2s ease;
+.profile-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.28rem;
+  margin-right: 16px;
+}
 
-    &:hover {
-      transform: scale(1.05);
-    }
-  }
+.profile-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #232323;
+  flex: 1;
+  min-width: 0;
+}
+
+.chevron {
+  color: #969696;
+  font-size: 1.37rem;
 }

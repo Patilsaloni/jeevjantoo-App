@@ -1,48 +1,86 @@
-ion-content {
-  --background: #f4f5f8;
+.nav-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background-color: var(--ion-background-color, #fff);
 }
 
-.adoption-card {
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
-  transition: transform 0.3s ease;
+/* Style for the Create button */
+button {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --border-radius: 8px;
+  text-transform: capitalize;
+  font-size: 16px;
+  height: 40px;
+  min-width: 80px;
+}
 
-  &:hover {
-    transform: translateY(-5px);
+/* Search bar styling */
+ion-searchbar {
+  --background: var(--ion-color-light, #f4f5f8);
+  --border-radius: 8px;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --icon-color: var(--ion-color-primary, #3880ff);
+  flex: 1;
+  max-width: 400px;
+  height: 40px;
+  padding: 0;
+  margin: 0;
+}
+
+/* Filter icon styling */
+ion-icon {
+  font-size: 24px;
+  color: var(--ion-color-primary, #3880ff);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+ion-icon:hover {
+  color: var(--ion-color-primary-shade, #3171e0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .nav-container {
+    flex-wrap: nowrap;
+    gap: 8px;
   }
 
-  ion-card-title {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #3880ff;
+  ion-searchbar {
+    max-width: 100%;
+    flex: 1;
   }
 
-  ion-item {
-    --border-radius: 8px;
-    margin-bottom: 10px;
+  button {
+    min-width: 60px;
+    font-size: 14px;
   }
 
-  ion-label {
-    font-weight: 500;
-    color: #333;
+  ion-icon {
+    font-size: 20px;
   }
+}
 
-  .preview-image {
-    max-height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-top: 10px;
-  }
-
-  .animated-button {
-    font-weight: bold;
-    text-transform: uppercase;
-    --border-radius: 10px;
-    transition: transform 0.2s ease;
-
-    &:hover {
-      transform: scale(1.05);
-    }
-  }
+.pet-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+ion-badge[slot="end"] {
+  margin-left: 8px;
+}
+ion-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+.map-container {
+  width: 100%;
+  height: 350px;
+  margin-bottom: 18px;
+  /* Add your map styling here */
 }

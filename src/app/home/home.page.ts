@@ -10,10 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    IonicModule
-  ],
+  imports: [CommonModule, IonicModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomePage implements OnInit {
@@ -33,18 +30,15 @@ export class HomePage implements OnInit {
     { label: 'Govt Helpline', icon: 'call-outline', route: 'ghelpline' },
     { label: 'Feeding', icon: 'restaurant-outline', route: 'feeding' },
     { label: 'Insurance', icon: 'shield-checkmark-outline', route: 'insurance' },
-    { label: 'Adoption', icon: 'paw-outline', route: 'adoptions' }
   ];
 
-  // Variables for HTML use
   categories = [
-  { name: 'Dogs', icon: 'paw-outline', route: 'dogs', imageUrl: 'assets/img/dogs.jpg' },
-  { name: 'Cats', icon: 'paw-outline', route: 'cats', imageUrl: 'assets/img/cats.jpg' },
-  { name: 'Birds', icon: 'paw-outline', route: 'birds', imageUrl: 'assets/img/birds.jpg' },
-  { name: 'Rabbits', icon: 'paw-outline', route: 'rabbits', imageUrl: 'assets/img/rabbits.jpg' },
-  { name: 'Small Pets', icon: 'paw-outline', route: 'small-pets', imageUrl: 'assets/img/hamster.jpg' }
-];
-
+    { name: 'Dogs', icon: 'paw-outline', route: 'dogs', imageUrl: 'assets/img/dogs.jpg' },
+    { name: 'Cats', icon: 'paw-outline', route: 'cats', imageUrl: 'assets/img/cats.jpg' },
+    { name: 'Birds', icon: 'paw-outline', route: 'birds', imageUrl: 'assets/img/birds.jpg' },
+    { name: 'Rabbits', icon: 'paw-outline', route: 'rabbits', imageUrl: 'assets/img/rabbits.jpg' },
+    { name: 'Small Pets', icon: 'paw-outline', route: 'small-pets', imageUrl: 'assets/img/hamster.jpg' }
+  ];
 
   featuredPets = [
     { id: 1, name: 'Buddy', breed: 'Golden Retriever', age: '2 years', photos: ['assets/img/buddy.jpg'] },
@@ -53,34 +47,13 @@ export class HomePage implements OnInit {
     { id: 4, name: 'Mochi', breed: 'Shiba Inu', age: '1 year', photos: ['assets/img/mochi.jpg'] }
   ];
 
-  adoptionPets = this.featuredPets.slice(0, 3);
-
   latestAdoptions: any[] = [];
   loadingStats = true;
   loadingAdoptions = true;
 
-  // Ionic ion-slides options
-  bannerOptions = {
-    slidesPerView: 1,
-    loop: true,
-    autoplay: true
-  };
-
-  tilesOptions = {
-    slidesPerView: 2.5,
-    spaceBetween: 15,
-    freeMode: true
-  };
-
-  carouselOptions = {
-    slidesPerView: 1.2,
-    spaceBetween: 15,
-    loop: true,
-    centeredSlides: true
-  };
-
-  banners = [1, 2, 3]; // banner images
-  carouselItems = [1, 2, 3, 4]; // featured carousel images
+  bannerOptions = { slidesPerView: 1, loop: true, autoplay: true };
+  tilesOptions = { slidesPerView: 2.5, spaceBetween: 15, freeMode: true };
+  carouselOptions = { slidesPerView: 1.2, spaceBetween: 15, loop: true, centeredSlides: true };
 
   constructor(
     private directoryService: DirectoryService,
@@ -90,27 +63,8 @@ export class HomePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.loadStats();
     this.loadLatestAdoptions();
   }
-
-  // loadStats() {
-  //   this.loadingStats = true;
-  //   this.directoryService.getCounts().subscribe({
-  //     next: (res: any) => {
-  //       this.stats[0].value = res.clinics ?? 0;
-  //       this.stats[1].value = res.ngos ?? 0;
-  //       this.stats[2].value = res.adoptions ?? 0;
-  //       this.stats[3].value = res.events ?? 0;
-  //       this.loadingStats = false;
-  //     },
-  //     error: (err: any) => {
-  //       console.error('Error loading stats', err);
-  //       this.stats.forEach(stat => stat.value = 0);
-  //       this.loadingStats = false;
-  //     }
-  //   });
-  // }
 
   loadLatestAdoptions() {
     this.loadingAdoptions = true;
@@ -126,36 +80,33 @@ export class HomePage implements OnInit {
           : [];
         this.loadingAdoptions = false;
       },
-      error: (err: any) => {
-        console.error('Error loading adoptions', err);
+      error: () => {
         this.latestAdoptions = [];
         this.loadingAdoptions = false;
       }
     });
   }
 
+  // Navigate to a directory page dynamically
   goToDirectory(route: string, type?: string) {
+    const path = `/tabs/directory/${route}`;
     if (type) {
-      this.router.navigate([`/${route}`], { queryParams: { type } });
+      this.router.navigate([path], { queryParams: { type } });
     } else {
-      this.router.navigate([`/${route}`]);
+      this.router.navigate([path]);
     }
   }
 
   goToAdoptions() {
-    this.router.navigate(['/adoptions']);
+    this.router.navigate(['/tabs/adoptions']);
   }
 
   goToAdoptionDetail(pet: any) {
-    this.router.navigate([`/adoption-detail/${pet.id}`]);
-  }
-  
-  navigateToDirectory(){
-    this.router.navigate(['/tabs/directory']);
+    this.router.navigate([`/tabs/adoption-detail/${pet.id}`]);
   }
 
-  goToTab(tab: string) {
-    this.router.navigate([`/${tab}`]);
+  navigateToDirectory() {
+    this.router.navigate(['/tabs/directory']);
   }
 
 }

@@ -6,6 +6,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { environment } from '../environments/environment';
 
+
 const app = initializeApp(environment.firebaseConfig);
 const auth = getAuth(app);
 
@@ -48,5 +49,16 @@ export class AppComponent {
   async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastCtrl.create({ message, duration: 2000, color });
     toast.present();
+  }
+
+  navigareToHome(){
+    this.router.navigate(['/tabs/home'])
+  }
+  navigateToProfile(){
+    this.router.navigate(['/tabs/profile'])
+  }
+  
+  navigateToAdopt(){
+    this.router.navigate(['/tabs/adoption'])
   }
 }

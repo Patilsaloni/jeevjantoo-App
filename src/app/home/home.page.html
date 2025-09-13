@@ -1,3 +1,4 @@
+
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -14,71 +15,92 @@
 
 <ion-content class="premium-dashboard">
 
-  <!-- Top Banner with Background Image -->
-  <ion-slides [options]="bannerOptions" class="banner-slides">
-    <ion-slide>
-      <div class="banner-slide" 
-           [ngStyle]="{'background-image': 'url(assets/img/pets2.png)'}">
-        <div class="banner-text">
-          <h1>Find Your New Best Friend</h1>
-          <p>Adopt a loving pet today</p>
-        </div>
+  <!-- Hero Banner -->
+  <div class="adopt-card-wrapper">
+    <div class="cat-illustration">
+      <img src="assets/img/herocat.svg" alt="Cat" />
+    </div>
+    <ion-card class="adopt-card">
+      <div class="card-content">
+        <h1>
+          <span class="bold">Find Your New </span>
+          <span class="highlight">Best Friend</span>
+        </h1>
+        <ion-button expand="block" class="adopt-btn" (click)="navigateToDirectory()">
+          ADOPT NOW
+        </ion-button>
       </div>
-    </ion-slide>
-  </ion-slides>
-
-  <!-- Explore Section -->
-  <div class="explore-header">
-    <h2>Explore</h2>
-    <ion-button fill="clear" size="small" (click)="navigateToDirectory()">View All</ion-button>
+    </ion-card>
   </div>
 
-  <ion-grid>
-    <ion-row>
-      <ion-col size="6" *ngFor="let tile of tiles; let i = index" [hidden]="i >= 4">
-        <ion-card button (click)="goToDirectory(tile.route, tile.type)">
-          <ion-card-content class="tile-card">
-            <ion-icon [name]="tile.icon" size="large"></ion-icon>
-            <h3>{{ tile.label }}</h3>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <!-- Ends -->
 
-  <!-- Extra Banner Slide with Image -->
-    <ion-slides [options]="bannerOptions" class="banner-slides">
+  <!-- Explore Section -->
+  <div class="explore-section">
+    <div class="heading">
+      <h2>Explore</h2>
+      <ion-button fill="clear" size="small" class="view-all-btn" (click)="navigateToDirectory()">View All</ion-button>
+    </div>
+
+    <div class="categories-slider">
+      <div class="category-card" *ngFor="let tile of tiles" (click)="goToDirectory(tile.route, tile.type)">
+        <div class="icon-bg">
+          <ion-icon [name]="tile.icon" size="large"></ion-icon>
+        </div>
+        <div class="label">{{ tile.label }}</div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- <ion-slides [options]="bannerOptions" class="community-slides">
     <ion-slide>
-      <div class="banner-slide" 
-           [ngStyle]="{'background-image': 'url(assets/img/pets2.jpg)'}">
+      <div class="banner-slide" [ngStyle]="{'background-image': 'url(assets/img/pets2.jpg)'}">
         <div class="banner-text">
           <h1>Join Our Pet Community!</h1>
           <p>Swipe to see more exciting content.</p>
         </div>
       </div>
     </ion-slide>
-  </ion-slides>
+  </ion-slides> -->
 
-   <!-- Ready for Adoption -->
-  <div class="adoption-section">
-    <div class="adoption-header">
-      <h2>Ready for Adoption</h2>
-      <ion-button fill="clear" size="small" (click)="goToAdoptions()">View All</ion-button>
-    </div>
-  <ion-slides [options]="carouselOptions" class="carousel-swiper">
-    <ion-slide *ngFor="let pet of featuredPets">
-      <ion-card button (click)="goToAdoptionDetail(pet)">
-        <ion-card-content>
-          <ion-img [src]="pet.photos[0]" alt="{{pet.name}}"></ion-img>
-          <h3>{{ pet.name }}</h3>
-          <p>{{ pet.breed }} - {{ pet.age }}</p>
-        </ion-card-content>
-      </ion-card>
+
+  <!-- Extra Banner Slide with Image -->
+  <ion-slides [options]="bannerOptions" class="community-slides">
+    <ion-slide>
+      <div class="banner-slide-community">
+        <div class="community-content">
+          <h1>Join Our Pet <br> Community!</h1>
+        </div>
+        <div class="community-pawprints"></div>
+        <img class="community-image" src="assets/img/banner-img.png" alt="Pet Family" />
+      </div>
     </ion-slide>
   </ion-slides>
+
+
+
+  <!-- Ready for Adoption -->
+  <div class="adoption-section">
+    <div class="heading">
+      <h2>Ready for Adoption</h2>
+      <ion-button fill="clear" size="small" class="view-all-btn" (click)="goToAdoptions()">View All</ion-button>
+    </div>
+    <ion-slides [options]="carouselOptions" class="carousel-swiper">
+      <ion-slide *ngFor="let pet of featuredPets">
+        <ion-card button (click)="goToAdoptionDetail(pet)">
+          <ion-card-content>
+            <div class="pet-img">
+              <ion-img [src]="pet.photos[0]" alt="{{pet.name}}"></ion-img>
+            </div>
+
+            <div class="pet-details">
+              <h3>{{ pet.name }}</h3>
+              <p>{{ pet.breed }} - {{ pet.age }}</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
   </div>
-
-
 </ion-content>
-
-

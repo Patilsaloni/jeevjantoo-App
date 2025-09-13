@@ -1,49 +1,58 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
+    <ion-menu contentId="main-content" type="overlay" class="premium-menu">
       <ion-content>
-        <ion-list class="menu-list">
-          <ion-item class="logo-item" routerLink="/dashboard" routerDirection="root">
-            <ion-list-header class="menu-header">Jeev Jantoo</ion-list-header>
-          </ion-item>
+        <!-- Profile Header -->
+        <div class="menu-profile">
+          <div class="profile-details">
+            <div class="profile-name">Jeev Jantoo</div>
+            <div class="profile-status">Find your new family member!</div>
+          </div>
+        </div>
 
-          <ion-menu-toggle>
-            <ion-item routerLink="/profile" routerDirection="root" class="menu-item">
+        <!-- Menu List -->
+        <ion-list class="menu-list" lines="none">
+          <ion-menu-toggle auto-hide="false">
+            <ion-item routerLink="/dashboard" (click)="navigareToHome()">
+              <ion-icon name="home-outline" slot="start"></ion-icon>
+              <ion-label>Dashboard</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item routerLink="/profile" (click)="navigateToProfile()">
               <ion-icon name="person-outline" slot="start"></ion-icon>
               <ion-label>Profile</ion-label>
             </ion-item>
           </ion-menu-toggle>
-
-          <ion-menu-toggle>
-            <ion-item routerLink="/pets" routerDirection="root" class="menu-item">
+          <ion-menu-toggle auto-hide="false">
+            <ion-item routerLink="/pets" (click)="navigateToAdopt()">
               <ion-icon name="paw-outline" slot="start"></ion-icon>
               <ion-label>Adopt</ion-label>
             </ion-item>
           </ion-menu-toggle>
-
-          <ion-menu-toggle>
-            <ion-item routerLink="/adoption" routerDirection="root" class="menu-item">
+          <ion-menu-toggle auto-hide="false">
+            <ion-item routerLink="/adoption" routerDirection="root">
               <ion-icon name="heart-outline" slot="start"></ion-icon>
               <ion-label>Put for Adoption</ion-label>
             </ion-item>
           </ion-menu-toggle>
-
-          <ion-menu-toggle>
-            <ion-item routerLink="/contact" routerDirection="root" class="menu-item">
+          <ion-menu-toggle auto-hide="false">
+            <ion-item routerLink="/contact" routerDirection="root">
               <ion-icon name="mail-outline" slot="start"></ion-icon>
               <ion-label>Contact</ion-label>
             </ion-item>
           </ion-menu-toggle>
+        </ion-list>
 
-          <!-- Logout Button -->
-          <ion-menu-toggle>
-            <ion-item (click)="logout()" class="menu-item">
+        <!-- Logout button fixed at bottom -->
+        <div class="signout-container">
+          <ion-menu-toggle auto-hide="false">
+            <ion-item (click)="logout()" class="signout-item">
               <ion-icon name="log-out-outline" slot="start"></ion-icon>
               <ion-label>Logout</ion-label>
             </ion-item>
           </ion-menu-toggle>
-
-        </ion-list>
+        </div>
       </ion-content>
     </ion-menu>
 

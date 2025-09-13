@@ -13,6 +13,8 @@ const routes: Routes = [
       { path: 'home', loadChildren: () => import('../home/home.module').then(m => m.HomePageModule) },
       { path: 'adoption', loadChildren: () => import('../adoption/adoption.module').then(m => m.AdoptionPageModule) },
 
+      
+
       // Directory main pages
       { path: 'directory', loadComponent: () => import('../directory/directory.page').then(m => m.DirectoryPage) },
       { path: 'directory/clinics', loadComponent: () => import('../directory/clinics/clinics.page').then(m => m.ClinicsPage) },

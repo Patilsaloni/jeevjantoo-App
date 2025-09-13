@@ -7,6 +7,7 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 import { Capacitor } from '@capacitor/core';
 
+
 bootstrapApplication(AppComponent, {
   providers: [
     // Only modules go here

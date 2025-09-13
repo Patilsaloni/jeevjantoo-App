@@ -1,22 +1,141 @@
-html, body, ion-app, ion-content {
+/* Main menu content */
+.premium-menu ion-content {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  overflow: hidden;
+  --background: #fff; /* Base menu background */
+  padding: 0;
+  position: relative;
+  font-family: 'Poppins', sans-serif;
 }
 
-ion-content {
-  --keyboard-offset: 0px;
-  --overflow: hidden;
+/* Profile header */
+.menu-profile {
+  background: linear-gradient(135deg, #ff7700 0%, #ff6b00 80%, #ffae40 100%);
+  padding: 32px 20px 24px 20px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  margin-bottom: 12px;
+  min-height: 92px;
+  display: flex;
+  align-items: flex-end;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* When keyboard opens, prevent jump */
-body.keyboard-open ion-content {
-  --keyboard-offset: 0px !important;
-  --overflow: hidden !important;
-  overflow: hidden !important;
+.profile-details {
+  color: #fff;
 }
 
-body.keyboard-open .form-wrapper {
-  justify-content: flex-start !important;
-  padding-top: 60px; /* ensures inputs near bottom remain visible */
-  height: 100%;
+.list-md {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background: none;
+}
+.profile-name {
+  font-size: 1.2em;
+  font-weight: 700;
+  margin-bottom: 3px;
+  letter-spacing: 0.3px;
+}
+
+.profile-status {
+  font-size: 0.95em;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+/* Scrollable menu list */
+.menu-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0 0 90px 0; /* Space for logout */
+}
+
+.menu-list ion-item {
+  --background: #fff3ea; /* Light premium color */
+  color: #222;
+  font-size: 1.06em;
+  border-radius: 16px;
+  margin: 5px 16px;
+  height: 50px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.menu-list ion-item:hover {
+  background-color: #ffd1a8 !important; /* Hover color */
+  color: #ff6b00 !important;
+  transform: translateX(2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.menu-list ion-item:active,
+.menu-list ion-item.activated,
+.menu-list ion-item.selected {
+  background-color: #ffc78f !important;
+  color: #e65c00 !important;
+}
+
+ion-icon[slot=start] {
+  font-size: 1.25em;
+  color: #ff6b00;
+  margin-right: 10px;
+}
+
+/* Logout button fixed at bottom with colored background */
+.signout-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  background: #fff3ea; /* Match menu item light color */
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+  z-index: 10;
+}
+
+.signout-item {
+  color: #ff3c33 !important;
+  font-weight: 600;
+  border-radius: 16px;
+  height: 50px;
+  background: #ffb8a0 !important; /* Premium colored button */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 16px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.signout-item:hover {
+  background-color: #ff9275 !important;
+  color: #a7221c !important;
+  transform: translateX(2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.signout-item:active {
+  background-color: #ff6b50 !important;
+  color: #7a1c14 !important;
+}
+
+.signout-item ion-icon {
+  color: #fff !important; /* White icon on colored button */
+  font-size: 1.25em;
+}
+
+/* Remove default ion-list borders */
+ion-list, ion-item {
+  --inner-border-width: 0 !important;
 }

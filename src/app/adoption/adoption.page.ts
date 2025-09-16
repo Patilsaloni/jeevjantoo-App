@@ -1,161 +1,103 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController, LoadingController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { PetDetailsPage } from './pet-details/pet-details.page'; // Import PetDetailsPage
 import { Router } from '@angular/router';
-
-interface Pet {
-  name: string;
-  breed: string;
-  age: number;
-  gender: string;
-  image: string | null;
-  category: string; // For filtering by category
-   favorite?: boolean; // track favorite state
-}
+import { FirebaseService } from '../../app/services/firebase.service';
+import { Pet } from '../models/pet.model';
 
 @Component({
   selector: 'app-adoption',
   templateUrl: './adoption.page.html',
   styleUrls: ['./adoption.page.scss'],
   standalone: true,
-  imports: [FormsModule, IonicModule, CommonModule], // add PetMapComponent here if needed
+  imports: [FormsModule, IonicModule, CommonModule],
 })
 export class AdoptionPage implements OnInit {
   searchText: string = '';
-  filters: string[] = ['All', 'Dogs', 'Cats', 'Birds'];
+  filters: string[] = ['All', 'Dog', 'Cat', 'Other'];
   selectedFilter: string = 'All';
+  pets: Pet[] = [];
 
-  pets: Pet[] = [
-    {
-      name: 'Buddy',
-      breed: 'Golden Retriever',
-      age: 3,
-      gender: 'Male',
-      image: 'assets/dog.jpg',
-      category: 'Dogs',
-    },
-    {
-      name: 'Mittens',
-      breed: 'Persian Cat',
-      age: 2,
-      gender: 'Female',
-      image: 'assets/cat.jpg',
-      category: 'Cats',
-    },
-    {
-      name: 'Tweety',
-      breed: 'Parrot',
-      age: 1,
-      gender: 'Female',
-      image: 'assets/bird.jpg',
-      category: 'Birds',
-    },
-  ];
+  constructor(
+    private router: Router,
+    private firebaseService: FirebaseService,
+    private toastCtrl: ToastController,
+    private loadingCtrl: LoadingController
+  ) {}
 
-  // For new pet submission
-  pet: Pet = {
-    name: '',
-    breed: '',
-    age: 0,
-    gender: '',
-    image: null,
-    category: 'Dogs',
-    
-  };
-
-  favorites: Pet[] = []; // bookmarked pets
-
-  constructor(private router: Router) {}
-
-  ngOnInit() {
-    console.log('AdoptionPage initialized ✅');
+  async ngOnInit() {
+    await this.loadPets();
   }
 
-  // Apply category filter
+  async loadPets() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Loading pets...',
+      spinner: 'crescent',
+    });
+    await loading.present();
+
+    try {
+      const activePets: any[] = await this.firebaseService.getActivePets();
+      const favoritePets: any[] = await this.firebaseService.getFavoritePets('pet-adoption');
+      const favoriteIds = favoritePets.map(p => p.id);
+
+      this.pets = activePets.map(p => ({
+        ...p,
+        favorite: favoriteIds.includes(p.id),
+        // ✅ use first photo from array or fallback
+        image: Array.isArray(p.photos) && p.photos.length > 0 
+          ? p.photos[0] 
+          : 'assets/default-pet.jpg'
+      }));
+    } catch (err) {
+      console.error(err);
+      this.showToast('Failed to load pets.', 'danger');
+    } finally {
+      await loading.dismiss();
+    }
+  }
+
   applyFilter(cat: string) {
     this.selectedFilter = cat;
   }
 
-  // Show category icon
-  getCategoryIcon(cat: string): string {
-    switch (cat) {
-      case 'Dogs':
-        return 'assets/icons/dog.png';
-      case 'Cats':
-        return 'assets/icons/cat.png';
-      case 'Birds':
-        return 'assets/icons/bird.png';
-      default:
-        return 'assets/icons/all.png';
-    }
-  }
-
-  // Filter pets by search + category
   filteredPets(): Pet[] {
     return this.pets.filter(
-      (pet) =>
-        (this.selectedFilter === 'All' ||
-          pet.category === this.selectedFilter) &&
-        pet.name.toLowerCase().includes(this.searchText.toLowerCase())
+      pet =>
+        (this.selectedFilter === 'All' || pet.species === this.selectedFilter) &&
+        pet.petName.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  // Bookmark pet
-  bookmarkPet(pet: Pet) {
-    if (!this.favorites.includes(pet)) {
-      this.favorites.push(pet);
-      console.log('Bookmarked pet:', pet);
-    } else {
-      console.warn('Already bookmarked:', pet.name);
+  openPetDetails(pet: Pet) {
+    this.router.navigate(['/adoption/pet-details', pet.id]);
+  }
+
+  async toggleFavorite(pet: Pet, event: MouseEvent) {
+    event.stopPropagation();
+    if (!pet.id) return;
+
+    try {
+      await this.firebaseService.setFavorite('pet-adoption', pet.id, !pet.favorite);
+      pet.favorite = !pet.favorite;
+    } catch (err) {
+      console.error(err);
+      this.showToast('Failed to toggle favorite.', 'danger');
     }
-  }
-
-  // Handle image upload
-  onImageChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.pet.image = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  // Submit new pet
-  submitPet() {
-    if (this.pet.name.trim() && this.pet.breed.trim()) {
-      this.pets.push({ ...this.pet });
-      console.log('Pet submitted:', this.pet);
-
-      // Reset form
-      this.pet = {
-        name: '',
-        breed: '',
-        age: 0,
-        gender: '',
-        image: null,
-        category: 'Dogs',
-      };
-    } else {
-      console.warn('⚠️ Please fill all required fields');
-    }
-  }
-
- openPetDetails(pet: Pet) {
-    this.router.navigate(['/adoption/pet-details', pet.name]);
-  }
-
-  toggleFavorite(pet: Pet, event: MouseEvent) {
-    event.stopPropagation(); // Prevent card click
-    pet.favorite = !pet.favorite;
   }
 
   newAdoptionNavigation() {
     this.router.navigate(['/tabs/adoption/submit-pet']);
   }
 
-  
+  private async showToast(message: string, color: 'success' | 'danger') {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2000,
+      color,
+      position: 'bottom',
+    });
+    await toast.present();
+  }
 }

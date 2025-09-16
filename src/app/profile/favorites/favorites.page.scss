@@ -1,0 +1,17 @@
+.toggle-container {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.empty-state {
+  text-align: center;
+  margin-top: 40%;
+  color: gray;
+}
+
+ion-card {
+  margin: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+}

@@ -1,4 +1,3 @@
-
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -15,19 +14,12 @@
 
 <ion-content [fullscreen]="true" class="submit-pet-content">
   <div class="form-wrapper">
-     <!-- Mascot banner top (replace src with your mascot image path if desired) -->
     <div class="mascot-top">
       <img src="assets/img/newPet.png" alt="Pet mascot" class="mascot-img" />
     </div>
 
     <div class="submit-pet-card">
       <h2 class="form-title">Put Pet for <span class="highlight">Adoption</span></h2>
-
-      <!-- Logo -->
-      <!-- <div class="logo">
-        <img src="assets/icons/logo.png" alt="Jeevjantoo Logo" class="favicon-logo" />
-        <h2 class="app-title">Submit Pet for Adoption</h2>
-      </div> -->
 
       <!-- Step 1 Form -->
       <form *ngIf="step === 1" [formGroup]="petFormStep1">
@@ -56,7 +48,7 @@
         </ion-item>
         <ion-text color="danger" *ngIf="petFormStep1.get('age')?.touched && petFormStep1.get('age')?.invalid">
           <p *ngIf="petFormStep1.get('age')?.errors?.['required']">Age is required.</p>
-          <p *ngIf="petFormStep1.get('age')?.errors?.['min']">Age must be a positive number.</p>
+          <p *ngIf="petFormStep1.get('age')?.errors?.['min']">Age must be positive.</p>
         </ion-text>
 
         <ion-item [class.invalid]="petFormStep1.get('breed')?.invalid && petFormStep1.get('breed')?.touched">
@@ -98,19 +90,17 @@
           <p *ngIf="petFormStep2.get('contactPhone')?.errors?.['pattern']">Enter a valid phone number.</p>
         </ion-text>
 
+        <!-- Multiple Photo Upload -->
         <ion-item>
-          <!-- <ion-label>Upload Photos</ion-label>
-          <input type="file" (change)="onFileChange($event)" multiple accept="image/*"> -->
           <div class="input-row image-upload-row">
-          <label>Pet Image</label>
-          <button type="button" class="upload-btn" (click)="triggerFileInput()"> 
-  <ion-icon name="camera-outline"></ion-icon>
-  <span *ngIf="imageFileName">{{imageFileName}}</span>
-</button>
-<input type="file" #petImageInput (change)="onImageChange($event)" accept="image/*" style="display:none;" />
-
-          <!-- <input type="file" #petImageInput (change)="onImageChange($event)" accept="image/*" style="display:none;" /> -->
-        </div>
+            <label>Pet Photos</label>
+            <button type="button" class="upload-btn" (click)="triggerFileInput()"> 
+              <ion-icon name="camera-outline"></ion-icon>
+              <span *ngIf="imageFileNames.length">{{ imageFileNames.join(', ') }}</span>
+              <span *ngIf="!imageFileNames.length">Upload Photos</span>
+            </button>
+            <input type="file" #petImageInput (change)="onFileChange($event)" accept="image/*" multiple style="display:none;" />
+          </div>
         </ion-item>
 
         <ion-button expand="block" class="submit-btn" (click)="goBack()">← Back</ion-button>

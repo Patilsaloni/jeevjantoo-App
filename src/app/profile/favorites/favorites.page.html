@@ -1,13 +1,80 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>favorites</ion-title>
+    <ion-title>Favorites</ion-title>
+  </ion-toolbar>
+
+  <!-- 🔎 Search + Filters -->
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="searchQuery"
+      placeholder="Search favorites"
+      (ionInput)="applyFilters()">
+    </ion-searchbar>
+
+    <ion-segment [(ngModel)]="selectedFilter" (ionChange)="applyFilters()" value="all">
+      <ion-segment-button value="all">All</ion-segment-button>
+      <ion-segment-button value="clinic">Clinic</ion-segment-button>
+      <ion-segment-button value="ngo">NGO</ion-segment-button>
+      <ion-segment-button value="event">Event</ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">favorites</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <!-- 🟢 Toggle for List / Map -->
+  <div class="toggle-container ion-padding">
+    <ion-segment [(ngModel)]="viewMode" value="list">
+      <ion-segment-button value="list">List</ion-segment-button>
+      <ion-segment-button value="map">Map</ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- 🟢 List View -->
+  <ng-container *ngIf="viewMode === 'list'">
+    <ion-card *ngFor="let pet of filteredFavorites">
+      <img [src]="pet.image || 'assets/default-pet.jpg'" alt="pet image" />
+
+      <ion-card-header>
+        <ion-card-title>{{ pet.petName }}</ion-card-title>
+        <ion-card-subtitle>{{ pet.category | titlecase }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><b>Address:</b> {{ pet.location || 'Not available' }}</p>
+        <p><b>Timings:</b> {{ pet.timings || 'Not available' }}</p>
+        <p><b>Remarks:</b> {{ pet.remarks || '-' }}</p>
+
+        <!-- 🔘 Action buttons -->
+        <ion-buttons>
+          <ion-button color="primary" (click)="call(pet.contact)" *ngIf="pet.contact">
+            <ion-icon slot="icon-only" name="call"></ion-icon>
+          </ion-button>
+
+          <ion-button color="success" (click)="whatsapp(pet.contact)" *ngIf="pet.contact">
+            <ion-icon slot="icon-only" name="logo-whatsapp"></ion-icon>
+          </ion-button>
+
+          <ion-button color="medium" (click)="share(pet)">
+            <ion-icon slot="icon-only" name="share-social"></ion-icon>
+          </ion-button>
+
+          <!-- 🔴 Updated remove button -->
+          <ion-button color="danger" (click)="removeFavorite(pet)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+  <!-- 🟢 Map View -->
+  <ng-container *ngIf="viewMode === 'map'">
+    <div id="map" style="height: 100vh; width: 100%;"></div>
+  </ng-container>
+
+  <!-- 🟢 Empty State -->
+  <div *ngIf="filteredFavorites.length === 0" class="empty-state ion-text-center ion-padding">
+    <ion-icon name="heart-outline" size="large" color="medium"></ion-icon>
+    <p>No favorites saved yet. Start adding to favorites!</p>
+  </div>
 </ion-content>

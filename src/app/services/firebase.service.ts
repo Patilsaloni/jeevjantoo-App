@@ -52,7 +52,7 @@ export class FirebaseService {
     });
   }
 
-  // ---------------- Firestore Methods ----------------
+  // ---------------- Firestore Generic Methods ----------------
   async addInformation(docID: string, data: any, collectionName: string) {
     const colRef = collection(this.db, collectionName);
     const docRef = doc(colRef, docID);
@@ -102,61 +102,125 @@ export class FirebaseService {
 
   // ---------------- Pet Methods ----------------
   async submitPet(petData: any) {
-    if (!this.getCurrentUser()) throw new Error('User must be signed in to submit pets.');
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('User must be signed in to submit pets.');
     petData.status = 'Pending' as PetStatus;
     petData.createdAt = serverTimestamp();
-    petData.submitterUid = this.getCurrentUser()!.uid;
+    petData.submitterUid = user.uid;
     const docID = petData.petName + '_' + Date.now();
     return this.addInformation(docID, petData, 'pet-adoption');
   }
 
-  async updatePetStatus(docID: string, status: PetStatus) {
-    return this.updateInformation('pet-adoption', docID, { status });
+    async updatePetStatus(docID: string, status: PetStatus) {
+    if (!docID) throw new Error("Pet document ID is required to update status.");
+    const docRef = doc(this.db, 'pet-adoption', docID);
+    await updateDoc(docRef, { status, updatedAt: serverTimestamp() });
+    return true;
   }
+
 
   async getActivePets() {
     return this.getFilteredInformation('pet-adoption', 'status', '==', 'Active');
   }
 
   // ---------------- Storage Methods ----------------
-  async uploadFile(file: File, path: string): Promise<string> {
-    if (!this.getCurrentUser()) throw new Error('User must be signed in to upload files.');
-    const storageRef = ref(this.storage, path);
-    await uploadBytes(storageRef, file);
-    return getDownloadURL(storageRef);
+   async uploadFile(file: File, path: string): Promise<string> {
+    const storage = getStorage();
+    const storageRef = ref(storage, path);
+    await uploadBytes(storageRef, file);          // File upload
+    const downloadURL = await getDownloadURL(storageRef);  // URL get
+    return downloadURL;
   }
 
-  // ---------------- Favorites & Reports ----------------
-  async isFavorite(collectionName: string, id: string): Promise<boolean> {
-    const favRef = doc(this.db, `${collectionName}_favorites`, id);
-    const snap = await getDoc(favRef);
-    return snap.exists();
-  }
+  // ---------------- Favorites ----------------
+  async setFavorite(collectionName: string, pet: any | string, value: boolean) {
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('User must be signed in to manage favorites.');
 
-  async setFavorite(collectionName: string, id: string, value: boolean) {
-    if (!this.getCurrentUser()) throw new Error('User must be signed in to manage favorites.');
-    const favRef = doc(this.db, `${collectionName}_favorites`, id);
+    let petId: string;
+    let petData: any;
+
+    if (typeof pet === 'string') {
+      petId = pet;
+      const originalPet = await this.getDocument(collectionName, petId);
+      if (!originalPet) throw new Error('Pet not found.');
+      petData = originalPet;
+    } else {
+      petId = pet.id;
+      petData = pet;
+    }
+
+    const favRef = doc(this.db, `${collectionName}_favorites`, `${user.uid}_${petId}`);
+
     if (value) {
-      await setDoc(favRef, { favorite: true, updatedAt: new Date(), userId: this.getCurrentUser()!.uid });
+      await setDoc(favRef, {
+        ...petData,
+        favorite: true,
+        userId: user.uid,
+        updatedAt: serverTimestamp()
+      });
     } else {
       await deleteDoc(favRef);
     }
   }
 
-  async toggleFavorite(collectionName: string, id: string) {
-    const isFav = await this.isFavorite(collectionName, id);
-    await this.setFavorite(collectionName, id, !isFav);
+  async isFavorite(collectionName: string, petId: string): Promise<boolean> {
+    const user = this.getCurrentUser();
+    if (!user) return false;
+    const favRef = doc(this.db, `${collectionName}_favorites`, `${user.uid}_${petId}`);
+    const snap = await getDoc(favRef);
+    return snap.exists();
+  }
+
+  async toggleFavorite(collectionName: string, pet: any): Promise<boolean> {
+    const isFav = await this.isFavorite(collectionName, pet.id);
+    await this.setFavorite(collectionName, pet, !isFav);
     return !isFav;
   }
 
+ async getFavoritePets(collectionName: string): Promise<any[]> {
+  const user = this.getCurrentUser();
+  if (!user) return [];
+
+  const favSnapshot = await getDocs(
+    query(
+      collection(this.db, `${collectionName}_favorites`),
+      where('userId', '==', user.uid)
+    )
+  );
+
+  return favSnapshot.docs.map(doc => {
+    const petId = doc.id.split('_')[1]; // extract original pet id
+    const data = doc.data();
+
+    return {
+      id: petId,
+      petName: data['petName'] || 'Unknown',
+      breed: data['breed'] || 'Unknown',
+      age: data['age'] || 0,
+      gender: data['gender'] || '',
+      image: data['image'] || 'assets/default-pet.jpg',
+      category: data['category'] || 'Unknown',
+      favorite: true,
+      contact: data['contact'] || '',
+      location: data['location'] || 'Not available',
+      remarks: data['remarks'] || '',
+      timings: data['timings'] || 'Not available',
+    };
+  });
+}
+
+
+  // ---------------- Reports ----------------
   async reportEntry(collectionName: string, id: string, reason: string) {
-    if (!this.getCurrentUser()) throw new Error('User must be signed in to report entries.');
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('User must be signed in to report entries.');
     const reportsRef = collection(this.db, 'reports');
     await addDoc(reportsRef, {
       collection: collectionName,
       id,
       reason,
-      userId: this.getCurrentUser()!.uid,
+      userId: user.uid,
       createdAt: new Date()
     });
   }

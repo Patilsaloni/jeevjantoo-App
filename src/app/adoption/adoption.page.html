@@ -12,58 +12,71 @@
   </ion-toolbar>
 </ion-header>
 
-<div class="nav-container">
-  <button ion-button (click)="newAdoptionNavigation()"><ion-icon name="add-outline"></ion-icon></button>
-  <ion-searchbar placeholder="Search" debounce="300"></ion-searchbar>
-  <ion-icon name="filter-outline"></ion-icon>
-</div>
+<ion-content class="ion-padding">
 
+  <!-- Top navigation -->
+  <div class="nav-container">
+    <button ion-button (click)="newAdoptionNavigation()">
+      <ion-icon name="add-outline"></ion-icon>
+    </button>
+    <ion-searchbar
+      [(ngModel)]="searchText"
+      placeholder="Search"
+      debounce="300"
+    ></ion-searchbar>
+    <ion-icon name="filter-outline"></ion-icon>
+  </div>
 
-<!-- Categories horizontal scroll -->
-<div class="categories">
-  <!-- <div class="category" *ngFor="let cat of categories">
-    <img [src]="cat.img" alt="{{cat.name}}" />
-    <span>{{ cat.name }}</span>
-  </div> -->
-</div>
+  <!-- Categories -->
+  <div class="categories">
+    <div
+      class="category"
+      *ngFor="let cat of filters"
+      [class.active]="selectedFilter === cat"
+      (click)="applyFilter(cat)"
+    >
+      <span>{{ cat }}</span>
+    </div>
+  </div>
 
-<!-- Pet cards list -->
-<div class="pet-cards-list">
-  <div class="pet-card" *ngFor="let pet of filteredPets()">
-    <img [src]="pet.image" alt="{{ pet.name }}" class="pet-img" />
-    <div class="pet-card-content">
-      <div class="pet-card-header">
-        <div>
-          <div class="pet-name">{{ pet.name }}</div>
-          <div class="pet-location">
-            <ion-icon name="location-outline"></ion-icon>
-            Distance (Near 15km)
+  <!-- Pet cards -->
+  <div class="pet-cards-list">
+    <div class="pet-card" *ngFor="let pet of filteredPets()">
+      
+      <!-- ✅ Option 1: Show only first photo -->
+      <img [src]="pet.image" alt="{{ pet.petName }}" class="pet-img" />
+
+      <!-- ✅ Option 2: Show all photos (uncomment if needed) -->
+      <!--
+      <div class="pet-photos">
+        <img *ngFor="let photo of pet.photos" 
+             [src]="photo" 
+             alt="{{ pet.petName }}" 
+             class="pet-img" />
+      </div>
+      -->
+
+      <div class="pet-card-content">
+        <div class="pet-card-header">
+          <div>
+            <div class="pet-name">{{ pet.petName }}</div>
+            <div class="pet-location">
+              <ion-icon name="location-outline"></ion-icon>
+              Distance (Near 15km)
+            </div>
           </div>
+          <ion-icon
+            [name]="pet.favorite ? 'heart' : 'heart-outline'"
+            color="danger"
+            class="heart-icon"
+            (click)="toggleFavorite(pet, $event)"
+          ></ion-icon>
         </div>
-        <ion-icon name="heart-outline" class="heart-icon" (click)="openPetDetails(pet)"></ion-icon>
+        <div class="pet-details">
+          {{ pet.breed }} - {{ pet.age }} yrs
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-
-<!-- 
-<ion-list>
-  <ion-card *ngFor="let pet of pets" (click)="openPetDetails(pet)">
-    <img [src]="pet.image" alt="{{ pet.name }}" />
-    <ion-card-header>
-      <ion-card-title>
-        {{ pet.name }}
-        <ion-icon 
-          [name]="pet.favorite ? 'heart' : 'heart-outline'" 
-          color="danger" 
-          slot="end" 
-          (click)="toggleFavorite(pet, $event)">
-        </ion-icon>
-      </ion-card-title>
-      <ion-card-subtitle>
-        {{ pet.breed }} - {{ pet.age }} years
-      </ion-card-subtitle>
-    </ion-card-header>
-  </ion-card>
-</ion-list> -->
+</ion-content>

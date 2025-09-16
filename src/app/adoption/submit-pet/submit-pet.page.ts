@@ -1,19 +1,9 @@
-import { Component,ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  IonicModule,
-  ToastController,
-  LoadingController,
-} from '@ionic/angular';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { IonicModule, ToastController, LoadingController } from '@ionic/angular';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase.service';
 import { Router } from '@angular/router';
-import { getAuth } from 'firebase/auth';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
 interface Pet {
@@ -43,6 +33,9 @@ export class SubmitPetPage {
   petFormStep1: FormGroup;
   petFormStep2: FormGroup;
   photos: File[] = [];
+  imageFileNames: string[] = [];
+
+  @ViewChild('petImageInput') petImageInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private firebaseService: FirebaseService,
@@ -51,6 +44,7 @@ export class SubmitPetPage {
     private router: Router,
     private fb: FormBuilder
   ) {
+    // Step 1 form
     this.petFormStep1 = this.fb.group({
       petName: ['', [Validators.required, Validators.minLength(2)]],
       species: ['', Validators.required],
@@ -59,6 +53,7 @@ export class SubmitPetPage {
       description: ['', [Validators.required, Validators.minLength(10)]],
     });
 
+    // Step 2 form
     this.petFormStep2 = this.fb.group({
       location: [''],
       contactName: ['', Validators.minLength(2)],
@@ -66,27 +61,20 @@ export class SubmitPetPage {
     });
   }
 
-  imageFileName: string = '';
-
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.photos = Array.from(input.files);
-    }
-  }
-
-  @ViewChild('petImageInput') petImageInput!: ElementRef<HTMLInputElement>;
-
+  // Trigger file input
   triggerFileInput() {
     this.petImageInput.nativeElement.click();
   }
 
-  onImageChange(event: any) {
-    const file = event.target.files[0];
-    if (file) this.imageFileName = file.name;
+  // Handle multiple files
+  onFileChange(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.photos = Array.from(event.target.files);
+      this.imageFileNames = this.photos.map(file => file.name);
+    }
   }
 
-  goNext(): void {
+  goNext() {
     if (this.petFormStep1.invalid) {
       this.petFormStep1.markAllAsTouched();
       this.showToast('Please fill all required fields correctly.', 'danger');
@@ -95,14 +83,14 @@ export class SubmitPetPage {
     this.step = 2;
   }
 
-  goBack(): void {
+  goBack() {
     this.step = 1;
   }
 
-  async submitPet(): Promise<void> {
+  async submitPet() {
     if (!this.firebaseService.getCurrentUser()) {
       await this.showToast('Please sign in to submit a pet.', 'danger');
-      this.router.navigate(['/signin']); // Route to your sign-in page
+      this.router.navigate(['/signin']);
       return;
     }
 
@@ -113,11 +101,10 @@ export class SubmitPetPage {
     await loading.present();
 
     try {
-      const docID =
-        this.petFormStep1.value.petName + '_' + Date.now().toString();
+      const docID = this.petFormStep1.value.petName + '_' + Date.now();
       const photoUrls: string[] = [];
 
-      // Upload photos using FirebaseService
+      // Upload all photos to Firebase Storage
       if (this.photos.length > 0) {
         for (const [index, photo] of this.photos.entries()) {
           const ext = photo.name.split('.').pop() || 'png';
@@ -127,7 +114,8 @@ export class SubmitPetPage {
         }
       }
 
-      const data: Pet = {
+      // Prepare Pet object
+      const petData: Pet = {
         id: docID,
         petName: this.petFormStep1.value.petName,
         species: this.petFormStep1.value.species,
@@ -142,15 +130,14 @@ export class SubmitPetPage {
         createdAt: serverTimestamp() as Timestamp,
       };
 
-      await this.firebaseService.submitPet(data);
+      // Submit to Firestore
+      await this.firebaseService.submitPet(petData);
 
-      await this.showToast(
-        'Pet submitted successfully! Pending approval.',
-        'success'
-      );
+      await this.showToast('Pet submitted successfully! Pending approval.', 'success');
       this.petFormStep1.reset();
       this.petFormStep2.reset();
       this.photos = [];
+      this.imageFileNames = [];
       this.step = 1;
       this.router.navigate(['/tabs/adoption']);
     } catch (error: any) {
@@ -165,10 +152,7 @@ export class SubmitPetPage {
     }
   }
 
-  private async showToast(
-    message: string,
-    color: 'success' | 'danger'
-  ): Promise<void> {
+  private async showToast(message: string, color: 'success' | 'danger') {
     const toast = await this.toastCtrl.create({
       message,
       duration: 2000,
@@ -178,7 +162,7 @@ export class SubmitPetPage {
     await toast.present();
   }
 
-  navigateToAdoption(): void {
+  navigateToAdoption() {
     this.router.navigate(['/tabs/adoption']);
   }
 }

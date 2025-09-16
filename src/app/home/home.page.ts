@@ -23,14 +23,14 @@ export class HomePage implements OnInit {
   ];
 
   tiles = [
-    { label: 'Clinics', icon: 'medkit-outline', route: 'clinics', type: 'Clinics' },
-    { label: 'NGOs', icon: 'people-outline', route: 'ngos', type: 'NGOs' },
-    { label: 'Ambulance', icon: 'car-outline', route: 'ambulance' },
-    { label: 'Boarding', icon: 'home-outline', route: 'boarding' },
-    { label: 'Govt Helpline', icon: 'call-outline', route: 'ghelpline' },
-    { label: 'Feeding', icon: 'restaurant-outline', route: 'feeding' },
-    { label: 'Insurance', icon: 'shield-checkmark-outline', route: 'insurance' },
-  ];
+     { label: 'Clinics', svgPath: 'assets/icons/clinic.svg', bgColor: '#fff9db', route: 'clinics', type: 'Clinics' },    // pale yellow
+  { label: 'NGOs', svgPath: 'assets/icons/ngo.svg', bgColor: '#e9f4f0', route: 'ngos', type: 'NGOs' },              // very light teal
+  { label: 'Ambulance', svgPath: 'assets/icons/ambulance.svg', bgColor: '#fff0f0', route: 'ambulance' },             // pale pink
+  { label: 'Boarding', svgPath: 'assets/icons/boarding.svg', bgColor: '#faf5ea', route: 'boarding' },                // very light beige
+  { label: 'Govt Helpline', svgPath: 'assets/icons/helpline.svg', bgColor: '#e2efff', route: 'ghelpline' },           // pale blue
+  { label: 'Feeding', svgPath: 'assets/icons/feeding.svg', bgColor: '#f4f4f4', route: 'feeding' },                    // very light gray
+  { label: 'Insurance', svgPath: 'assets/icons/insurance.svg', bgColor: '#edf5ff', route: 'insurance' }              // soft sky blue
+];
 
   categories = [
     { name: 'Dogs', icon: 'paw-outline', route: 'dogs', imageUrl: 'assets/img/dogs.jpg' },

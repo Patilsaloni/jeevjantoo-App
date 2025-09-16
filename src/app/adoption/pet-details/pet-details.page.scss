@@ -1,0 +1,127 @@
+.pet-details-content {
+  --background: #f9fafc;
+  padding: 0;
+}
+
+.pet-details-card {
+  max-width: 380px;
+  background: #fff;
+  margin: 18px auto;
+  border-radius: 32px;
+  padding: 24px 18px 20px 18px;
+  box-shadow: 0 6px 36px #3e4a5540;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header Info */
+.pet-header-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: flex-start;
+}
+.pet-name-block h2 {
+  font-size: 1.13rem;
+  font-weight: 700;
+  margin: 0 0 2px 0;
+}
+.breed {
+  color: #c3914b;
+  font-size: 0.97rem;
+  margin-bottom: 7px;
+}
+.pet-meta {
+  font-size: 0.87rem;
+  color: #ed8282;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pet-age-sex {
+  text-align: right;
+  flex-shrink: 0;
+  color: #97989e;
+  .age { font-weight: 500; }
+  ion-icon {
+    font-size: 1.23rem;
+    color: #7f7ac4;
+    vertical-align: middle;
+    margin-left: 2.5px;
+  }
+}
+
+/* Gallery */
+.pet-gallery-section {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  margin: 22px 0 14px 0;
+  gap: 14px;
+}
+.pet-thumb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.pet-thumb-list img {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2.4px solid transparent;
+  cursor: pointer;
+  transition: border 0.14s;
+}
+.pet-thumb-list img.active-thumb {
+  border-color: #ff8a73;
+}
+.pet-main-image {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pet-main-image img {
+  width: 165px;
+  height: 165px;
+  border-radius: 21px;
+  object-fit: cover;
+  box-shadow: 0 4px 16px #f9bc8a55;
+}
+
+/* About */
+.about-section {
+  width: 100%;
+  margin-top: 7px;
+}
+.about-section h3 {
+  margin-bottom: 2px;
+  font-weight: 700;
+  color: #31323b;
+}
+.about-section p {
+  font-size: 0.97rem;
+  color: #7a7a7a;
+  margin-top: 1px;
+}
+
+/* Adopt Button in footer */
+ion-footer ion-toolbar {
+  --background: transparent;
+  box-shadow: none;
+  margin: 0 auto 0 auto;
+  padding-top: 0px;
+}
+.adopt-btn {
+  width: 90%;
+  margin: 8px auto 10px auto;
+  border-radius: 28px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  background: linear-gradient(90deg, #ff7e5f 20%, #fd3a84 80%);
+  letter-spacing: 0.03em;
+  box-shadow: 0 1px 12px #ff917711;
+}

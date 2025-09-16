@@ -1,7 +1,16 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ToastController, LoadingController } from '@ionic/angular';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  IonicModule,
+  ToastController,
+  LoadingController,
+} from '@ionic/angular';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { FirebaseService } from '../../services/firebase.service';
 import { Router } from '@angular/router';
 import { getAuth } from 'firebase/auth';
@@ -27,7 +36,7 @@ interface Pet {
   templateUrl: './submit-pet.page.html',
   styleUrls: ['./submit-pet.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, ReactiveFormsModule]
+  imports: [CommonModule, IonicModule, ReactiveFormsModule],
 })
 export class SubmitPetPage {
   step = 1;
@@ -47,21 +56,34 @@ export class SubmitPetPage {
       species: ['', Validators.required],
       age: ['', [Validators.required, Validators.min(0)]],
       breed: ['', [Validators.required, Validators.minLength(2)]],
-      description: ['', [Validators.required, Validators.minLength(10)]]
+      description: ['', [Validators.required, Validators.minLength(10)]],
     });
 
     this.petFormStep2 = this.fb.group({
       location: [''],
       contactName: ['', Validators.minLength(2)],
-      contactPhone: ['', [Validators.pattern(/^\+?[\d\s-]{10,}$/)]]
+      contactPhone: ['', [Validators.pattern(/^\+?[\d\s-]{10,}$/)]],
     });
   }
+
+  imageFileName: string = '';
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.photos = Array.from(input.files);
     }
+  }
+
+  @ViewChild('petImageInput') petImageInput!: ElementRef<HTMLInputElement>;
+
+  triggerFileInput() {
+    this.petImageInput.nativeElement.click();
+  }
+
+  onImageChange(event: any) {
+    const file = event.target.files[0];
+    if (file) this.imageFileName = file.name;
   }
 
   goNext(): void {
@@ -77,21 +99,22 @@ export class SubmitPetPage {
     this.step = 1;
   }
 
- async submitPet(): Promise<void> {
-  if (!this.firebaseService.getCurrentUser()) {
-    await this.showToast('Please sign in to submit a pet.', 'danger');
-    this.router.navigate(['/signin']);  // Route to your sign-in page
-    return;
-  }
+  async submitPet(): Promise<void> {
+    if (!this.firebaseService.getCurrentUser()) {
+      await this.showToast('Please sign in to submit a pet.', 'danger');
+      this.router.navigate(['/signin']); // Route to your sign-in page
+      return;
+    }
 
     const loading = await this.loadingCtrl.create({
       message: 'Submitting pet...',
-      spinner: 'crescent'
+      spinner: 'crescent',
     });
     await loading.present();
 
     try {
-      const docID = this.petFormStep1.value.petName + '_' + Date.now().toString();
+      const docID =
+        this.petFormStep1.value.petName + '_' + Date.now().toString();
       const photoUrls: string[] = [];
 
       // Upload photos using FirebaseService
@@ -116,12 +139,15 @@ export class SubmitPetPage {
         contactPhone: this.petFormStep2.value.contactPhone,
         photos: photoUrls,
         status: 'Pending',
-        createdAt: serverTimestamp() as Timestamp
+        createdAt: serverTimestamp() as Timestamp,
       };
 
       await this.firebaseService.submitPet(data);
 
-      await this.showToast('Pet submitted successfully! Pending approval.', 'success');
+      await this.showToast(
+        'Pet submitted successfully! Pending approval.',
+        'success'
+      );
       this.petFormStep1.reset();
       this.petFormStep2.reset();
       this.photos = [];
@@ -129,21 +155,25 @@ export class SubmitPetPage {
       this.router.navigate(['/tabs/adoption']);
     } catch (error: any) {
       console.error('Error submitting pet:', error);
-      const errorMessage = error.code === 'storage/unauthorized'
-        ? 'Permission denied. Please check Storage rules or sign in.'
-        : 'Failed to submit pet. Please try again later.';
+      const errorMessage =
+        error.code === 'storage/unauthorized'
+          ? 'Permission denied. Please check Storage rules or sign in.'
+          : 'Failed to submit pet. Please try again later.';
       await this.showToast(errorMessage, 'danger');
     } finally {
       await loading.dismiss();
     }
   }
 
-  private async showToast(message: string, color: 'success' | 'danger'): Promise<void> {
+  private async showToast(
+    message: string,
+    color: 'success' | 'danger'
+  ): Promise<void> {
     const toast = await this.toastCtrl.create({
       message,
       duration: 2000,
       color,
-      position: 'bottom'
+      position: 'bottom',
     });
     await toast.present();
   }

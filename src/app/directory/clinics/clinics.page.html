@@ -21,11 +21,52 @@
 
   <p *ngIf="!loading && clinics.length === 0" class="no-data">No clinics found</p>
 
-  <div class="clinic-cards" *ngIf="!loading && clinics.length > 0">
+  <div class="clinic-cards">
+  <div *ngFor="let clinic of clinics" class="clinic-card">
+    <!-- Card Header with title, subtitle, and toggle icon -->
+    <div class="clinic-header">
+      <div>
+        <div class="clinic-title">{{ clinic.name || 'Clinic title' }}</div>
+        <div class="clinic-subtitle">{{ clinic.type || 'Clinic subtitle' }}</div>
+      </div>
+      <button class="expand-btn" (click)="clinic._expanded = !clinic._expanded">
+        <ion-icon [name]="clinic._expanded ? 'remove' : 'add'"></ion-icon>
+      </button>
+    </div>
+
+    <!-- Accordion Content -->
+    <div class="clinic-accordion" *ngIf="clinic._expanded">
+      <table>
+        <tr>
+          <td><b>Area</b></td><td>{{ clinic.area }}</td>
+        </tr>
+        <tr>
+          <td><b>Pincode</b></td><td>{{ clinic.pincode }}</td>
+        </tr>
+        <tr>
+          <td><b>Contact</b></td><td>{{ clinic.contact }}</td>
+        </tr>
+        <tr>
+          <td><b>Timing</b></td><td>{{ formatTiming(clinic.timeFrom, clinic.timeTo) }}</td>
+        </tr>
+        <tr>
+          <td><b>Remark</b></td><td>{{ clinic.remarks }}</td>
+        </tr>
+      </table>
+      <div class="clinic-actions-row">
+        <button ion-button class="details-btn" (click)="viewDetails(clinic)">DETAILS</button>
+        <button ion-button class="map-btn" (click)="openMap(clinic)">MAP</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- <div class="clinic-cards" *ngIf="!loading && clinics.length > 0">
     <ion-card 
       *ngFor="let clinic of clinics" 
       class="clinic-card"
-      [style.background]="clinic.color"> <!-- Dynamic background color -->
+      [style.background]="clinic.color"> 
       
       <ion-card-header>
         <ion-card-title>{{ clinic.name }}</ion-card-title>
@@ -58,6 +99,6 @@
       </ion-card-footer>
 
     </ion-card>
-  </div>
+  </div> -->
 
 </ion-content>

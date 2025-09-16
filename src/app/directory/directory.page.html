@@ -14,18 +14,35 @@
 
 
 <ion-content class="directory-content ion-padding">
+
+  <div class="blob-bg-container">
+    <svg class="blob-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Blob path as a reusable clipPath -->
+        <clipPath id="clip-blob">
+          <path
+            d="M62,43 Q100,10 170,36 Q260,55 334,90 Q397,125 351,190 Q308,259 176,272 Q88,281 39,220 Q-21,173 25,102 Q37,57 62,43 Z" />
+        </clipPath>
+      </defs>
+      <rect width="400" height="300" fill="#ffffff" opacity="0.3" />
+      <image xlink:href="assets/img/bird.jpg" x="0" y="0" width="400" height="300" clip-path="url(#clip-blob)"
+        preserveAspectRatio="xMidYMid slice" />
+      <!-- Optional: for extra flair, add a colored semi-transparent layer below -->
+      <!-- <path d="M62,43 Q100,10 170,36 Q260,55 334,90 Q397,125 351,190 Q308,259 176,272 Q88,281 39,220 Q-21,173 25,102 Q37,57 62,43 Z" fill="#f4eede" opacity="0.3"/> -->
+    </svg>
+  </div>
+
   <ion-grid class="directory-grid">
     <ion-row class="directory-row" justify-content-center>
       <ion-col *ngFor="let item of directoryItems" size="6" size-md="4" size-lg="3">
-        <ion-card 
-          class="effect"
-          (click)="goToDirectoryDetail(item)"
-          [ngStyle]="{'background': item.color}">
+        <ion-card class="effect" (click)="goToDirectoryDetail(item)"
+          [ngStyle]="{'background': item.bg, 'background-repeat': item.bgRepeat || 'no-repeat'}">
           <ion-card-content class="ion-text-center">
-            <ion-icon [name]="item.icon" size="large"></ion-icon>
+            <img [src]="item.svgPath" alt="{{ item.label }} icon" class="directory-svg" />
             <h3>{{ item.label }}</h3>
           </ion-card-content>
         </ion-card>
+
       </ion-col>
     </ion-row>
   </ion-grid>

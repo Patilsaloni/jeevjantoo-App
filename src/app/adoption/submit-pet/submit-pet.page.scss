@@ -1,118 +1,254 @@
+// :host {
+//   ion-content {
+//     --keyboard-offset: 0px;
+//     --padding-bottom: 0px;
+//     overflow: hidden;
+//   }
 
-:host {
-  ion-content {
-    --keyboard-offset: 0px;
-    --padding-bottom: 0px;
-    overflow: hidden;
-  }
+//   .submit-pet-card {
+//     position: fixed;
+//     top: 55%;
+//     left: 50%;
+//     transform: translate(-50%, -50%);
+//     width: 90%;
+//     max-width: 400px;
+//     z-index: 10;
+//     transition: transform 0.3s ease;
+//   }
 
-  .submit-pet-card {
-    position: fixed;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 400px;
-    z-index: 10;
-    transition: transform 0.3s ease;
-  }
+//   body.keyboard-open .submit-pet-card {
+//     transform: translate(-50%, -40%) !important;
+//     margin-bottom: 0 !important;
+//   }
+// }
 
-  body.keyboard-open .submit-pet-card {
-    transform: translate(-50%, -40%) !important;
-    margin-bottom: 0 !important;
-  }
-}
+// .submit-pet-content {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 100vh;
+//   overflow: hidden;
+//   background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+// }
+
+// .form-wrapper {
+//   width: 100%;
+//   max-width: 400px;
+//   padding: 16px;
+//   position: relative;
+// }
+
+// .submit-pet-card {
+//   width: 100%;
+//   max-width: 400px;
+//   background: #fff;
+//   border-radius: 20px;
+//   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+//   padding: 24px;
+//   text-align: center;
+//   overflow: hidden;
+// }
+
+// .logo {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   margin-bottom: 16px;
+// }
+
+// .favicon-logo {
+//   width: 60px;
+//   height: 60px;
+//   border-radius: 12px;
+//   margin-bottom: 8px;
+// }
+
+// .app-title {
+//   margin-top: 8px;
+//   font-size: 22px;
+//   font-weight: bold;
+//   color: #333;
+// }
+
+// ion-item {
+//   margin-bottom: 12px;
+//   --border-radius: 12px;
+//   --background: #f8f8f8;
+
+//   &.invalid {
+//     --border-color: #ff4d4f;
+//   }
+// }
+
+// ion-text[color="danger"] {
+//   font-size: 12px;
+//   margin-top: 5px;
+//   display: block;
+// }
+
+// .submit-btn, ion-button {
+//   margin-top: 12px;
+//   --border-radius: 20px;
+//   --background: #ff7f50;
+//   --color: #fff;
+// }
+
+// .back-link {
+//   margin-top: 14px;
+//   font-size: 14px;
+//   color: #555;
+// }
+
+// .back-link a {
+//   color: #ff7f50;
+//   font-weight: 500;
+//   cursor: pointer;
+// }
+
+// form {
+//   transition: opacity 0.3s ease, transform 0.3s ease;
+// }
+
+// form.ng-hide {
+//   opacity: 0;
+//   transform: translateX(100%);
+//   height: 0;
+//   overflow: hidden;
+// }
 
 .submit-pet-content {
+  // min-height: 100vh;
+  // background: linear-gradient(135deg, #e6e9f9 0%, #f6f7fb 100%);
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  overflow: hidden;
-  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  justify-content: center;
 }
 
 .form-wrapper {
   width: 100%;
-  max-width: 400px;
-  padding: 16px;
+  max-width: 100%;
+  margin: 0 auto 0 auto;
   position: relative;
 }
 
-.submit-pet-card {
-  width: 100%;
-  max-width: 400px;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
-  padding: 24px;
-  text-align: center;
-  overflow: hidden;
-}
-
-.logo {
+.mascot-top {
+  background: #e4ddff;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 16px;
+  justify-content: center;
+  align-items: end;
+  border-radius: 0;
+  height: 105px;
+}
+.mascot-img {
+  z-index: 10;
+  width: 110px;
+  margin-bottom: -24px;
+  background: none;
+  user-select: none;
 }
 
-.favicon-logo {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  margin-bottom: 8px;
+.submit-pet-card {
+  // border-radius: 22px;
+  background: #fff;
+  // box-shadow: 0 8px 36px #453d263a;
+  padding: 30px 22px 20px 22px;
+  z-index: 2;
+  position: relative;
 }
 
-.app-title {
-  margin-top: 8px;
-  font-size: 22px;
+.form-title {
+  text-align: center;
+  font-size: 1.35rem;
   font-weight: bold;
-  color: #333;
-}
-
-ion-item {
-  margin-bottom: 12px;
-  --border-radius: 12px;
-  --background: #f8f8f8;
-
-  &.invalid {
-    --border-color: #ff4d4f;
+  margin-bottom: 14px;
+  color: #222;
+  .highlight {
+    color: #f8932c;
   }
 }
 
-ion-text[color="danger"] {
-  font-size: 12px;
-  margin-top: 5px;
-  display: block;
+.input-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+  label {
+    font-size: 1rem;
+    margin-bottom: 2px;
+    color: #393232;
+    font-weight: 500;
+  }
+  input,
+  select {
+    background: transparent;
+    border: none;
+    border-bottom: 2.5px solid #e1e1e1;
+    padding: 7px 1px 4px 0;
+    font-size: 1rem;
+    transition: border 0.17s;
+    outline: none;
+    color: #252525;
+    border-radius: 0;
+  }
+  input:focus,
+  select:focus {
+    border-bottom: 2.5px solid #f8932c;
+    background: #f9f7fb;
+  }
+}
+ion-item {
+  margin-bottom: 10px;
+  background: transparent;
 }
 
-.submit-btn, ion-button {
-  margin-top: 12px;
-  --border-radius: 20px;
-  --background: #ff7f50;
-  --color: #fff;
+.row-fields {
+  display: flex;
+  gap: 12px;
+  .input-row {
+    flex: 1;
+    margin-bottom: 0;
+  }
 }
 
-.back-link {
-  margin-top: 14px;
-  font-size: 14px;
-  color: #555;
+.image-upload-row {
+  align-items: flex-start;
+  button.upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: none;
+    background: #f8932c;
+    color: #fffaf5;
+    font-size: 1rem;
+    border-radius: 7px;
+    margin-top: 3px;
+    padding: 5px 15px;
+    box-shadow: 0 2px 8px #f9bc8a14;
+    cursor: pointer;
+    ion-icon {
+      font-size: 1.4rem;
+    }
+    span {
+      color: #a47d3a;
+      font-weight: 500;
+      font-size: 0.97rem;
+    }
+  }
 }
 
-.back-link a {
-  color: #ff7f50;
-  font-weight: 500;
+.submit-btn {
+  width: 100%;
+  // background: #f8932c;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 7px;
+  margin-top: 20px;
+  font-size: 1rem;
+  padding: 10px 0;
+  // box-shadow: 0 4px 18px #fd943227;
+  transition: background 0.15s;
   cursor: pointer;
 }
-
-form {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-form.ng-hide {
-  opacity: 0;
-  transform: translateX(100%);
-  height: 0;
-  overflow: hidden;
+.submit-btn:active {
+  background: #995f18;
 }

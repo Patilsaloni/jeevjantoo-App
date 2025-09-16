@@ -1,12 +1,122 @@
+// ion-content {
+//   --overflow: auto;
+//   min-height: 100vh;
+//   padding: 0;
+//   background: #f5f7fa; /* light background for contrast */
+// }
+
+// /* Profile Header */
+// .profile-header[_ngcontent-ng-c1467391268] {
+//     background: linear-gradient(135deg, #ff9d32, #ffd8a1);
+//     padding: 29px 0 41px 0;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+//     border-bottom-left-radius: 25px;
+//     border-bottom-right-radius: 25px;
+// }
+
+// .avatar-circle {
+//   background: #ff6a00;
+//   width: 70px;
+//   height: 70px;
+//   border-radius: 50%;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   margin-bottom: 12px;
+//   box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+// }
+
+// .avatar-icon {
+//   color: #fff;
+//   font-size: 2.8rem;
+// }
+
+// .username-text {
+//   color: #222;
+//   font-size: 1.2rem;
+//   font-weight: 700;
+//   margin-bottom: 4px;
+//   text-align: center;
+// }
+
+// .user-status {
+//   color: #555;
+//   font-size: 0.95rem;
+//   font-weight: 400;
+// }
+
+// /* Profile Menu List */
+// .profile-list {
+//   background: #fff;
+//   margin: -30px auto 20px auto; /* overlaps header slightly for 3D feel */
+//   padding: 20px 0;
+//   max-width: 380px;
+//   border-radius: 20px;
+//   min-height: 200px;
+//   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+// }
+
+// .profile-item {
+//   display: flex;
+//   align-items: center;
+//   padding: 14px 22px;
+//   cursor: pointer;
+//   transition: all 0.2s ease-in-out;
+//   border-bottom: 1px solid #f1f2f6;
+// }
+
+// .profile-item:hover {
+//   background: #f9f9f9;
+// }
+
+// .profile-item:last-child {
+//   border-bottom: none;
+// }
+
+// .profile-icon {
+//   width: 46px;
+//   height: 46px;
+//   border-radius: 12px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   font-size: 1.3rem;
+//   margin-right: 18px;
+//   transition: transform 0.2s;
+// }
+
+// .profile-item:hover .profile-icon {
+//   transform: scale(1.1);
+// }
+
+// .profile-label {
+//   font-size: 1.05rem;
+//   font-weight: 500;
+//   color: #232323;
+//   flex: 1;
+//   min-width: 0;
+// }
+
+// .chevron {
+//   font-size: 1.4rem;
+//   color: #b0b0b0;
+// }
+
+//profile css
 ion-content {
-    min-height: 100vh;
+  --overflow: auto;
+  // min-height: 100vh;
   padding: 0;
+  background: #f5f7fa; /* light background for contrast */
 }
 
-/* Profile Header Design */
+/* Profile Header */
 .profile-header {
   background: #ffd8a1;
-    padding: 34px 0 20px 0;
+  padding: 34px 0 50px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,6 +127,7 @@ ion-content {
   width: 66px;
   height: 66px;
   border-radius: 50%;
+  border: 4px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,24 +146,28 @@ ion-content {
   text-align: center;
 }
 
-/* Profile Page Menu List */
+/* Profile Menu List */
 .profile-list {
   background: #fff;
-  margin: 0 auto;
-  margin-top: 0;
-  padding: 28px 0 0 0;
-  max-width: 370px;
-  border-radius: 18px;
+  margin: -30px auto 20px auto; /* overlaps header slightly for 3D feel */
+  padding: 20px 0;
+  max-width: 380px;
+  border-radius: 20px;
+  min-height: 200px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .profile-item {
   display: flex;
   align-items: center;
-  padding: 12px 22px;
+  padding: 14px 22px;
   cursor: pointer;
-  transition: background 0.13s;
-  border-bottom: 1px solid #f4f5f8;
-  min-width: 0;
+  transition: all 0.2s ease-in-out;
+  border-bottom: 1px solid #f1f2f6;
+}
+
+.profile-item:hover {
+  background: #f9f9f9;
 }
 
 .profile-item:last-child {
@@ -60,18 +175,23 @@ ion-content {
 }
 
 .profile-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.28rem;
-  margin-right: 16px;
+  font-size: 1.3rem;
+  margin-right: 18px;
+  transition: transform 0.2s;
+}
+
+.profile-item:hover .profile-icon {
+  transform: scale(1.1);
 }
 
 .profile-label {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 500;
   color: #232323;
   flex: 1;
@@ -79,6 +199,6 @@ ion-content {
 }
 
 .chevron {
-  color: #969696;
-  font-size: 1.37rem;
+  font-size: 1.4rem;
+  color: #b0b0b0;
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-// import { PetMapComponent } from '../components/pet-map/pet-map.component'; // if you want map later
+import { PetDetailsPage } from './pet-details/pet-details.page'; // Import PetDetailsPage
 import { Router } from '@angular/router';
 
 interface Pet {
@@ -12,6 +12,7 @@ interface Pet {
   gender: string;
   image: string | null;
   category: string; // For filtering by category
+   favorite?: boolean; // track favorite state
 }
 
 @Component({
@@ -19,7 +20,7 @@ interface Pet {
   templateUrl: './adoption.page.html',
   styleUrls: ['./adoption.page.scss'],
   standalone: true,
-  imports: [FormsModule, IonicModule, CommonModule] // add PetMapComponent here if needed
+  imports: [FormsModule, IonicModule, CommonModule], // add PetMapComponent here if needed
 })
 export class AdoptionPage implements OnInit {
   searchText: string = '';
@@ -27,9 +28,30 @@ export class AdoptionPage implements OnInit {
   selectedFilter: string = 'All';
 
   pets: Pet[] = [
-    { name: 'Buddy', breed: 'Golden Retriever', age: 3, gender: 'Male', image: 'assets/dog.jpg', category: 'Dogs' },
-    { name: 'Mittens', breed: 'Persian Cat', age: 2, gender: 'Female', image: 'assets/cat.jpg', category: 'Cats' },
-    { name: 'Tweety', breed: 'Parrot', age: 1, gender: 'Female', image: 'assets/bird.jpg', category: 'Birds' }
+    {
+      name: 'Buddy',
+      breed: 'Golden Retriever',
+      age: 3,
+      gender: 'Male',
+      image: 'assets/dog.jpg',
+      category: 'Dogs',
+    },
+    {
+      name: 'Mittens',
+      breed: 'Persian Cat',
+      age: 2,
+      gender: 'Female',
+      image: 'assets/cat.jpg',
+      category: 'Cats',
+    },
+    {
+      name: 'Tweety',
+      breed: 'Parrot',
+      age: 1,
+      gender: 'Female',
+      image: 'assets/bird.jpg',
+      category: 'Birds',
+    },
   ];
 
   // For new pet submission
@@ -39,7 +61,8 @@ export class AdoptionPage implements OnInit {
     age: 0,
     gender: '',
     image: null,
-    category: 'Dogs'
+    category: 'Dogs',
+    
   };
 
   favorites: Pet[] = []; // bookmarked pets
@@ -58,18 +81,24 @@ export class AdoptionPage implements OnInit {
   // Show category icon
   getCategoryIcon(cat: string): string {
     switch (cat) {
-      case 'Dogs': return 'assets/icons/dog.png';
-      case 'Cats': return 'assets/icons/cat.png';
-      case 'Birds': return 'assets/icons/bird.png';
-      default: return 'assets/icons/all.png';
+      case 'Dogs':
+        return 'assets/icons/dog.png';
+      case 'Cats':
+        return 'assets/icons/cat.png';
+      case 'Birds':
+        return 'assets/icons/bird.png';
+      default:
+        return 'assets/icons/all.png';
     }
   }
 
   // Filter pets by search + category
   filteredPets(): Pet[] {
-    return this.pets.filter(pet =>
-      (this.selectedFilter === 'All' || pet.category === this.selectedFilter) &&
-      pet.name.toLowerCase().includes(this.searchText.toLowerCase())
+    return this.pets.filter(
+      (pet) =>
+        (this.selectedFilter === 'All' ||
+          pet.category === this.selectedFilter) &&
+        pet.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
@@ -108,15 +137,25 @@ export class AdoptionPage implements OnInit {
         age: 0,
         gender: '',
         image: null,
-        category: 'Dogs'
+        category: 'Dogs',
       };
     } else {
       console.warn('⚠️ Please fill all required fields');
-  
-  }
+    }
   }
 
-  newAdoptionNavigation(){
-   this.router.navigate(['/tabs/adoption/submit-pet'])
+ openPetDetails(pet: Pet) {
+    this.router.navigate(['/adoption/pet-details', pet.name]);
   }
+
+  toggleFavorite(pet: Pet, event: MouseEvent) {
+    event.stopPropagation(); // Prevent card click
+    pet.favorite = !pet.favorite;
+  }
+
+  newAdoptionNavigation() {
+    this.router.navigate(['/tabs/adoption/submit-pet']);
+  }
+
+  
 }

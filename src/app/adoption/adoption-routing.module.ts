@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { AdoptionPage } from './adoption.page';
+import { PetDetailsPage } from './pet-details/pet-details.page';
 import { AuthGuard } from '../guards/auth-guard'; 
 
 const routes: Routes = [
@@ -10,6 +10,10 @@ const routes: Routes = [
     component: AdoptionPage,
     canActivate: [AuthGuard],       // Protect parent route
     canActivateChild: [AuthGuard],  
+  },
+   {
+    path: 'pets/pet-details/:name',
+    component: PetDetailsPage,
   },
   {
     path: 'submit-pet',

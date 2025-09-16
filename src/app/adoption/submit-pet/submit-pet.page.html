@@ -4,7 +4,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Clinics</ion-title>
+    <ion-title>New Adoption</ion-title>
     <ion-buttons slot="end">
       <ion-button>
         <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
@@ -15,12 +15,19 @@
 
 <ion-content [fullscreen]="true" class="submit-pet-content">
   <div class="form-wrapper">
+     <!-- Mascot banner top (replace src with your mascot image path if desired) -->
+    <div class="mascot-top">
+      <img src="assets/img/newPet.png" alt="Pet mascot" class="mascot-img" />
+    </div>
+
     <div class="submit-pet-card">
+      <h2 class="form-title">Put Pet for <span class="highlight">Adoption</span></h2>
+
       <!-- Logo -->
-      <div class="logo">
-        <img src="assets/icon/favicon.png" alt="Jeevjantoo Logo" class="favicon-logo" />
+      <!-- <div class="logo">
+        <img src="assets/icons/logo.png" alt="Jeevjantoo Logo" class="favicon-logo" />
         <h2 class="app-title">Submit Pet for Adoption</h2>
-      </div>
+      </div> -->
 
       <!-- Step 1 Form -->
       <form *ngIf="step === 1" [formGroup]="petFormStep1">
@@ -92,8 +99,18 @@
         </ion-text>
 
         <ion-item>
-          <ion-label>Upload Photos</ion-label>
-          <input type="file" (change)="onFileChange($event)" multiple accept="image/*">
+          <!-- <ion-label>Upload Photos</ion-label>
+          <input type="file" (change)="onFileChange($event)" multiple accept="image/*"> -->
+          <div class="input-row image-upload-row">
+          <label>Pet Image</label>
+          <button type="button" class="upload-btn" (click)="triggerFileInput()"> 
+  <ion-icon name="camera-outline"></ion-icon>
+  <span *ngIf="imageFileName">{{imageFileName}}</span>
+</button>
+<input type="file" #petImageInput (change)="onImageChange($event)" accept="image/*" style="display:none;" />
+
+          <!-- <input type="file" #petImageInput (change)="onImageChange($event)" accept="image/*" style="display:none;" /> -->
+        </div>
         </ion-item>
 
         <ion-button expand="block" class="submit-btn" (click)="goBack()">← Back</ion-button>

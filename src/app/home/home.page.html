@@ -16,9 +16,9 @@
 <ion-content class="premium-dashboard">
 
   <!-- Hero Banner -->
-  <div class="adopt-card-wrapper">
+     <div class="adopt-card-wrapper">
     <div class="cat-illustration">
-      <img src="assets/img/herocat.svg" alt="Cat" />
+      <img src="assets/img/herocat.svg" alt="Cat" class="sleepy-cat" />
     </div>
     <ion-card class="adopt-card">
       <div class="card-content">
@@ -32,8 +32,7 @@
       </div>
     </ion-card>
   </div>
-
-  <!-- Ends -->
+    <!-- Ends -->
 
   <!-- Explore Section -->
   <div class="explore-section">
@@ -43,9 +42,10 @@
     </div>
 
     <div class="categories-slider">
-      <div class="category-card" *ngFor="let tile of tiles" (click)="goToDirectory(tile.route, tile.type)">
-        <div class="icon-bg">
-          <ion-icon [name]="tile.icon" size="large"></ion-icon>
+      <div class="category-card" *ngFor="let tile of tiles" (click)="goToDirectory(tile.route, tile.type)" >
+        <div class="icon-bg" [ngStyle]="{'background-color': tile.bgColor}">
+          <!-- <ion-icon [name]="tile.icon" size="large"></ion-icon> -->
+           <img [src]="tile.svgPath" alt="{{tile.label}} icon" class="category-svg" />
         </div>
         <div class="label">{{ tile.label }}</div>
       </div>
@@ -91,7 +91,8 @@
         <ion-card button (click)="goToAdoptionDetail(pet)">
           <ion-card-content>
             <div class="pet-img">
-              <ion-img [src]="pet.photos[0]" alt="{{pet.name}}"></ion-img>
+              <!-- <ion-img [src]="pet.photos[0]" alt="{{pet.name}}"></ion-img> -->
+              <img [src]="pet.photos[0]" alt="{{pet.name}}" class="pet-img-svg" />
             </div>
 
             <div class="pet-details">

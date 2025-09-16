@@ -1,0 +1,94 @@
+// /* Gradient circle */
+// ion-tab-button.tab-selected {
+//   position: relative;
+//   z-index: 1;
+// }
+
+// ion-tab-button.tab-selected::before {
+//   content: '';
+//   position: absolute;
+//   top: 6px;
+//   left: 50%;
+//   transform: translateX(-50%);
+//   width: 48px;
+//   height: 48px;
+//   border-radius: 50%;
+//   background: linear-gradient(135deg, #ff8f32, #fdd835);
+//   z-index: -1;
+//   box-shadow: 0 6px 18px #fcb53d80;
+//   transition: background 0.3s ease;
+// }
+
+// /* Icon float and scale animation when active */
+// ion-tab-button.tab-selected ion-icon {
+//   animation: floatScale 1.6s ease-in-out infinite;
+//   color: #fff !important;
+//   font-size: 24px !important;
+// }
+
+// @keyframes floatScale {
+//   0%, 100% { transform: translateY(0) scale(1); }
+//   50% { transform: translateY(-5px) scale(1.15); }
+// }
+
+// /* Label color change on active */
+// ion-tab-button.tab-selected ion-label {
+//   color: #f78905 !important;
+//   font-weight: 600;
+// }
+
+
+ion-tab-bar {
+  position: relative;
+  --background: #fff;
+  box-shadow: 0 -1px 8px rgb(0 0 0 / 0.1);
+}
+
+ion-tab-button {
+  position: relative;
+  z-index: 0;
+  color: #666;
+  transition: color 0.25s ease;
+}
+
+ion-tab-button.ion-selected {
+  color: #fff; /* active label/icon color */
+}
+
+ion-tab-button.ion-selected ion-icon {
+  position: relative;
+  z-index: 10;
+}
+
+/* Create the animated gradient circle behind the active icon */
+ion-tab-button.ion-selected ion-icon::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff7e5f, #feb47b, #ff7e5f);
+  animation: gradient-move 3.5s linear infinite;
+  z-index: -1;
+  filter: drop-shadow(0 4px 12px rgba(255, 126, 95, 0.6));
+}
+
+/* Gradient moving animation */
+@keyframes gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+ion-tab-button.ion-selected ion-icon::before {
+  background-size: 200% 200%;
+}

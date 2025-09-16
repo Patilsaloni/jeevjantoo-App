@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/pets"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ pet.name }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleFavorite()">
+        <ion-icon [name]="pet.favorite ? 'heart' : 'heart-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="pet-details-content">
+  <div class="pet-details-card">
+
+    <!-- Pet Info & Gallery -->
+    <div class="pet-header-row">
+      <div class="pet-name-block">
+        <h2>{{ pet.name }}</h2>
+        <p class="breed">{{ pet.breed }}</p>
+        <div class="pet-meta">
+          <ion-icon name="location-outline"></ion-icon>
+          <span>{{ pet.distance }} away</span>
+        </div>
+      </div>
+      <div class="pet-age-sex">
+        <span class="age">{{ pet.age }}</span>
+        <ion-icon [name]="pet.gender === 'Male' ? 'male' : 'female'"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Gallery Thumbnails -->
+    <div class="pet-gallery-section">
+      <div class="pet-thumb-list">
+        <img *ngFor="let img of pet.gallery; let i = index"
+             [src]="img"
+             [class.active-thumb]="i === selectedImage"
+             (click)="selectedImage = i" />
+      </div>
+      <div class="pet-main-image">
+        <img [src]="pet.gallery[selectedImage]" />
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="about-section">
+      <h3>About</h3>
+      <p>{{ pet.about }}</p>
+    </div>
+  </div>
+
+  <!-- Adopt Button -->
+  <ion-footer>
+    <ion-toolbar>
+      <ion-button expand="block" color="danger" class="adopt-btn">
+        <ion-icon name="paw" slot="start"></ion-icon>
+        Adopt
+      </ion-button>
+    </ion-toolbar>
+  </ion-footer>
+</ion-content>

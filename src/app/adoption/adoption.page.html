@@ -13,70 +13,66 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-
-  <!-- Top navigation -->
+  <!-- Top Bar: New (icon only), Search, Filter -->
   <div class="nav-container">
-    <button ion-button (click)="newAdoptionNavigation()">
-      <ion-icon name="add-outline"></ion-icon>
-    </button>
+    <ion-button fill="outline" color="primary" shape="round" (click)="newAdoptionNavigation()" aria-label="Add New Pet">
+      <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+    </ion-button>
     <ion-searchbar
       [(ngModel)]="searchText"
-      placeholder="Search"
+      placeholder="Quick search by pet name, species, or city."
       debounce="300"
+      animated="true"
+      class="adoption-search"
     ></ion-searchbar>
-    <ion-icon name="filter-outline"></ion-icon>
+    <ion-button fill="clear" shape="round" color="primary" aria-label="Filter" (click)="openFilterModal()">
+      <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+    </ion-button>
   </div>
 
-  <!-- Categories -->
-  <div class="categories">
+  <!-- Categories Horizontal Scroll -->
+  <div class="category-scroller" style="display: flex; overflow-x: auto;">
     <div
-      class="category"
-      *ngFor="let cat of filters"
-      [class.active]="selectedFilter === cat"
-      (click)="applyFilter(cat)"
+      class="category-item"
+      *ngFor="let cat of categoryIcons"
+      [class.active]="selectedFilter === cat.name"
+      (click)="applyFilter(cat.name)"
     >
-      <span>{{ cat }}</span>
+      <ion-avatar>
+        <img [src]="cat.icon" alt="{{cat.name}}" />
+      </ion-avatar>
+      <div class="category-label">{{ cat.name }}</div>
     </div>
   </div>
 
-  <!-- Pet cards -->
-  <div class="pet-cards-list">
-    <div class="pet-card" *ngFor="let pet of filteredPets()">
-      
-      <!-- ✅ Option 1: Show only first photo -->
-      <img [src]="pet.image" alt="{{ pet.petName }}" class="pet-img" />
-
-      <!-- ✅ Option 2: Show all photos (uncomment if needed) -->
-      <!--
-      <div class="pet-photos">
-        <img *ngFor="let photo of pet.photos" 
-             [src]="photo" 
-             alt="{{ pet.petName }}" 
-             class="pet-img" />
-      </div>
-      -->
-
-      <div class="pet-card-content">
-        <div class="pet-card-header">
-          <div>
-            <div class="pet-name">{{ pet.petName }}</div>
-            <div class="pet-location">
-              <ion-icon name="location-outline"></ion-icon>
-              Distance (Near 15km)
+  <!-- Pet Cards List -->
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="12" size-md="6" *ngFor="let pet of filteredPets()">
+        <ion-card class="pet-card" (click)="openPetDetails(pet)">
+          <img [src]="pet.image" alt="{{pet.petName}}" class="pet-img" />
+          <ion-card-content>
+            <div class="pet-card-header">
+              <div>
+                <div class="pet-name">{{ pet.petName }}</div>
+                <div class="pet-location">
+                  <ion-icon name="location-outline"></ion-icon>
+                  Distance (Near 15km)
+                </div>
+              </div>
+              <ion-icon
+                [name]="pet.favorite ? 'heart' : 'heart-outline'"
+                color="danger"
+                class="heart-icon"
+                (click)="toggleFavorite(pet, $event)"
+              ></ion-icon>
             </div>
-          </div>
-          <ion-icon
-            [name]="pet.favorite ? 'heart' : 'heart-outline'"
-            color="danger"
-            class="heart-icon"
-            (click)="toggleFavorite(pet, $event)"
-          ></ion-icon>
-        </div>
-        <div class="pet-details">
-          {{ pet.breed }} - {{ pet.age }} yrs
-        </div>
-      </div>
-    </div>
-  </div>
-
+            <div class="pet-details">
+              {{ pet.breed }} - {{ pet.age }} yrs
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

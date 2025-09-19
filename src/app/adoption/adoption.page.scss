@@ -1,7 +1,7 @@
 ion-content {
   display: flex;
   flex-direction: column;
-  overflow-y: auto; // make content scrollable
+  overflow-y: auto; /* make content scrollable */
   --padding-top: 0;
   --padding-bottom: 0;
 }
@@ -11,73 +11,90 @@ ion-content {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px;
+  padding: 10px 16px;
   background-color: var(--ion-background-color, #fff);
   position: sticky;
   top: 0;
-  z-index: 10; // stays on top when scrolling
+  z-index: 10; /* stays on top when scrolling */
 }
 
-/* Style for the Create button */
-button {
-  --padding-start: 16px;
-  --padding-end: 16px;
-  border-radius: 8px;
-  text-transform: capitalize;
-  font-size: 16px;
-  height: 40px;
+/* New button - smaller and less wide */
+button.new-button {
+  --padding-start: 10px;
+  --padding-end: 10px;
+  border-radius: 20px;
+  text-transform: none;
+  font-size: 14px;
+  height: 36px;
   background: var(--ion-color-primary);
-  min-width: 80px;
+  min-width: 60px;
 
   ion-icon {
     color: var(--ion-color-light, #f4f5f8);
+    font-size: 20px;
   }
 }
 
-/* Search bar styling */
-ion-searchbar {
+/* Search bar - allow it to grow and be wider */
+ion-searchbar.adoption-search {
   --background: var(--ion-color-light, #f4f5f8);
-  --border-radius: 8px;
-  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --border-radius: 12px;
+  --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
   --icon-color: var(--ion-color-primary, #3880ff);
-  flex: 1;
-  max-width: 400px;
-  height: 40px;
+  flex-grow: 1;
+  max-width: none; /* let it take maximum space */
+  height: 42px;
   padding: 0;
   margin: 0;
 }
 
-/* Filter icon styling */
-ion-icon {
-  font-size: 24px;
-  color: var(--ion-color-primary, #3880ff);
+/* Filter icon as button */
+button.filter-button {
+  background: transparent;
+  border: none;
   cursor: pointer;
-  transition: color 0.2s ease;
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
 
-ion-icon:hover {
-  color: var(--ion-color-primary-shade, #3171e0);
+  ion-icon {
+    font-size: 25px;
+    color: var(--ion-color-primary);
+    transition: color 0.25s ease;
+  }
+
+  &:hover ion-icon {
+    color: var(--ion-color-primary-shade);
+  }
 }
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .nav-container {
-    flex-wrap: nowrap;
-    gap: 8px;
+      .nav-container {
+        gap: 5px;
+        padding: 8px 0px;
+    }
+  
+  button.new-button {
+    min-width: 50px;
+    font-size: 13px;
+    height: 34px;
   }
 
-  ion-searchbar {
-    max-width: 100%;
-    flex: 1;
+  ion-searchbar.adoption-search {
+    height: 38px;
   }
 
-  button {
-    min-width: 60px;
-    font-size: 14px;
-  }
+  button.filter-button {
+    height: 34px;
+    width: 34px;
 
-  ion-icon {
-    font-size: 20px;
+    ion-icon {
+      font-size: 22px;
+    }
   }
 }
 
@@ -87,9 +104,11 @@ ion-icon:hover {
   grid-template-columns: 1fr;
   gap: 16px;
   padding: 12px;
+}
 
-  @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr; // 2 cards per row
+@media (min-width: 768px) {
+  .pet-cards-list {
+    grid-template-columns: 1fr 1fr; /* 2 cards per row */
   }
 }
 
@@ -102,10 +121,10 @@ ion-icon:hover {
   flex-direction: column;
   transition: box-shadow 0.15s;
   cursor: pointer;
+}
 
-  &:hover {
-    box-shadow: 0 4px 14px #0003;
-  }
+.pet-card:hover {
+  box-shadow: 0 4px 14px #0003;
 }
 
 .pet-img {
@@ -150,4 +169,39 @@ ion-icon:hover {
   justify-content: space-between;
   font-size: 14px;
   margin-top: 6px;
+}
+
+/* Category scroller */
+.category-scroller {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 8px 0 12px 0;
+  margin-bottom: 12px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 68px;
+  opacity: 0.65;
+  cursor: pointer;
+}
+
+.category-item.active {
+  opacity: 1;
+  font-weight: 700;
+}
+
+.category-label {
+  margin-top: 4px;
+  font-size: 13px;
 }

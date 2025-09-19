@@ -3,20 +3,19 @@ export interface Pet {
   petName: string;
   breed: string;
   age: number;
-  gender?: string;
+  gender?: string; // "male", "female", "unknown"
   image?: string;
   category: string;
   favorite?: boolean;
-
-  contact?: string; // phone number
-  location?: string; // address
+  contact?: string;
+  location?: string; // Used as city
+  area?: string; // Added for area filter
   remarks?: string;
   timings?: string;
-
-  // Optional extra fields
   healthStatus?: string;
+  vaccinated?: boolean; // Added for vaccination filter
   description?: string;
-  species?: string;
+  species?: string; // "dog", "cat", "other"
   petType?: string;
   status?: string;
   createdAt?: number;

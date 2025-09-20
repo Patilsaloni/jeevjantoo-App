@@ -69,7 +69,11 @@
 
 
   <div class="ambulance-cards">
+<<<<<<< HEAD
     <div *ngFor="let amb of filteredAmbulances" class="ambulance-card" [ngClass]="amb.variant">
+=======
+    <div *ngFor="let amb of ambulances" class="ambulance-card" [ngClass]="amb.variant">
+>>>>>>> 325d64b (done)
       <div class="ambulance-header">
         <div style="display: flex; align-items: center;">
           <div class="card-initial">{{ amb.name[0] }}</div>
@@ -109,7 +113,11 @@
     </div>
   </div>
 
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 325d64b (done)
   <!-- No Ambulances -->
   <div *ngIf="!loading && filteredAmbulances.length === 0" class="no-data">
     <ion-icon name="alert-circle-outline"></ion-icon>

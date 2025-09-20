@@ -259,7 +259,11 @@ interface Boarding {
   lat: number;
   lng: number;
   status: string;
+<<<<<<< HEAD
   expanded?: boolean;
+=======
+   expanded?: boolean;
+>>>>>>> 325d64b (done)
   variant?: string;
 }
 
@@ -298,7 +302,11 @@ export class BoardingPage implements OnInit {
       const res = await this.firebaseService.getInformation('boardings');
       this.boardingSpas = res
         .filter((b: any) => b.status?.toLowerCase() === 'active')
+<<<<<<< HEAD
         .map((b: any, index: number) => ({
+=======
+        .map((b: any,index: number) => ({
+>>>>>>> 325d64b (done)
           id: b.id,
           name: b.name || 'Unknown',
           contact: b.contact || 'N/A',

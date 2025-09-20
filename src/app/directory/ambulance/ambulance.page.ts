@@ -261,7 +261,11 @@ interface Ambulance {
   area: string;
   lat?: number;
   lng?: number;
+<<<<<<< HEAD
   expanded?: boolean;
+=======
+   expanded?: boolean;
+>>>>>>> 325d64b (done)
   variant?: string;
 }
 
@@ -315,8 +319,13 @@ export class AmbulancePage implements OnInit {
           area: amb.area || 'N/A',
           lat: amb.lat,
           lng: amb.lng,
+<<<<<<< HEAD
           expanded: false,
           variant: ['a', 'b', 'c', 'd', 'e'][idx % 5]
+=======
+            expanded: false,
+          variant: ['a', 'b', 'c', 'd', 'e'][res.indexOf(amb) % 5]
+>>>>>>> 325d64b (done)
         }));
       this.filteredAmbulances = [...this.ambulances];
       this.areas = Array.from(new Set(this.ambulances.map(a => a.area).filter(a => a))).sort();

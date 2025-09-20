@@ -29,7 +29,11 @@ export class AdoptionPage implements OnInit {
   // Category icons for horizontally scrollable list
   categoryIcons = [
     { name: 'All', icon: 'assets/img/pets2.png' },
+<<<<<<< HEAD
     { name: 'dog', icon: 'assets/img/dog.jpg' },
+=======
+    { name: 'dog', icon: 'assets/img/dog.jpg' }, // Updated to match species values
+>>>>>>> 325d64b (done)
     { name: 'cat', icon: 'assets/img/cat.jpg' },
     { name: 'bird', icon: 'assets/img/bird.jpg' },
     { name: 'fish', icon: 'assets/img/fish.jfif' },
@@ -94,6 +98,7 @@ export class AdoptionPage implements OnInit {
   }
 
   filteredPets(): Pet[] {
+<<<<<<< HEAD
     const q = this.searchText.trim().toLowerCase();
 
     return this.pets.filter((pet: any) => {
@@ -140,6 +145,27 @@ export class AdoptionPage implements OnInit {
         matchesVaccinated &&
         matchesSearch
       );
+=======
+    return this.pets.filter(pet => {
+      // Category filter (based on species)
+      const matchesCategory = this.selectedFilter === 'All' || (pet.species && pet.species === this.selectedFilter);
+
+      // Modal filters
+      const matchesSpecies = !this.filters.species.length || (pet.species && this.filters.species.includes(pet.species));
+      const matchesGender = !this.filters.gender.length || (pet.gender && this.filters.gender.includes(pet.gender));
+      const matchesCity = !this.filters.city || (pet.location && pet.location === this.filters.city);
+      const matchesArea = !this.filters.area || (pet.area && pet.area === this.filters.area);
+      const matchesVaccinated = this.filters.vaccinated === false || (pet.vaccinated === this.filters.vaccinated);
+
+      // Search text
+      const matchesSearch = this.searchText.trim() === '' ||
+        pet.petName.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        (pet.species && pet.species.toLowerCase().includes(this.searchText.toLowerCase())) ||
+        (pet.category && pet.category.toLowerCase().includes(this.searchText.toLowerCase())) ||
+        (pet.location && pet.location.toLowerCase().includes(this.searchText.toLowerCase()));
+
+      return matchesCategory && matchesSpecies && matchesGender && matchesCity && matchesArea && matchesVaccinated && matchesSearch;
+>>>>>>> 325d64b (done)
     });
   }
 
@@ -191,15 +217,25 @@ export class AdoptionPage implements OnInit {
     const modal = await this.modalController.create({
       component: FilterModalComponent,
       componentProps: {
+<<<<<<< HEAD
         filters: { ...this.filters }
+=======
+        filters: { ...this.filters } // Pass current filters to modal
+>>>>>>> 325d64b (done)
       }
     });
 
     modal.onDidDismiss().then(({ data }) => {
       if (data) {
+<<<<<<< HEAD
         this.filters = { ...data };
         console.log('Applied filters:', this.filters);
         console.log('Filtered pets:', this.filteredPets());
+=======
+        this.filters = { ...data }; // Update filters with modal output
+        console.log('Applied filters:', this.filters); // Debug: Log applied filters
+        console.log('Filtered pets:', this.filteredPets()); // Debug: Log filtered results
+>>>>>>> 325d64b (done)
       }
     });
 

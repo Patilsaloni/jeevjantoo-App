@@ -1,3 +1,124 @@
+// /* Toolbar Gradient */
+// .premium-toolbar {
+//   background: linear-gradient(135deg, #9befe0 0%, #6eb9ff 100%);
+//   color: #000;  /* make default text black */
+
+//   ion-title,
+//   ion-icon,
+//   ion-button {
+//     color: #000 !important;  /* force black */
+//   }
+// }
+
+
+// /* Helpline Page Styling */
+// .premium-helpline {
+//   padding: 1rem;
+
+//   ion-searchbar {
+//     margin-bottom: 1rem;
+//     --border-radius: 15px;
+//     --background: #f0f4f8;
+//     --color: #000; /* black text */
+//   }
+
+//   .filters {
+//     display: flex;
+//     gap: 1rem;
+//     margin-bottom: 1rem;
+
+//     ion-select {
+//       flex: 1;
+//       --border-radius: 12px;
+//       --background: #f0f4f8;
+//       --color: #000; /* black text */
+//     }
+//   }
+
+//   .helpline-cards {
+//     display: grid;
+//     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+//     gap: 1rem;
+//   }
+
+//   .helpline-card {
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: space-between;
+//     background: #ffffff;
+//     border-radius: 20px;
+//     overflow: hidden;
+//     position: relative;
+//     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+//     border-top: 5px solid #6eb9ff; 
+//     transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+//     &:hover {
+//       transform: translateY(-5px);
+//       box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+//     }
+
+//     .card-header-gradient {
+//       background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+//       padding: 1rem;
+//       border-bottom: 1px solid #eee;
+
+//       ion-card-title {
+//         font-size: 1.3rem;
+//         font-weight: 700;
+//         color: #fff; /* keep white text in header */
+//       }
+
+//       ion-card-subtitle {
+//         font-size: 1rem;
+//         color: #f0f0f0;
+//       }
+//     }
+
+//     ion-card-content {
+//       padding: 0.8rem 1rem;
+//       color: #000; /* default black text */
+
+//       p {
+//         margin: 0.3rem 0;
+//         font-size: 0.95rem;
+//         color: #000; /* black text */
+
+//         ion-icon {
+//           vertical-align: middle;
+//           margin-right: 0.3rem;
+//           color: #6eb9ff;
+//         }
+//       }
+//     }
+//   }
+
+  
+
+//   .spinner-overlay {
+//   position: fixed;   /* stay on top */
+//   top: 0;
+//   left: 0;
+//   width: 100vw;
+//   height: 100vh;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   background: rgba(255, 255, 255, 0.7); // optional dim background
+//   z-index: 9999;
+// }
+
+
+//   .no-data {
+//     text-align: center;
+//     font-size: 1rem;
+//     color: #000; /* black text */
+//     margin-top: 40px;
+//   }
+// }
+
+
+
 /* Toolbar Gradient */
 .premium-toolbar {
   background: linear-gradient(135deg, #9befe0 0%, #6eb9ff 100%);
@@ -14,6 +135,7 @@
 .premium-helpline {
   padding: 1rem;
 
+<<<<<<< HEAD
   // ion-searchbar {
   //   margin-bottom: 1rem;
   //   --border-radius: 15px;
@@ -113,6 +235,13 @@
         font-size: 22px;
       }
     }
+=======
+  ion-searchbar {
+    margin-bottom: 1rem;
+    --border-radius: 15px;
+    --background: #f0f4f8;
+    --color: #000;
+>>>>>>> 325d64b (done)
   }
 
   .filters {
@@ -120,6 +249,7 @@
     gap: 1rem;
     flex-wrap: wrap;
     margin-bottom: 1rem;
+<<<<<<< HEAD
   }
 
   .helpline-cards {
@@ -267,6 +397,220 @@
       flex: 1;
       background: none;
       color: #00796b;
+      border: 1px solid;
+      border-radius: 10px;
+      padding: 0.6rem 0;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+  }
+
+  @keyframes fadeInAcc {
+    from {
+      opacity: 0;
+      transform: translateY(-13px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes expandFade {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .helpline-accordion {
+    animation: expandFade 0.4s ease forwards;
+  }
+
+  @keyframes cardPopIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.93) translateY(32px);
+    }
+    75% {
+      opacity: 1;
+      transform: scale(1.04) translateY(-6px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .helpline-card {
+    animation: cardPopIn 0.6s cubic-bezier(0.29, 0.75, 0.44, 1.28);
+=======
+
+    ion-select {
+      flex: 1;
+      --border-radius: 12px;
+      --background: #f0f4f8;
+      --color: #000;
+    }
+  }
+
+  .no-data {
+    text-align: center;
+    font-size: 1rem;
+    color: #000;
+    margin-top: 40px;
+>>>>>>> 325d64b (done)
+  }
+
+  .helpline-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 1.2rem 1rem;
+  }
+
+  .helpline-card {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 6px 22px #dce6ff44;
+    transition: box-shadow 0.2s;
+    position: relative;
+
+    &.a {
+      background: linear-gradient(120deg, #a3d8ff, #b8c6ff);
+    }
+    &.b {
+      background: linear-gradient(120deg, #ffe1b6, #ffb48f);
+    }
+    &.c {
+      background: linear-gradient(120deg, #ffb7b7, #ffd6e0);
+    }
+    &.d {
+      background: linear-gradient(120deg, #c7bfff, #c8e6ff);
+    }
+    &.e {
+      background: linear-gradient(120deg, #a0fff7, #71e1ff);
+    }
+  }
+
+  .helpline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.1rem 0.85rem 1.13rem;
+    border-bottom: 1.5px solid #f3f3f6;
+    background: none;
+  }
+
+  .card-initial {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-right: 16px;
+  }
+
+  .helpline-title {
+    font-size: 1.21rem;
+    font-weight: bold;
+    color: #2b2a32;
+    margin-bottom: 0.1rem;
+  }
+
+  .helpline-subtitle {
+    color: #877b82;
+    font-size: 0.92rem;
+  }
+
+  .expand-btn {
+    background: linear-gradient(135deg, #edf6ff 40%, #fff0e7 100%);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 2px 8px #fafbfd8e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    ion-icon {
+      font-size: 1.43rem;
+      color: #000000;
+      font-weight: bold;
+    }
+  }
+
+  .spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+  }
+
+  .helpline-accordion {
+    padding: 1.1rem 1rem 0.7rem 1.1rem;
+    border-top: 1px solid #f0eded;
+    animation: fadeInAcc 0.38s cubic-bezier(0.36, 0.32, 0.29, 1);
+
+    &.a {
+      background: #f6faff;
+    }
+    &.b {
+      background: #fff5ed;
+    }
+    &.c {
+      background: #fff4f0;
+    }
+    &.d {
+      background: #f6f6fa;
+    }
+    &.e {
+      background: #e6fefd;
+    }
+
+    table {
+      width: 100%;
+      td {
+        font-size: 1.02rem;
+        color: #222;
+        vertical-align: top;
+        padding: 3.5px 5px 2.5px 0;
+      }
+      td:first-child {
+        font-weight: 700;
+        color: #24272b;
+        text-align: left;
+        min-width: 78px;
+      }
+    }
+  }
+
+  .helpline-actions-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 1rem;
+
+    .details-btn {
+      flex: 1;
+      background: none;
+      color: #535a90;
       border: 1px solid;
       border-radius: 10px;
       padding: 0.6rem 0;

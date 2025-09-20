@@ -107,14 +107,19 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
+<<<<<<< HEAD
       <ion-button href="/tabs/directory">
        <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
       </ion-button>
+=======
+      <ion-menu-button></ion-menu-button>
+>>>>>>> 325d64b (done)
     </ion-buttons>
     <ion-title>Clinics</ion-title>
   </ion-toolbar>
 </ion-header>
 
+<<<<<<< HEAD
 
 <ion-content [fullscreen]="true" class="premium-abc">
   <!-- Loader -->
@@ -137,6 +142,17 @@
 
   <div class="clinic-cards">
     <div *ngFor="let clinic of filteredClinics" class="clinic-card" [ngClass]="clinic.variant">
+=======
+<ion-content fullscreen="true" class="premium-clinics">
+  <div *ngIf="loading" class="spinner-center">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <div *ngIf="!loading && clinics.length === 0" class="no-data">
+    No clinics found
+  </div>
+  <div class="clinic-cards">
+    <div *ngFor="let clinic of clinics" class="clinic-card" [ngClass]="clinic.variant">
+>>>>>>> 325d64b (done)
       <div class="clinic-header">
         <div>
           <div class="card-initial"> {{ clinic.name[0] }} </div>

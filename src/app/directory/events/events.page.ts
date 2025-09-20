@@ -314,6 +314,7 @@ export class EventsPage implements OnInit {
   async loadEvents() {
     this.loading = true;
     try {
+<<<<<<< HEAD
       const res = await this.firebaseService.getInformation('events');
       this.events = res.map((ev: any, index: number) => ({
         id: ev.id,
@@ -343,6 +344,21 @@ export class EventsPage implements OnInit {
       console.log('Areas:', this.areas);
       console.log('Places:', this.places);
       console.log('Timings:', this.timings);
+=======
+      this.events = await this.firebaseService.getInformation('events');
+
+      this.events.forEach((ev,index) => {
+        const lat = parseFloat(ev.lat);
+        const lng = parseFloat(ev.lng);
+        ev.hasLocation = !isNaN(lat) && !isNaN(lng);
+        ev.lat = lat;
+        ev.lng = lng;
+         ev.expanded = false;
+        ev.variant = ['a', 'b', 'c', 'd', 'e'][index % 5];
+      });
+
+      this.filteredEvents = this.events;
+>>>>>>> 325d64b (done)
     } catch (error) {
       console.error('Error loading events:', error);
       this.events = [];

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // // import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 // // import { IonicModule, AlertController } from '@ionic/angular';
 // // import { CommonModule } from '@angular/common';
@@ -87,12 +88,23 @@
 //   expanded?: boolean;
 //   variant?: string;
 // }
+=======
+// import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+// import { IonicModule, AlertController } from '@ionic/angular';
+// import { CommonModule } from '@angular/common';
+// import { FirebaseService } from 'src/app/services/firebase.service';
+// import { Router } from '@angular/router';
+// import { RouterModule } from '@angular/router';
+
+
+>>>>>>> 325d64b (done)
 
 // @Component({
 //   selector: 'app-clinics',
 //   templateUrl: './clinics.page.html',
 //   styleUrls: ['./clinics.page.scss'],
 //   standalone: true,
+<<<<<<< HEAD
 //   imports: [IonicModule, CommonModule, FormsModule],
 //   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 // })
@@ -110,6 +122,20 @@
 //     private router: Router,
 //     private modalController: ModalController
 //   ) {}
+=======
+//   imports: [IonicModule, CommonModule],
+//   schemas: [CUSTOM_ELEMENTS_SCHEMA]
+// })
+// export class ClinicsPage implements OnInit {
+//   clinics: any[] = [];
+//   loading = true;
+
+//  constructor(
+//   private firebaseService: FirebaseService,
+//   private alertCtrl: AlertController,
+//   private router: Router
+// ) {}
+>>>>>>> 325d64b (done)
 
 //   ngOnInit() {
 //     this.loadClinics();
@@ -118,6 +144,7 @@
 //   async loadClinics() {
 //     this.loading = true;
 //     try {
+<<<<<<< HEAD
 //       const res = await this.firebaseService.getInformation('veterinaryClinic');
 //       this.clinics = res.map((c: any, index: number) => ({
 //         id: c.id,
@@ -145,11 +172,27 @@
 //       console.error('Error loading clinics:', error);
 //       this.clinics = [];
 //       this.filteredClinics = [];
+=======
+//       this.clinics = await this.firebaseService.getInformation('veterinaryClinic');
+      
+//       this.clinics.forEach(clinic => {
+//         const lat = parseFloat(clinic.lat);
+//         const lng = parseFloat(clinic.lng);
+//         clinic.hasLocation = !isNaN(lat) && !isNaN(lng);
+//         clinic.lat = lat;
+//         clinic.lng = lng;
+//       });
+
+//     } catch (error) {
+//       console.error('Error loading clinics:', error);
+//       this.clinics = [];
+>>>>>>> 325d64b (done)
 //     } finally {
 //       this.loading = false;
 //     }
 //   }
 
+<<<<<<< HEAD
 //   filterClinics(event: any) {
 //     this.searchTerm = event?.target?.value?.toLowerCase() || '';
 //     this.applyFilters();
@@ -198,6 +241,10 @@
 
 //   openMap(clinic: Clinic) {
 //     if (clinic.lat && clinic.lng) {
+=======
+//   openMap(clinic: any) {
+//     if (clinic.hasLocation) {
+>>>>>>> 325d64b (done)
 //       const mapUrl = `https://www.google.com/maps?q=${clinic.lat},${clinic.lng}`;
 //       window.open(mapUrl, '_blank');
 //     } else {
@@ -205,9 +252,58 @@
 //     }
 //   }
 
+<<<<<<< HEAD
 //   viewDetails(clinic: Clinic) {
 //     this.router.navigate([`/tabs/directory/clinics/${clinic.id}`]);
 //   }
+=======
+//   async openAddClinicPrompt() {
+//     const alert = await this.alertCtrl.create({
+//       header: 'Add New Clinic',
+//       inputs: [
+//         { name: 'name', type: 'text', placeholder: 'Clinic Name' },
+//         { name: 'type', type: 'text', placeholder: 'Type' },
+//         { name: 'city', type: 'text', placeholder: 'City' },
+//         { name: 'state', type: 'text', placeholder: 'State' },
+//         { name: 'area', type: 'text', placeholder: 'Area' },
+//         { name: 'pincode', type: 'text', placeholder: 'Pincode' },
+//         { name: 'contact', type: 'text', placeholder: 'Contact' },
+//         { name: 'timeFrom', type: 'text', placeholder: 'From Time' },
+//         { name: 'timeTo', type: 'text', placeholder: 'To Time' },
+//         { name: 'lat', type: 'text', placeholder: 'Latitude' },
+//         { name: 'lng', type: 'text', placeholder: 'Longitude' },
+//         { name: 'remarks', type: 'text', placeholder: 'Remarks (Optional)' },
+//       ],
+//       buttons: [
+//         { text: 'Cancel', role: 'cancel' },
+//         {
+//           text: 'Add',
+//           handler: (data) => this.addClinic(data)
+//         }
+//       ]
+//     });
+
+//     await alert.present();
+//   }
+
+//   async addClinic(data: any) {
+//     try {
+//       await this.firebaseService.addInformation(data.name, data, 'veterinaryClinic');
+//       this.loadClinics(); // Refresh list
+//     } catch (error) {
+//       console.error('Error adding clinic:', error);
+//     }
+//   }
+
+//   formatTiming(timeFrom: string, timeTo: string) {
+//     if (!timeFrom || !timeTo) return 'Timing not available';
+//     return `${timeFrom} - ${timeTo}`;
+//   }
+
+//   viewDetails(clinic: any) {
+//   this.router.navigate([`/tabs/directory/clinics/${clinic.id}`]);
+// }
+>>>>>>> 325d64b (done)
 // }
 
 
@@ -217,6 +313,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Router } from '@angular/router';
+<<<<<<< HEAD
 import { FilterModalComponent } from 'src/app/filter-modal/filter-modal.component';
 
 interface Clinic {
@@ -235,6 +332,9 @@ interface Clinic {
   expanded?: boolean;
   variant?: string;
 }
+=======
+import { RouterModule } from '@angular/router';
+>>>>>>> 325d64b (done)
 
 @Component({
   selector: 'app-clinics',
@@ -257,8 +357,13 @@ export class ClinicsPage implements OnInit {
 
   constructor(
     private firebaseService: FirebaseService,
+<<<<<<< HEAD
     private router: Router,
     private modalController: ModalController
+=======
+    private alertCtrl: AlertController,
+    private router: Router
+>>>>>>> 325d64b (done)
   ) {}
 
   ngOnInit() {
@@ -268,6 +373,7 @@ export class ClinicsPage implements OnInit {
   async loadClinics() {
     this.loading = true;
     try {
+<<<<<<< HEAD
       const res = await this.firebaseService.getInformation('veterinaryClinic');
       this.clinics = res.map((c: any, index: number) => ({
         id: c.id,
@@ -305,11 +411,23 @@ export class ClinicsPage implements OnInit {
       console.error('Error loading clinics:', error);
       this.clinics = [];
       this.filteredClinics = [];
+=======
+      this.clinics = await this.firebaseService.getInformation('veterinaryClinic');
+      // Assign variants for background; cycle or use type for demo
+      const variants = ['a', 'b', 'c', 'd', 'e'];
+      this.clinics.forEach((clinic, idx) => {
+        clinic.expanded = false;
+        clinic.variant = variants[idx % variants.length];
+      });
+    } catch (error) {
+      console.error('Error loading clinics', error);
+>>>>>>> 325d64b (done)
     } finally {
       this.loading = false;
     }
   }
 
+<<<<<<< HEAD
   filterClinics(event: any) {
     this.searchTerm = event?.target?.value?.toLowerCase().trim() || '';
     this.applyFilters();
@@ -365,12 +483,29 @@ export class ClinicsPage implements OnInit {
     if (clinic.lat && clinic.lng) {
       const mapUrl = `https://www.google.com/maps?q=${clinic.lat},${clinic.lng}`;
       window.open(mapUrl, '_blank');
+=======
+  openMap(clinic: any) {
+    if (clinic.lat && clinic.lng) {
+      window.open(`https://www.google.com/maps?q=${clinic.lat},${clinic.lng}`, '_blank');
+>>>>>>> 325d64b (done)
     } else {
       alert('Location not available for this clinic');
     }
   }
 
+<<<<<<< HEAD
   viewDetails(clinic: Clinic) {
     this.router.navigate([`/tabs/directory/clinics/${clinic.id}`]);
   }
 }
+=======
+  formatTiming(timeFrom: string, timeTo: string) {
+    if (!timeFrom || !timeTo) { return 'Timing not available'; }
+    return `${timeFrom} - ${timeTo}`;
+  }
+
+  viewDetails(clinic: any) {
+    this.router.navigate(['tabs/directory/clinics', clinic.id]);
+  }
+}
+>>>>>>> 325d64b (done)

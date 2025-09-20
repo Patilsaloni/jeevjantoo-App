@@ -139,6 +139,7 @@ export class GhelplinePage implements OnInit {
     this.loading = true;
     try {
       const res = await this.firebaseService.getInformation('government-helpline');
+<<<<<<< HEAD
       console.log('Raw Firebase Data:', res); // Debug: Log raw data
       this.helplines = res
         .filter((h: any) => h.status?.toLowerCase() === 'active')
@@ -177,6 +178,22 @@ export class GhelplinePage implements OnInit {
       console.log('States:', this.states);
       console.log('Cities by State:', this.citiesByState);
       this.applyFilters();
+=======
+  const helplinesData: GovtHelpline[] = res.map((h: any, index: number) => ({
+        ...h,
+        expanded: false,
+        variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
+      })) as GovtHelpline[];
+      // const helplinesData: GovtHelpline[] = res as GovtHelpline[];
+
+      // ✅ Filter based on status, city, service, search term
+      this.helplines = helplinesData
+        .filter(h => h.status?.toLowerCase() === 'active')
+        .filter(h => !this.selectedCity || (h.city && h.city.toLowerCase() === this.selectedCity.toLowerCase()))
+        .filter(h => !this.selectedService || h.helplineServices.toLowerCase().includes(this.selectedService.toLowerCase()))
+        .filter(h => !this.searchTerm || h.helplineServices.toLowerCase().includes(this.searchTerm.toLowerCase()));
+
+>>>>>>> 325d64b (done)
     } catch (err) {
       console.error('Failed to load government helplines:', err);
       this.helplines = [];

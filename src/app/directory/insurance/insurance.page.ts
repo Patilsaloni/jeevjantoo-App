@@ -119,10 +119,19 @@ export class InsurancePage implements OnInit {
   insurances: Insurance[] = [];
   filteredInsurances: Insurance[] = [];
   loading = true;
+<<<<<<< HEAD
   searchTerm = '';
   filters = { coverage: '', city: '' };
   coverages: string[] = [];
   cities: string[] = [];
+=======
+expanded?: boolean;
+  variant?: string;
+  filters = {
+    q: '',
+    city: ''
+  };
+>>>>>>> 325d64b (done)
 
   constructor(
     private firebaseService: FirebaseService,
@@ -136,6 +145,7 @@ export class InsurancePage implements OnInit {
   async loadInsurances() {
     this.loading = true;
     try {
+<<<<<<< HEAD
       const res = await this.firebaseService.getInformation('medical-insurance');
       this.insurances = res.map((ins: any, index: number) => ({
         id: ins.id,
@@ -154,6 +164,15 @@ export class InsurancePage implements OnInit {
       console.log('Loaded Insurances:', this.insurances);
       console.log('Coverages:', this.coverages);
       console.log('Cities:', this.cities);
+=======
+      // this.insurances = await this.firebaseService.getInformation('medical-insurance');
+       this.insurances = (await this.firebaseService.getInformation('medical-insurance')).map((ins: any, index: number) => ({
+        ...ins,
+        expanded: false,
+        variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
+      }));
+      this.applyFilters();
+>>>>>>> 325d64b (done)
     } catch (err) {
       console.error('Error fetching insurance:', err);
       this.insurances = [];

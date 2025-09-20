@@ -145,6 +145,7 @@ export class AbcPage implements OnInit {
       });
       this.filteredAbcs = [...this.abcs];
 
+<<<<<<< HEAD
       // Populate states and citiesByState
       this.states = Array.from(
         new Set(this.abcs.map((a) => a.state).filter((s) => s))
@@ -153,6 +154,20 @@ export class AbcPage implements OnInit {
       this.updateCities();
       console.log('Loaded ABCs:', this.abcs);
       console.log('States:', this.states);
+=======
+
+        const variants = ['a', 'b', 'c', 'd', 'e'];
+      this.abcs.forEach((abc, idx) => {
+        abc.expanded = false;
+        abc.variant = variants[idx % variants.length];
+      });
+      this.filteredAbcs = [...this.abcs];
+
+      
+      this.cities = Array.from(new Set(this.abcs.map(a => a.city).filter(c => c)));
+      this.types = Array.from(new Set(this.abcs.map(a => a.type).filter(t => t)));
+
+>>>>>>> 325d64b (done)
     } catch (error) {
       console.error('Error loading ABCs:', error);
       this.abcs = [];

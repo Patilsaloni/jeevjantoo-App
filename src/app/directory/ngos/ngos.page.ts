@@ -139,7 +139,11 @@ export class NgosPage implements OnInit {
       const res = await this.firebaseService.getInformation('ngos');
       this.ngos = res
         .filter((ngo: any) => ngo.status?.toLowerCase() === 'active')
+<<<<<<< HEAD
         .map((ngo: any, index: number) => ({
+=======
+        .map((ngo: any,index: number) => ({
+>>>>>>> 325d64b (done)
           id: ngo.id,
           name: ngo.name || 'Unknown',
           individual: ngo.individual || 'N/A',

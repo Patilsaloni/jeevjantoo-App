@@ -16,6 +16,8 @@ interface FeedingPoint {
   lng?: number | null;
   food_items: string[];  // ✅ always array
   city?: string;
+   expanded?: boolean;
+  variant?: string;
 }
 
 @Component({
@@ -52,7 +54,7 @@ export class FeedingPage implements OnInit {
     try {
       let data: any[] = await this.firebaseService.getInformation('food') || [];
 
-      this.feedingPoints = data.map(fp => {
+      this.feedingPoints = data.map((fp, index) => {
         let items: string[] = [];
 
         if (Array.isArray(fp.food_items)) {
@@ -65,7 +67,9 @@ export class FeedingPage implements OnInit {
           ...fp,
           food_items: items,  // ✅ always string[]
           lat: fp.lat ?? null,
-          lng: fp.lng ?? null
+          lng: fp.lng ?? null,
+           expanded: false,
+          variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
         } as FeedingPoint;
       });
 

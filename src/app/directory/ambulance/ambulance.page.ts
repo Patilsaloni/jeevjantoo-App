@@ -14,6 +14,8 @@ interface Ambulance {
   area: string;
   lat?: number;
   lng?: number;
+   expanded?: boolean;
+  variant?: string;
 }
 
 @Component({
@@ -50,7 +52,9 @@ export class AmbulancePage implements OnInit {
           governing_body: amb.govtBody || 'N/A',
           area: amb.area || 'N/A',
           lat: amb.lat,
-          lng: amb.lng
+          lng: amb.lng,
+            expanded: false,
+          variant: ['a', 'b', 'c', 'd', 'e'][res.indexOf(amb) % 5]
         }));
     } catch (err) {
       console.error('Failed to load ambulances:', err);

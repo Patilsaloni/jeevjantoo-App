@@ -17,6 +17,8 @@ interface Boarding {
   lat: number;
   lng: number;
   status: string;
+   expanded?: boolean;
+  variant?: string;
 }
 
 @Component({
@@ -44,7 +46,7 @@ export class BoardingPage implements OnInit {
       const res = await this.firebaseService.getInformation('boardings'); // Firestore collection
       this.boardingSpas = res
         .filter((b: any) => b.status?.toLowerCase() === 'active')
-        .map((b: any) => ({
+        .map((b: any,index: number) => ({
           id: b.id,
           name: b.name || 'Unknown',
           contact: b.contact || 'N/A',
@@ -57,6 +59,8 @@ export class BoardingPage implements OnInit {
           lat: b.lat ?? 0,
           lng: b.lng ?? 0,
           status: b.status || 'inactive',
+          expanded: false,
+          variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
         }));
     } catch (err) {
       console.error('Failed to load boardings:', err);

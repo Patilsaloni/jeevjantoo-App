@@ -28,7 +28,7 @@
   </div>
 
   <!-- Helpline List -->
-  <div class="helpline-cards" *ngIf="!loading && helplines.length > 0">
+  <!-- <div class="helpline-cards" *ngIf="!loading && helplines.length > 0">
     <ion-card *ngFor="let h of helplines" class="helpline-card" (click)="openDetails(h)">
       <ion-card-header class="card-header-gradient">
         <ion-card-title>
@@ -46,8 +46,44 @@
         <p *ngIf="h.remarks"><ion-icon name="document-text-outline"></ion-icon> <strong>Remarks:</strong> {{ h.remarks }}</p>
       </ion-card-content>
     </ion-card>
-  </div>
+  </div> -->
 
+   <div class="helpline-cards">
+    <div *ngFor="let h of helplines" class="helpline-card" [ngClass]="h.variant">
+      <div class="helpline-header">
+        <div style="display: flex; align-items: center;">
+          <div class="card-initial">{{ h.helplineServices ? h.helplineServices[0] : 'H' }}</div>
+          <div>
+            <div class="helpline-title">{{ h.helplineServices || 'Unknown' }}</div>
+            <!-- <div class="helpline-subtitle">{{ h.city || 'N/A' }}</div> -->
+          </div>
+        </div>
+        <button class="expand-btn" (click)="h.expanded = !h.expanded">
+          <ion-icon [name]="h.expanded ? 'remove' : 'add'"></ion-icon>
+        </button>
+      </div>
+      <div class="helpline-accordion" *ngIf="h.expanded" [ngClass]="h.variant">
+        <table>
+          <tr>
+            <td>Contact</td>
+            <td>{{ h.contact || 'N/A' }}</td>
+          </tr>
+                    <tr>
+            <td>Govt Body</td>
+            <td>{{ h.govtBody || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td>Remarks</td>
+            <td>{{ h.remarks || 'N/A' }}</td>
+          </tr>
+        </table>
+        <div class="helpline-actions-row">
+          <button ion-button class="details-btn" (click)="openDetails(h)">DETAILS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <p *ngIf="!loading && helplines.length === 0" class="no-data">
     No helplines found.
   </p>

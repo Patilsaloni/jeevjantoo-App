@@ -18,6 +18,8 @@ interface GovtHelpline {
   pincode?: string;
   timeFrom?: string;
   timeTo?: string;
+  expanded?: boolean;
+  variant?: string;
 }
 
 @Component({
@@ -48,8 +50,12 @@ export class GhelplinePage implements OnInit {
     try {
       // ✅ Fetch all government helplines from Firestore
       const res = await this.firebaseService.getInformation('government-helpline');
-
-      const helplinesData: GovtHelpline[] = res as GovtHelpline[];
+  const helplinesData: GovtHelpline[] = res.map((h: any, index: number) => ({
+        ...h,
+        expanded: false,
+        variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
+      })) as GovtHelpline[];
+      // const helplinesData: GovtHelpline[] = res as GovtHelpline[];
 
       // ✅ Filter based on status, city, service, search term
       this.helplines = helplinesData

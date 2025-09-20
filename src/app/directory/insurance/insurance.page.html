@@ -38,13 +38,53 @@
   </div>
 
   <!-- 📌 Insurance List -->
-  <div *ngIf="!loading && filteredInsurances.length > 0" class="insurance-cards">
+
+   <div class="insurance-cards">
+    <div *ngFor="let ins of filteredInsurances" class="insurance-card" [ngClass]="ins.variant">
+      <div class="insurance-header">
+        <div style="display: flex; align-items: center;">
+          <div class="card-initial">{{ ins.providerName ? ins.providerName[0] : 'I' }}</div>
+          <div>
+            <div class="insurance-title">{{ ins.providerName || 'Unknown' }}</div>
+            <!-- <div class="insurance-subtitle">{{ ins.city || 'N/A' }}</div> -->
+          </div>
+        </div>
+        <button class="expand-btn" (click)="ins.expanded = !ins.expanded">
+          <ion-icon [name]="ins.expanded ? 'remove' : 'add'"></ion-icon>
+        </button>
+      </div>
+      <div class="insurance-accordion" *ngIf="ins.expanded" [ngClass]="ins.variant">
+        <table>
+          <tr>
+            <td>Coverage</td>
+            <td>{{ ins.coverage || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td>Remarks</td>
+            <td>{{ ins.remarks || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td>Website</td>
+            <td><a (click)="openWebsite(ins.website)" *ngIf="ins.website">{{ ins.website }}</a><span *ngIf="!ins.website">N/A</span></td>
+          </tr>
+          <tr>
+            <td>Contact</td>
+            <td>{{ ins.contact || 'N/A' }}</td>
+          </tr>
+        </table>
+        <div class="insurance-actions-row">
+          <!-- <button ion-button class="details-btn" (click)="openDetail(ins)">DETAILS</button> -->
+          <button ion-button class="website-btn" (click)="openWebsite(ins.website)" *ngIf="ins.website">WEBSITE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div *ngIf="!loading && filteredInsurances.length > 0" class="insurance-cards">
     <ion-card *ngFor="let ins of filteredInsurances" class="insurance-card">
       
       <ion-card-header>
         <ion-card-title>{{ ins.providerName }}</ion-card-title>
-        <!-- <ion-card-subtitle *ngIf="ins.status">{{ ins.status }}</ion-card-subtitle> -->
-      </ion-card-header>
+              </ion-card-header>
 
       <ion-card-content>
         <p *ngIf="ins.coverage"><b>Coverage:</b> {{ ins.coverage }}</p>
@@ -66,7 +106,7 @@
       </ion-card-footer>
 
     </ion-card>
-  </div>
+  </div> -->
 
   <!-- ❌ No Data -->
   <div *ngIf="!loading && filteredInsurances.length === 0" class="no-data">

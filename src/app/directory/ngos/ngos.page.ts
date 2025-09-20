@@ -15,6 +15,8 @@ interface NGO {
   status: string;
   lat: number;
   lng: number;
+  expanded?: boolean;
+  variant?: string;
 }
 
 @Component({
@@ -44,7 +46,7 @@ export class NgosPage implements OnInit {
       const res = await this.firebaseService.getInformation('ngos'); // Firestore collection
       this.ngos = res
         .filter((ngo: any) => ngo.status?.toLowerCase() === 'active')
-        .map((ngo: any) => ({
+        .map((ngo: any,index: number) => ({
           id: ngo.id,
           name: ngo.name || 'Unknown',
           individual: ngo.individual || 'N/A',
@@ -55,6 +57,8 @@ export class NgosPage implements OnInit {
           status: ngo.status || 'Inactive',
           lat: ngo.lat ?? 0,
           lng: ngo.lng ?? 0,
+          expanded: false,
+          variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
         }));
     } catch (err) {
       console.error('Failed to load NGOs:', err);

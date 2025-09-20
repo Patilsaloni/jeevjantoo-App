@@ -21,7 +21,47 @@
     No boarding/spa found
   </p>
 
-  <div class="spa-cards" *ngIf="!loading && boardingSpas.length > 0">
+    <div class="spa-cards">
+    <div *ngFor="let spa of boardingSpas" class="spa-card" [ngClass]="spa.variant">
+      <div class="spa-header">
+        <div style="display: flex; align-items: center;">
+          <div class="card-initial">{{ spa.name[0] }}</div>
+          <div>
+            <div class="spa-title">{{ spa.name }}</div>
+            <div class="spa-subtitle">{{ spa.city }}, {{ spa.state }}</div>
+          </div>
+        </div>
+        <button class="expand-btn" (click)="spa.expanded = !spa.expanded">
+          <ion-icon [name]="spa.expanded ? 'remove' : 'add'"></ion-icon>
+        </button>
+      </div>
+      <div class="spa-accordion" *ngIf="spa.expanded" [ngClass]="spa.variant">
+        <table>
+          <tr>
+            <td>Area</td>
+            <td>{{ spa.area }}</td>
+          </tr>
+          <tr>
+            <td>Pincode</td>
+            <td>{{ spa.pincode }}</td>
+          </tr>
+          <tr>
+            <td>Contact</td>
+            <td>{{ spa.contact }}</td>
+          </tr>
+          <tr>
+            <td>Timing</td>
+            <td>{{ spa.timeFrom }} - {{ spa.timeTo }}</td>
+          </tr>
+        </table>
+        <div class="spa-actions-row">
+          <button ion-button class="details-btn" (click)="viewDetails(spa)">DETAILS</button>
+          <button ion-button class="map-btn" (click)="trackLocation(spa)">MAP</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="spa-cards" *ngIf="!loading && boardingSpas.length > 0">
     <ion-card *ngFor="let spa of boardingSpas" class="spa-card">
       
       <ion-card-header>
@@ -55,5 +95,5 @@
       </ion-card-footer>
 
     </ion-card>
-  </div>
+  </div> -->
 </ion-content>

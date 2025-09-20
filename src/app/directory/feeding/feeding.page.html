@@ -27,7 +27,7 @@
   </div>
 
   <!-- 📌 Feeding List -->
-  <div class="feeding-cards" *ngIf="!loading && filteredPoints.length > 0">
+  <!-- <div class="feeding-cards" *ngIf="!loading && filteredPoints.length > 0">
     <ion-card *ngFor="let fp of filteredPoints" class="feeding-card">
 
       <ion-card-header>
@@ -41,7 +41,7 @@
         <p><strong>Contact:</strong> {{ fp.contact }}</p>
         <p><strong>Address:</strong> {{ fp.address }}{{ fp.city ? ', ' + fp.city : '' }}</p>
 
-        <!-- ✅ Fixed Food Items -->
+       
         <div class="food-tags">
           <ion-chip *ngFor="let item of fp.food_items">{{ item }}</ion-chip>
         </div>
@@ -65,8 +65,50 @@
       </ion-card-footer>
 
     </ion-card>
+  </div> -->
+ <div class="feeding-cards">
+    <div *ngFor="let fp of filteredPoints" class="feeding-card" [ngClass]="fp.variant">
+      <div class="feeding-header">
+        <div style="display: flex; align-items: center;">
+          <div class="card-initial">{{ fp.name ? fp.name[0] : 'F' }}</div>
+          <div>
+            <div class="feeding-title">{{ fp.name || 'Unknown' }}</div>
+            <div class="feeding-subtitle">{{ fp.address || 'N/A' }}</div>
+          </div>
+        </div>
+        <button class="expand-btn" (click)="fp.expanded = !fp.expanded">
+          <ion-icon [name]="fp.expanded ? 'remove' : 'add'"></ion-icon>
+        </button>
+      </div>
+      <div class="feeding-accordion" *ngIf="fp.expanded" [ngClass]="fp.variant">
+        <table>
+          <tr>
+            <td>Type</td>
+            <td>{{ fp.individual === 'Y' ? 'Individual' : 'NGO' }}</td>
+          </tr>
+          <tr>
+            <td>Contact</td>
+            <td>{{ fp.contact || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td>Address</td>
+            <td>{{ fp.address }}{{ fp.city ? ', ' + fp.city : '' }}</td>
+          </tr>
+          <tr>
+            <td>Food Items</td>
+            <td>
+              <ion-chip *ngFor="let item of fp.food_items">{{ item }}</ion-chip>
+            </td>
+          </tr>
+        </table>
+        <div class="feeding-actions-row">
+          <button ion-button class="details-btn" (click)="viewDetails(fp)">DETAILS</button>
+          <button ion-button class="map-btn" (click)="openInMaps(fp.lat, fp.lng)">MAP</button>
+          <button ion-button class="actions-btn" (click)="openActions(fp)">ACTIONS</button>
+        </div>
+      </div>
+    </div>
   </div>
-
   <!-- ❌ No Data -->
   <div *ngIf="!loading && filteredPoints.length === 0" class="no-data">
     <ion-icon name="alert-circle-outline"></ion-icon>

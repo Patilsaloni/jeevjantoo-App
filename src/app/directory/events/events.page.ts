@@ -36,12 +36,14 @@ export class EventsPage implements OnInit {
     try {
       this.events = await this.firebaseService.getInformation('events');
 
-      this.events.forEach(ev => {
+      this.events.forEach((ev,index) => {
         const lat = parseFloat(ev.lat);
         const lng = parseFloat(ev.lng);
         ev.hasLocation = !isNaN(lat) && !isNaN(lng);
         ev.lat = lat;
         ev.lng = lng;
+         ev.expanded = false;
+        ev.variant = ['a', 'b', 'c', 'd', 'e'][index % 5];
       });
 
       this.filteredEvents = this.events;

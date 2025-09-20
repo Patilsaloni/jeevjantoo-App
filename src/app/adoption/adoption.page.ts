@@ -18,15 +18,22 @@ export class AdoptionPage implements OnInit {
   searchText: string = '';
   selectedFilter: string = 'All';
   pets: Pet[] = [];
+  filters = {
+    species: [] as string[],
+    gender: [] as string[],
+    city: '',
+    area: '',
+    vaccinated: false
+  };
 
   // Category icons for horizontally scrollable list
   categoryIcons = [
     { name: 'All', icon: 'assets/img/pets2.png' },
-    { name: 'Dog', icon: 'assets/img/dog.jpg' },
-    { name: 'Cat', icon: 'assets/img/cat.jpg' },
-    { name: 'Bird', icon: 'assets/img/bird.jpg' },
-    { name: 'Fish', icon: 'assets/img/fish.jfif' },
-    { name: 'Rabbit', icon: 'assets/img/rabbit.png' }
+    { name: 'dog', icon: 'assets/img/dog.jpg' }, // Updated to match species values
+    { name: 'cat', icon: 'assets/img/cat.jpg' },
+    { name: 'bird', icon: 'assets/img/bird.jpg' },
+    { name: 'fish', icon: 'assets/img/fish.jfif' },
+    { name: 'rabbit', icon: 'assets/img/rabbit.png' }
   ];
 
   constructor(
@@ -76,17 +83,26 @@ export class AdoptionPage implements OnInit {
   }
 
   filteredPets(): Pet[] {
-    return this.pets.filter(
-      pet => {
-        const matchesCategory = this.selectedFilter === 'All' || (pet.species && pet.species === this.selectedFilter);
-        const matchesSearch = this.searchText.trim() === '' ||
-          pet.petName.toLowerCase().includes(this.searchText.toLowerCase()) ||
-          (pet.species && pet.species.toLowerCase().includes(this.searchText.toLowerCase())) ||
-          (pet.category && pet.category.toLowerCase().includes(this.searchText.toLowerCase())) ||
-          (pet.location && pet.location.toLowerCase().includes(this.searchText.toLowerCase()));
-        return matchesCategory && matchesSearch;
-      }
-    );
+    return this.pets.filter(pet => {
+      // Category filter (based on species)
+      const matchesCategory = this.selectedFilter === 'All' || (pet.species && pet.species === this.selectedFilter);
+
+      // Modal filters
+      const matchesSpecies = !this.filters.species.length || (pet.species && this.filters.species.includes(pet.species));
+      const matchesGender = !this.filters.gender.length || (pet.gender && this.filters.gender.includes(pet.gender));
+      const matchesCity = !this.filters.city || (pet.location && pet.location === this.filters.city);
+      const matchesArea = !this.filters.area || (pet.area && pet.area === this.filters.area);
+      const matchesVaccinated = this.filters.vaccinated === false || (pet.vaccinated === this.filters.vaccinated);
+
+      // Search text
+      const matchesSearch = this.searchText.trim() === '' ||
+        pet.petName.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        (pet.species && pet.species.toLowerCase().includes(this.searchText.toLowerCase())) ||
+        (pet.category && pet.category.toLowerCase().includes(this.searchText.toLowerCase())) ||
+        (pet.location && pet.location.toLowerCase().includes(this.searchText.toLowerCase()));
+
+      return matchesCategory && matchesSpecies && matchesGender && matchesCity && matchesArea && matchesVaccinated && matchesSearch;
+    });
   }
 
   openPetDetails(pet: Pet) {
@@ -128,14 +144,15 @@ export class AdoptionPage implements OnInit {
     const modal = await this.modalController.create({
       component: FilterModalComponent,
       componentProps: {
-        // pass any initial data if needed here
+        filters: { ...this.filters } // Pass current filters to modal
       }
     });
 
     modal.onDidDismiss().then(({ data }) => {
       if (data) {
-        console.log('Filter modal data:', data);
-        // Update selectedFilter or other criteria based on modal data if needed
+        this.filters = { ...data }; // Update filters with modal output
+        console.log('Applied filters:', this.filters); // Debug: Log applied filters
+        console.log('Filtered pets:', this.filteredPets()); // Debug: Log filtered results
       }
     });
 

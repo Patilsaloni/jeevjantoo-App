@@ -20,7 +20,7 @@
   </div>
 
   <!-- NGO List -->
-  <div class="ngo-cards" *ngIf="!loading && ngos.length > 0">
+  <!-- <div class="ngo-cards" *ngIf="!loading && ngos.length > 0">
     <ion-card class="ngo-card" *ngFor="let ngo of ngos">
       <ion-card-header>
         <ion-card-title>{{ ngo.name }}</ion-card-title>
@@ -51,8 +51,47 @@
         </ion-grid>
       </ion-card-footer>
     </ion-card>
+  </div> -->
+<div class="ngo-cards">
+    <div *ngFor="let ngo of ngos" class="ngo-card" [ngClass]="ngo.variant">
+      <div class="ngo-header">
+        <div style="display: flex; align-items: center;">
+          <div class="card-initial">{{ ngo.name[0] }}</div>
+          <div>
+            <div class="ngo-title">{{ ngo.name }}</div>
+            <div class="ngo-subtitle">{{ ngo.city }}, {{ ngo.state }}</div>
+          </div>
+        </div>
+        <button class="expand-btn" (click)="ngo.expanded = !ngo.expanded">
+          <ion-icon [name]="ngo.expanded ? 'remove' : 'add'"></ion-icon>
+        </button>
+      </div>
+      <div class="ngo-accordion" *ngIf="ngo.expanded" [ngClass]="ngo.variant">
+        <table>
+          <tr>
+            <td>Individual</td>
+            <td>{{ ngo.individual }}</td>
+          </tr>
+          <tr>
+            <td>Pincode</td>
+            <td>{{ ngo.pincode }}</td>
+          </tr>
+          <tr>
+            <td>Contact</td>
+            <td>{{ ngo.contact }}</td>
+          </tr>
+          <tr>
+            <td>Location</td>
+            <td>{{ ngo.lat }}, {{ ngo.lng }}</td>
+          </tr>
+        </table>
+        <div class="ngo-actions-row">
+          <button ion-button class="details-btn" (click)="viewDetails(ngo)">DETAILS</button>
+          <button ion-button class="map-btn" (click)="trackNGO(ngo)">MAP</button>
+        </div>
+      </div>
+    </div>
   </div>
-
   <!-- No NGOs -->
   <div *ngIf="!loading && ngos.length === 0" class="no-data">
     No NGOs available at the moment.

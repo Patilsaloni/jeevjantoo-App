@@ -118,7 +118,7 @@ export class ProfilePage implements OnInit {
     { icon: 'person', label: 'Edit Profile', bg: '#ffd7e3' },
     { icon: 'list', label: 'My Listings', bg: '#e3d7ff' },
     { icon: 'heart', label: 'Favorites', bg: '#d7ffde' },
-    { icon: 'mail', label: 'Messages', bg: '#ffd7e3' },
+    { icon: 'mail', label: 'Inquiries', bg: '#ffd7e3' },
     { icon: 'shield-checkmark', label: 'Verification', bg: '#cde3ff' },
     { icon: 'settings', label: 'Settings', bg: '#ffd7e3' },
     { icon: 'person-add', label: 'Invite a friend', bg: '#d7ffde' },

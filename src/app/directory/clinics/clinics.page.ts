@@ -1,11 +1,119 @@
+// import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+// import { IonicModule, AlertController } from '@ionic/angular';
+// import { CommonModule } from '@angular/common';
+// import { FirebaseService } from 'src/app/services/firebase.service';
+// import { Router } from '@angular/router';
+// import { RouterModule } from '@angular/router';
+
+
+
+// @Component({
+//   selector: 'app-clinics',
+//   templateUrl: './clinics.page.html',
+//   styleUrls: ['./clinics.page.scss'],
+//   standalone: true,
+//   imports: [IonicModule, CommonModule],
+//   schemas: [CUSTOM_ELEMENTS_SCHEMA]
+// })
+// export class ClinicsPage implements OnInit {
+//   clinics: any[] = [];
+//   loading = true;
+
+//  constructor(
+//   private firebaseService: FirebaseService,
+//   private alertCtrl: AlertController,
+//   private router: Router
+// ) {}
+
+//   ngOnInit() {
+//     this.loadClinics();
+//   }
+
+//   async loadClinics() {
+//     this.loading = true;
+//     try {
+//       this.clinics = await this.firebaseService.getInformation('veterinaryClinic');
+      
+//       this.clinics.forEach(clinic => {
+//         const lat = parseFloat(clinic.lat);
+//         const lng = parseFloat(clinic.lng);
+//         clinic.hasLocation = !isNaN(lat) && !isNaN(lng);
+//         clinic.lat = lat;
+//         clinic.lng = lng;
+//       });
+
+//     } catch (error) {
+//       console.error('Error loading clinics:', error);
+//       this.clinics = [];
+//     } finally {
+//       this.loading = false;
+//     }
+//   }
+
+//   openMap(clinic: any) {
+//     if (clinic.hasLocation) {
+//       const mapUrl = `https://www.google.com/maps?q=${clinic.lat},${clinic.lng}`;
+//       window.open(mapUrl, '_blank');
+//     } else {
+//       alert('Location not available for this clinic');
+//     }
+//   }
+
+//   async openAddClinicPrompt() {
+//     const alert = await this.alertCtrl.create({
+//       header: 'Add New Clinic',
+//       inputs: [
+//         { name: 'name', type: 'text', placeholder: 'Clinic Name' },
+//         { name: 'type', type: 'text', placeholder: 'Type' },
+//         { name: 'city', type: 'text', placeholder: 'City' },
+//         { name: 'state', type: 'text', placeholder: 'State' },
+//         { name: 'area', type: 'text', placeholder: 'Area' },
+//         { name: 'pincode', type: 'text', placeholder: 'Pincode' },
+//         { name: 'contact', type: 'text', placeholder: 'Contact' },
+//         { name: 'timeFrom', type: 'text', placeholder: 'From Time' },
+//         { name: 'timeTo', type: 'text', placeholder: 'To Time' },
+//         { name: 'lat', type: 'text', placeholder: 'Latitude' },
+//         { name: 'lng', type: 'text', placeholder: 'Longitude' },
+//         { name: 'remarks', type: 'text', placeholder: 'Remarks (Optional)' },
+//       ],
+//       buttons: [
+//         { text: 'Cancel', role: 'cancel' },
+//         {
+//           text: 'Add',
+//           handler: (data) => this.addClinic(data)
+//         }
+//       ]
+//     });
+
+//     await alert.present();
+//   }
+
+//   async addClinic(data: any) {
+//     try {
+//       await this.firebaseService.addInformation(data.name, data, 'veterinaryClinic');
+//       this.loadClinics(); // Refresh list
+//     } catch (error) {
+//       console.error('Error adding clinic:', error);
+//     }
+//   }
+
+//   formatTiming(timeFrom: string, timeTo: string) {
+//     if (!timeFrom || !timeTo) return 'Timing not available';
+//     return `${timeFrom} - ${timeTo}`;
+//   }
+
+//   viewDetails(clinic: any) {
+//   this.router.navigate([`/tabs/directory/clinics/${clinic.id}`]);
+// }
+// }
+
+
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule, AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
-
-
 
 @Component({
   selector: 'app-clinics',
@@ -19,11 +127,11 @@ export class ClinicsPage implements OnInit {
   clinics: any[] = [];
   loading = true;
 
- constructor(
-  private firebaseService: FirebaseService,
-  private alertCtrl: AlertController,
-  private router: Router
-) {}
+  constructor(
+    private firebaseService: FirebaseService,
+    private alertCtrl: AlertController,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadClinics();
@@ -33,76 +141,33 @@ export class ClinicsPage implements OnInit {
     this.loading = true;
     try {
       this.clinics = await this.firebaseService.getInformation('veterinaryClinic');
-      
-      this.clinics.forEach(clinic => {
-        const lat = parseFloat(clinic.lat);
-        const lng = parseFloat(clinic.lng);
-        clinic.hasLocation = !isNaN(lat) && !isNaN(lng);
-        clinic.lat = lat;
-        clinic.lng = lng;
+      // Assign variants for background; cycle or use type for demo
+      const variants = ['a', 'b', 'c', 'd', 'e'];
+      this.clinics.forEach((clinic, idx) => {
+        clinic.expanded = false;
+        clinic.variant = variants[idx % variants.length];
       });
-
     } catch (error) {
-      console.error('Error loading clinics:', error);
-      this.clinics = [];
+      console.error('Error loading clinics', error);
     } finally {
       this.loading = false;
     }
   }
 
   openMap(clinic: any) {
-    if (clinic.hasLocation) {
-      const mapUrl = `https://www.google.com/maps?q=${clinic.lat},${clinic.lng}`;
-      window.open(mapUrl, '_blank');
+    if (clinic.lat && clinic.lng) {
+      window.open(`https://www.google.com/maps?q=${clinic.lat},${clinic.lng}`, '_blank');
     } else {
       alert('Location not available for this clinic');
     }
   }
 
-  async openAddClinicPrompt() {
-    const alert = await this.alertCtrl.create({
-      header: 'Add New Clinic',
-      inputs: [
-        { name: 'name', type: 'text', placeholder: 'Clinic Name' },
-        { name: 'type', type: 'text', placeholder: 'Type' },
-        { name: 'city', type: 'text', placeholder: 'City' },
-        { name: 'state', type: 'text', placeholder: 'State' },
-        { name: 'area', type: 'text', placeholder: 'Area' },
-        { name: 'pincode', type: 'text', placeholder: 'Pincode' },
-        { name: 'contact', type: 'text', placeholder: 'Contact' },
-        { name: 'timeFrom', type: 'text', placeholder: 'From Time' },
-        { name: 'timeTo', type: 'text', placeholder: 'To Time' },
-        { name: 'lat', type: 'text', placeholder: 'Latitude' },
-        { name: 'lng', type: 'text', placeholder: 'Longitude' },
-        { name: 'remarks', type: 'text', placeholder: 'Remarks (Optional)' },
-      ],
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        {
-          text: 'Add',
-          handler: (data) => this.addClinic(data)
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async addClinic(data: any) {
-    try {
-      await this.firebaseService.addInformation(data.name, data, 'veterinaryClinic');
-      this.loadClinics(); // Refresh list
-    } catch (error) {
-      console.error('Error adding clinic:', error);
-    }
-  }
-
   formatTiming(timeFrom: string, timeTo: string) {
-    if (!timeFrom || !timeTo) return 'Timing not available';
+    if (!timeFrom || !timeTo) { return 'Timing not available'; }
     return `${timeFrom} - ${timeTo}`;
   }
 
   viewDetails(clinic: any) {
-  this.router.navigate([`/tabs/directory/clinics/${clinic.id}`]);
-}
+    this.router.navigate(['tabs/directory/clinics', clinic.id]);
+  }
 }

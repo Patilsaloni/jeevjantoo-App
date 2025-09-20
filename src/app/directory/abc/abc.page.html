@@ -50,7 +50,52 @@
   </p>
 
   <!-- ABC Cards -->
-  <div class="abc-cards" *ngIf="!loading && filteredAbcs.length > 0">
+   
+  <div class="abc-cards">
+    <div *ngFor="let abc of filteredAbcs" class="abc-card" [ngClass]="abc.variant">
+      <div class="abc-header">
+        <div style="display: flex; align-items: center;">
+          <div class="card-initial">{{ abc.type[0] }}</div>
+          <div>
+            <div class="abc-title">{{ abc.type }}</div>
+            <div class="abc-subtitle">{{ abc.location }}</div>
+          </div>
+        </div>
+        <button class="expand-btn" (click)="abc.expanded = !abc.expanded">
+          <ion-icon [name]="abc.expanded ? 'remove' : 'add'"></ion-icon>
+        </button>
+      </div>
+      <div class="abc-accordion" *ngIf="abc.expanded" [ngClass]="abc.variant">
+        <table>
+          <tr>
+            <td>Person Incharge</td>
+            <td>{{ abc.personIncharge }}</td>
+          </tr>
+          <tr>
+            <td>City</td>
+            <td>{{ abc.city }}</td>
+          </tr>
+          <tr>
+            <td>State</td>
+            <td>{{ abc.state }}</td>
+          </tr>
+          <tr>
+            <td>Pincode</td>
+            <td>{{ abc.pincode }}</td>
+          </tr>
+          <tr>
+            <td>Location</td>
+            <td>{{ abc.location }}</td>
+          </tr>
+        </table>
+        <div class="abc-actions-row">
+          <button ion-button class="details-btn" (click)="viewDetails(abc)">DETAILS</button>
+          <button ion-button class="map-btn" (click)="openMap(abc.location, abc.lat, abc.lng)">MAP</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="abc-cards" *ngIf="!loading && filteredAbcs.length > 0">
     <ion-card *ngFor="let abc of filteredAbcs" class="abc-card" [style.border-top-color]="abc.color || '#6eb9ff'">
       <ion-card-header>
         <ion-card-title>{{ abc.type }} - {{ abc.location }}</ion-card-title>
@@ -81,5 +126,5 @@
         </ion-grid>
       </ion-card-footer>
     </ion-card>
-  </div>
+  </div> -->
 </ion-content>

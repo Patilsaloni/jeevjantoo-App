@@ -20,7 +20,7 @@
 </div>
 
   <!-- Ambulance List -->
-  <div class="ambulance-cards" *ngIf="!loading && ambulances.length > 0">
+  <!-- <div class="ambulance-cards" *ngIf="!loading && ambulances.length > 0">
     <ion-card class="ambulance-card" *ngFor="let amb of ambulances">
       <ion-card-header>
         <ion-card-title>{{ amb.name }}</ion-card-title>
@@ -55,8 +55,51 @@
 </ion-card-footer>
 
     </ion-card>
+  </div> -->
+
+
+  <div class="ambulance-cards">
+    <div *ngFor="let amb of ambulances" class="ambulance-card" [ngClass]="amb.variant">
+      <div class="ambulance-header">
+        <div style="display: flex; align-items: center;">
+          <div class="card-initial">{{ amb.name[0] }}</div>
+          <div>
+            <div class="ambulance-title">{{ amb.name }}</div>
+            <div class="ambulance-subtitle">{{ amb.area }}</div>
+          </div>
+        </div>
+        <button class="expand-btn" (click)="amb.expanded = !amb.expanded">
+          <ion-icon [name]="amb.expanded ? 'remove' : 'add'"></ion-icon>
+        </button>
+      </div>
+      <div class="ambulance-accordion" *ngIf="amb.expanded" [ngClass]="amb.variant">
+        <table>
+          <tr>
+            <td>Contact</td>
+            <td>{{ amb.contact }}</td>
+          </tr>
+          <tr>
+            <td>Vehicle</td>
+            <td>{{ amb.vehicle_number }}</td>
+          </tr>
+          <tr>
+            <td>Authority</td>
+            <td>{{ amb.governing_body }}</td>
+          </tr>
+          <tr>
+            <td>Location</td>
+            <td>{{ amb.area }}</td>
+          </tr>
+        </table>
+        <div class="ambulance-actions-row">
+          <button ion-button class="details-btn" (click)="viewDetails(amb)">DETAILS</button>
+          <button ion-button class="map-btn" (click)="trackAmbulance(amb)">MAP</button>
+        </div>
+      </div>
+    </div>
   </div>
 
+  
   <!-- No Ambulances -->
   <div *ngIf="!loading && ambulances.length === 0" class="no-data">
     No ambulances available at the moment.

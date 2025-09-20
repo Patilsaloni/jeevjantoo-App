@@ -1,169 +1,316 @@
-// .premium-clinics {
-//   padding: 1rem;
+// // .premium-clinics {
+// //   padding: 1rem;
 
-//   .no-data {
-//     text-align: center;
-//     font-size: 1.2rem;
-//     color: gray;
-//     margin-top: 2rem;
-//   }
+// //   .no-data {
+// //     text-align: center;
+// //     font-size: 1.2rem;
+// //     color: gray;
+// //     margin-top: 2rem;
+// //   }
 
-//   .clinic-cards {
-//     display: grid;
-//     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-//     gap: 1rem;
-//   }
+// //   .clinic-cards {
+// //     display: grid;
+// //     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+// //     gap: 1rem;
+// //   }
 
-//   .clinic-card {
-//     display: flex;                  // make card a flex container
-//     flex-direction: column;         // vertical layout
-//     justify-content: space-between; // push footer to bottom
-//     background: #ffffff;
-//     border-radius: 20px;
-//     overflow: hidden;
-//     position: relative;
-//     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-//     border-top: 5px solid #6eb9ff;
-//     transition: transform 0.3s ease, box-shadow 0.3s ease;
+// //   .clinic-card {
+// //     display: flex;                  // make card a flex container
+// //     flex-direction: column;         // vertical layout
+// //     justify-content: space-between; // push footer to bottom
+// //     background: #ffffff;
+// //     border-radius: 20px;
+// //     overflow: hidden;
+// //     position: relative;
+// //     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+// //     border-top: 5px solid #6eb9ff;
+// //     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-//     &:hover {
-//       transform: translateY(-7px);
-//       box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-//     }
+// //     &:hover {
+// //       transform: translateY(-7px);
+// //       box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+// //     }
 
-//     ion-card-header {
-//       background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
-//       padding: 1rem;
-//       border-bottom: 1px solid #eee;
-//     }
+// //     ion-card-header {
+// //       background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+// //       padding: 1rem;
+// //       border-bottom: 1px solid #eee;
+// //     }
 
-//     ion-card-title {
-//       font-size: 1.35rem;
-//       font-weight: 700;
-//       color: #333;
-//     }
+// //     ion-card-title {
+// //       font-size: 1.35rem;
+// //       font-weight: 700;
+// //       color: #333;
+// //     }
 
-//     ion-card-subtitle {
-//       font-size: 1rem;
-//       color: #555;
-//     }
+// //     ion-card-subtitle {
+// //       font-size: 1rem;
+// //       color: #555;
+// //     }
 
-//     .clinic-info {
-//       padding: 0.8rem 1rem;
-//       flex-grow: 1; // let content take up remaining space
+// //     .clinic-info {
+// //       padding: 0.8rem 1rem;
+// //       flex-grow: 1; // let content take up remaining space
 
-//       p {
-//         margin: 0.3rem 0;
-//         font-size: 0.95rem;
-//         color: #333;
-//       }
-//     }
+// //       p {
+// //         margin: 0.3rem 0;
+// //         font-size: 0.95rem;
+// //         color: #333;
+// //       }
+// //     }
 
-//     ion-card-footer {
-//       padding: 0.5rem 1rem;
+// //     ion-card-footer {
+// //       padding: 0.5rem 1rem;
 
-//       ion-button {
-//         border-radius: 12px;
-//         --background: #6eb9ff;
-//         --color: #fff;
-//         --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-//         transition: all 0.2s ease;
+// //       ion-button {
+// //         border-radius: 12px;
+// //         --background: #6eb9ff;
+// //         --color: #fff;
+// //         --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+// //         transition: all 0.2s ease;
 
-//         &:hover {
-//           --background: #5aa0e0;
-//           transform: translateY(-2px);
-//         }
-//       }
-//     }
-//   }
+// //         &:hover {
+// //           --background: #5aa0e0;
+// //           transform: translateY(-2px);
+// //         }
+// //       }
+// //     }
+// //   }
 
-//   .spinner-center {
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     height: 50vh;
-//   }
+// //   .spinner-center {
+// //     display: flex;
+// //     justify-content: center;
+// //     align-items: center;
+// //     height: 50vh;
+// //   }
+// // .spinner-container {
+// //   position: absolute;   // cover full content
+// //   top: 0;
+// //   left: 0;
+// //   width: 100%;
+// //   height: 100%;
+
+// //   display: flex;
+// //   justify-content: center;
+// //   align-items: center;
+
+// //   background: rgba(255, 255, 255, 0.6); // optional dim background
+// //   z-index: 9999; // keep it above content
+// // }
+
+// //   .add-clinic-btn {
+// //     --background: #ff8d6b;
+// //     --color: #fff;
+// //     --box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+// //     border-radius: 50%;
+// //     width: 60px;
+// //     height: 60px;
+// //     position: fixed;
+// //     bottom: 20px;
+// //     right: 20px;
+// //     font-size: 1.5rem;
+// //     transition: all 0.3s ease;
+
+// //     &:hover {
+// //       --background: #ff6f4a;
+// //       transform: translateY(-3px);
+// //     }
+// //   }
+// // }
+
+// .spinner-center {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 50vh;
+// }
 // .spinner-container {
-//   position: absolute;   // cover full content
+//   position: absolute; // cover full content
 //   top: 0;
 //   left: 0;
 //   width: 100%;
 //   height: 100%;
-
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-
-//   background: rgba(255, 255, 255, 0.6); // optional dim background
-//   z-index: 9999; // keep it above content
 // }
 
-//   .add-clinic-btn {
-//     --background: #ff8d6b;
-//     --color: #fff;
-//     --box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-//     border-radius: 50%;
-//     width: 60px;
-//     height: 60px;
-//     position: fixed;
-//     bottom: 20px;
-//     right: 20px;
-//     font-size: 1.5rem;
-//     transition: all 0.3s ease;
+// .clinic-card {
+//   margin: 20px 10px;
+//   box-shadow: 0 6px 22px #dce6ff44;
+//   border-radius: 17px;
+//   overflow: hidden;
+//   background: #fff;
+//   border: none;
+//   position: relative;
+//   padding: 0;
+//   transition: box-shadow 0.2s;
+// }
 
-//     &:hover {
-//       --background: #ff6f4a;
-//       transform: translateY(-3px);
+// .clinic-header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   background: linear-gradient(to right, #f1dcc0, #ffaacf);
+//   // background: linear-gradient(100deg, #fff7fa 0%, #f1fcff 55%, #fbe9e7 100%);
+//   padding: 1.2rem 1rem 0.9rem 1.1rem;
+//   border-bottom: 1.5px solid #f3f3f6;
+// }
+
+// .clinic-title {
+//   font-size: 1.22rem;
+//   font-weight: bold;
+//   color: #2b2a32;
+//   margin-bottom: 0.1rem;
+// }
+
+// .clinic-subtitle {
+//   color: #877b82;
+//   font-size: 0.98rem;
+// }
+
+// .expand-btn {
+//   background: linear-gradient(135deg, #edf6ff 40%, #fff0e7 100%);
+//   border: none;
+//   border-radius: 50%;
+//   width: 32px;
+//   height: 32px;
+//   box-shadow: 0 2px 8px #fafbfd8e;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   cursor: pointer;
+//   transition: background 0.13s;
+//   outline: none;
+
+//   ion-icon {
+//     font-size: 1.43rem;
+//     color: #2091ff;
+//   }
+// }
+
+// .clinic-accordion {
+//   padding: 1.1rem 1rem 0.7rem 1.1rem;
+//   border-top: 1px solid #f0eded;
+//   background: #fff;
+//   animation: fadeInAcc 0.44s cubic-bezier(0.36, 0.32, 0.29, 1);
+
+//   table {
+//     width: 100%;
+//     td {
+//       font-size: 1.02rem;
+//       color: #222;
+//       vertical-align: top;
+//       padding: 3.5px 5px 2.5px 0;
+//     }
+//     td:first-child {
+//       font-weight: 700;
+//       color: #24272b;
+//       text-align: left;
+//       min-width: 78px;
 //     }
 //   }
 // }
 
-.spinner-center {
+// .clinic-actions-row {
+//   display: flex;
+//   justify-content: space-between;
+//   gap: 12px;
+//   margin-top: 1rem;
+
+//   .details-btn {
+//     flex: 1;
+//     background: linear-gradient(90deg, #e8e3fd 40%, #eaf6ff 100%);
+//     color: #535a90;
+//     border: none;
+//     border-radius: 10px;
+//     padding: 0.6rem 0;
+//     font-weight: 600;
+//     font-size: 1rem;
+//   }
+//   .map-btn {
+//     flex: 1;
+//     background: linear-gradient(90deg, #ffeccc 0%, #fff4e7 90%);
+//     color: #a86000;
+//     border: none;
+//     border-radius: 10px;
+//     padding: 0.6rem 0;
+//     font-weight: 600;
+//     font-size: 1rem;
+//   }
+// }
+
+// @keyframes fadeInAcc {
+//   from {
+//     opacity: 0;
+//     transform: translateY(-13px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0);
+//   }
+// }
+
+.clinic-cards {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50vh;
-}
-.spinner-container {
-  position: absolute; // cover full content
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  flex-direction: column;
+  gap: 18px;
+  padding: 1.2rem 1rem;
 }
 
 .clinic-card {
-  margin: 20px 10px;
-  box-shadow: 0 6px 22px #dce6ff44;
-  border-radius: 17px;
+  border-radius: 18px;
   overflow: hidden;
-  background: #fff;
-  border: none;
-  position: relative;
-  padding: 0;
+  box-shadow: 0 6px 22px #dce6ff44;
   transition: box-shadow 0.2s;
+  position: relative;
+
+  // Theme variants for card backgrounds
+  &.a {
+    background: linear-gradient(120deg, #a3d8ff, #b8c6ff);
+  }
+  &.b {
+    background: linear-gradient(120deg, #ffe1b6, #ffb48f);
+  }
+  &.c {
+    background: linear-gradient(120deg, #ffb7b7, #ffd6e0);
+  }
+  &.d {
+    background: linear-gradient(120deg, #c7bfff, #c8e6ff);
+  }
+  &.e {
+    background: linear-gradient(120deg, #a0fff7, #71e1ff);
+  }
 }
 
 .clinic-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(to right, #f1dcc0, #ffaacf);
-  // background: linear-gradient(100deg, #fff7fa 0%, #f1fcff 55%, #fbe9e7 100%);
-  padding: 1.2rem 1rem 0.9rem 1.1rem;
+  padding: 1.15rem 1.1rem 0.85rem 1.13rem;
   border-bottom: 1.5px solid #f3f3f6;
+  background: none;
+}
+
+.card-initial {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2); // or a lighter tone of card bg
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-right: 16px;
 }
 
 .clinic-title {
-  font-size: 1.22rem;
+  font-size: 1.21rem;
   font-weight: bold;
   color: #2b2a32;
-  margin-bottom: 0.1rem;
+  margin-bottom: 1rem 0;
 }
-
 .clinic-subtitle {
   color: #877b82;
-  font-size: 0.98rem;
+  font-size: 0.92rem;
 }
 
 .expand-btn {
@@ -177,20 +324,62 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.13s;
-  outline: none;
 
   ion-icon {
     font-size: 1.43rem;
-    color: #2091ff;
+    color: #000000;
+    font-weight: bold;
   }
 }
 
+.spinner-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; // full height of ion-content
+}
+
+.spinner-overlay {
+  position: fixed; /* stay on top */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.7); // optional dim background
+  z-index: 9999;
+}
+
+// Light background variants for expanded accordion details
 .clinic-accordion {
   padding: 1.1rem 1rem 0.7rem 1.1rem;
   border-top: 1px solid #f0eded;
-  background: #fff;
-  animation: fadeInAcc 0.44s cubic-bezier(0.36, 0.32, 0.29, 1);
+  animation: fadeInAcc 0.38s cubic-bezier(0.36, 0.32, 0.29, 1);
+
+  // Re-use card theme for matching background
+  &.a {
+    background: #f6faff;
+  }
+  &.b {
+    background: #fff5ed;
+  }
+  &.c {
+    background: #fff4f0;
+  }
+  &.d {
+    background: #f6f6fa;
+  }
+  &.e {
+    background: #e6fefd;
+  }
 
   table {
     width: 100%;
@@ -209,7 +398,6 @@
   }
 }
 
-
 .clinic-actions-row {
   display: flex;
   justify-content: space-between;
@@ -218,9 +406,9 @@
 
   .details-btn {
     flex: 1;
-    background: linear-gradient(90deg, #e8e3fd 40%, #eaf6ff 100%);
+    background: none;
     color: #535a90;
-    border: none;
+    border: 1px solid;
     border-radius: 10px;
     padding: 0.6rem 0;
     font-weight: 600;
@@ -228,9 +416,9 @@
   }
   .map-btn {
     flex: 1;
-    background: linear-gradient(90deg, #ffeccc 0%, #fff4e7 90%);
+    background: none;
     color: #a86000;
-    border: none;
+    border: 1px solid;
     border-radius: 10px;
     padding: 0.6rem 0;
     font-weight: 600;
@@ -247,4 +435,38 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes expandFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.clinic-accordion {
+  animation: expandFade 0.4s ease forwards;
+}
+
+@keyframes cardPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.93) translateY(32px);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.04) translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.clinic-card {
+  animation: cardPopIn 0.6s cubic-bezier(0.29, 0.75, 0.44, 1.28);
 }

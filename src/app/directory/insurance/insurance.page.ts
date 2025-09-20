@@ -20,7 +20,8 @@ export class InsurancePage implements OnInit {
   insurances: any[] = [];
   filteredInsurances: any[] = [];
   loading = true;
-
+expanded?: boolean;
+  variant?: string;
   filters = {
     q: '',
     city: ''
@@ -38,7 +39,12 @@ export class InsurancePage implements OnInit {
   async loadInsurances() {
     this.loading = true;
     try {
-      this.insurances = await this.firebaseService.getInformation('medical-insurance');
+      // this.insurances = await this.firebaseService.getInformation('medical-insurance');
+       this.insurances = (await this.firebaseService.getInformation('medical-insurance')).map((ins: any, index: number) => ({
+        ...ins,
+        expanded: false,
+        variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
+      }));
       this.applyFilters();
     } catch (err) {
       console.error('Error fetching insurance:', err);

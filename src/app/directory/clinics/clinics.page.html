@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -14,8 +14,7 @@
 
 <ion-content [fullscreen]="true" class="premium-clinics">
 
-  <!-- Centered Spinner -->
-   <div *ngIf="loading" class="spinner-container">
+    <div *ngIf="loading" class="spinner-container">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
 
@@ -23,7 +22,7 @@
 
   <div class="clinic-cards">
   <div *ngFor="let clinic of clinics" class="clinic-card">
-    <!-- Card Header with title, subtitle, and toggle icon -->
+   
     <div class="clinic-header">
       <div>
         <div class="clinic-title">{{ clinic.name || 'Clinic title' }}</div>
@@ -34,7 +33,7 @@
       </button>
     </div>
 
-    <!-- Accordion Content -->
+    
     <div class="clinic-accordion" *ngIf="clinic._expanded">
       <table>
         <tr>
@@ -59,10 +58,10 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 
-  <!-- <div class="clinic-cards" *ngIf="!loading && clinics.length > 0">
+<!-- <div class="clinic-cards" *ngIf="!loading && clinics.length > 0">
     <ion-card 
       *ngFor="let clinic of clinics" 
       class="clinic-card"
@@ -101,4 +100,66 @@
     </ion-card>
   </div> -->
 
+<!-- </ion-content> -->
+
+
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Clinics</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true" class="premium-clinics">
+  <div *ngIf="loading" class="spinner-center">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <div *ngIf="!loading && clinics.length === 0" class="no-data">
+    No clinics found
+  </div>
+  <div class="clinic-cards">
+    <div *ngFor="let clinic of clinics" class="clinic-card" [ngClass]="clinic.variant">
+      <div class="clinic-header">
+        <div>
+          <div class="card-initial"> {{ clinic.name[0] }} </div>
+          <div class="clinic-title">{{ clinic.name }}</div>
+          <div class="clinic-subtitle">{{ clinic.type }}</div>
+        </div>
+        <button class="expand-btn" (click)="clinic.expanded = !clinic.expanded">
+          <ion-icon [name]="clinic.expanded ? 'remove' : 'add'"></ion-icon>
+        </button>
+      </div>
+      <div class="clinic-accordion" *ngIf="clinic.expanded" [ngClass]="clinic.variant">
+        <table>
+          <tr>
+            <td>Area</td>
+            <td>{{ clinic.area }}</td>
+          </tr>
+          <tr>
+            <td>Pincode</td>
+            <td>{{ clinic.pincode }}</td>
+          </tr>
+          <tr>
+            <td>Contact</td>
+            <td>{{ clinic.contact }}</td>
+          </tr>
+          <tr>
+            <td>Timing</td>
+            <td>{{ formatTiming(clinic.timeFrom, clinic.timeTo) }}</td>
+          </tr>
+          <tr *ngIf="clinic.remarks">
+            <td>Remark</td>
+            <td>{{ clinic.remarks }}</td>
+          </tr>
+        </table>
+        <div class="clinic-actions-row">
+          <button ion-button class="details-btn" (click)="viewDetails(clinic)">DETAILS</button>
+          <button ion-button class="map-btn" (click)="openMap(clinic)">MAP</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>

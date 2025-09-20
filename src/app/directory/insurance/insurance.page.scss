@@ -1,3 +1,115 @@
+// .insurance-page {
+//   --ion-background-color: #f9f9f9;
+//   padding: 0.5rem;
+
+//   /* Filters Card */
+//   .filter-card {
+//     border-radius: 16px;
+//     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+//     margin-bottom: 16px;
+
+//     ion-card-header {
+//       font-weight: 600;
+//     }
+
+//     ion-card-content ion-button {
+//       --border-radius: 12px;
+//       --background: #ff6b00;
+//       --color: #fff;
+//       margin-top: 8px;
+//     }
+//   }
+
+//   /* Insurance Cards */
+//   .insurance-cards {
+//     display: grid;
+//     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+//     gap: 1rem;
+//   }
+
+//   .insurance-card {
+//     border-radius: 18px;
+//     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+//     transition: transform 0.2s ease, box-shadow 0.2s ease;
+//     background: #fff;
+
+//     &:hover {
+//       transform: translateY(-4px);
+//       box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+//     }
+
+//     ion-card-header {
+//       padding: 1rem;
+//       background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+//       border-bottom: 1px solid #eee;
+//     }
+
+//     ion-card-title {
+//       font-size: 1.2rem;
+//       font-weight: 700;
+//       color: #333;
+//     }
+
+//     ion-card-subtitle {
+//       font-size: 0.9rem;
+//       color: #555;
+//     }
+
+//     ion-card-content {
+//       padding: 0.8rem 1rem;
+
+//       p {
+//         margin: 4px 0;
+//         font-size: 0.95rem;
+//         color: #333;
+
+//         a {
+//           color: #0077cc;
+//           text-decoration: underline;
+//         }
+//       }
+//     }
+
+//     ion-card-footer {
+//       padding: 0.5rem 1rem;
+
+//       ion-button {
+//         border-radius: 12px;
+//       }
+//     }
+//   }
+
+//   /* No Data */
+//   .no-data {
+//     text-align: center;
+//     margin-top: 40px;
+//     color: #888;
+
+//     ion-icon {
+//       font-size: 40px;
+//       color: #ff6b00;
+//       margin-bottom: 8px;
+//     }
+//   }
+
+//   /* Spinner */
+//   .spinner-overlay {
+//   position: fixed;   /* stay on top */
+//   top: 0;
+//   left: 0;
+//   width: 100vw;
+//   height: 100vh;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   background: rgba(255, 255, 255, 0.7); // optional dim background
+//   z-index: 9999;
+// }
+
+// }
+
+
+
 .insurance-page {
   --ion-background-color: #f9f9f9;
   padding: 0.5rem;
@@ -20,65 +132,6 @@
     }
   }
 
-  /* Insurance Cards */
-  .insurance-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-  }
-
-  .insurance-card {
-    border-radius: 18px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    background: #fff;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-
-    ion-card-header {
-      padding: 1rem;
-      background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
-      border-bottom: 1px solid #eee;
-    }
-
-    ion-card-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #333;
-    }
-
-    ion-card-subtitle {
-      font-size: 0.9rem;
-      color: #555;
-    }
-
-    ion-card-content {
-      padding: 0.8rem 1rem;
-
-      p {
-        margin: 4px 0;
-        font-size: 0.95rem;
-        color: #333;
-
-        a {
-          color: #0077cc;
-          text-decoration: underline;
-        }
-      }
-    }
-
-    ion-card-footer {
-      padding: 0.5rem 1rem;
-
-      ion-button {
-        border-radius: 12px;
-      }
-    }
-  }
-
   /* No Data */
   .no-data {
     text-align: center;
@@ -94,16 +147,216 @@
 
   /* Spinner */
   .spinner-overlay {
-  position: fixed;   /* stay on top */
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.7); // optional dim background
-  z-index: 9999;
-}
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+  }
 
+  /* Insurance Cards */
+  .insurance-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 1.2rem 1rem;
+  }
+
+  .insurance-card {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 6px 22px #dce6ff44;
+    transition: box-shadow 0.2s;
+    position: relative;
+
+    &.a {
+      background: linear-gradient(120deg, #a3d8ff, #b8c6ff);
+    }
+    &.b {
+      background: linear-gradient(120deg, #ffe1b6, #ffb48f);
+    }
+    &.c {
+      background: linear-gradient(120deg, #ffb7b7, #ffd6e0);
+    }
+    &.d {
+      background: linear-gradient(120deg, #c7bfff, #c8e6ff);
+    }
+    &.e {
+      background: linear-gradient(120deg, #a0fff7, #71e1ff);
+    }
+  }
+
+  .insurance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.1rem 0.85rem 1.13rem;
+    border-bottom: 1.5px solid #f3f3f6;
+    background: none;
+  }
+
+  .card-initial {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-right: 16px;
+  }
+
+  .insurance-title {
+    font-size: 1.21rem;
+    font-weight: bold;
+    color: #2b2a32;
+    margin-bottom: 0.1rem;
+  }
+
+  .insurance-subtitle {
+    color: #877b82;
+    font-size: 0.92rem;
+  }
+
+  .expand-btn {
+    background: linear-gradient(135deg, #edf6ff 40%, #fff0e7 100%);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 2px 8px #fafbfd8e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    ion-icon {
+      font-size: 1.43rem;
+      color: #000000;
+      font-weight: bold;
+    }
+  }
+
+  .insurance-accordion {
+    padding: 1.1rem 1rem 0.7rem 1.1rem;
+    border-top: 1px solid #f0eded;
+    animation: fadeInAcc 0.38s cubic-bezier(0.36, 0.32, 0.29, 1);
+
+    &.a {
+      background: #f6faff;
+    }
+    &.b {
+      background: #fff5ed;
+    }
+    &.c {
+      background: #fff4f0;
+    }
+    &.d {
+      background: #f6f6fa;
+    }
+    &.e {
+      background: #e6fefd;
+    }
+
+    table {
+      width: 100%;
+      td {
+        font-size: 1.02rem;
+        color: #222;
+        vertical-align: top;
+        padding: 3.5px 5px 2.5px 0;
+      }
+      td:first-child {
+        font-weight: 700;
+        color: #24272b;
+        text-align: left;
+        min-width: 78px;
+      }
+      a {
+        color: #0077cc;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .insurance-actions-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 1rem;
+
+    .details-btn {
+      flex: 1;
+      background: none;
+      color: #535a90;
+      border: 1px solid;
+      border-radius: 10px;
+      padding: 0.6rem 0;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .website-btn {
+      flex: 1;
+      background: none;
+      color: #00796b;
+      border: 1px solid;
+      border-radius: 10px;
+      padding: 0.6rem 0;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+  }
+
+  @keyframes fadeInAcc {
+    from {
+      opacity: 0;
+      transform: translateY(-13px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes expandFade {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .insurance-accordion {
+    animation: expandFade 0.4s ease forwards;
+  }
+
+  @keyframes cardPopIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.93) translateY(32px);
+    }
+    75% {
+      opacity: 1;
+      transform: scale(1.04) translateY(-6px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .insurance-card {
+    animation: cardPopIn 0.6s cubic-bezier(0.29, 0.75, 0.44, 1.28);
+  }
 }

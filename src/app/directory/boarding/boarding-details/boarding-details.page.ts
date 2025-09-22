@@ -108,7 +108,7 @@ export class BoardingDetailsPage implements OnInit {
 
   async reportIssue() {
     const alert = await this.alertCtrl.create({
-      header: 'Report Clinic',
+      header: 'Report Boarding',
       inputs: [
         { name: 'reason', type: 'text', placeholder: 'Enter reason for reporting' }
       ],

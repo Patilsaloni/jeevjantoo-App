@@ -1,7 +1,7 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule, Platform } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AlertController, ToastController } from '@ionic/angular';
 
@@ -23,7 +23,7 @@ interface Ambulance {
   styleUrls: ['./ambulance-details.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] 
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AmbulanceDetailsPage implements OnInit {
   ambulance: Ambulance | null = null;
@@ -34,8 +34,9 @@ export class AmbulanceDetailsPage implements OnInit {
     private router: Router,
     private firebaseService: FirebaseService,
     private platform: Platform,
-     private alertCtrl: AlertController,
-  private toastCtrl: ToastController
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -47,11 +48,17 @@ export class AmbulanceDetailsPage implements OnInit {
     }
   }
 
+  goBack() {
+    this.location.back();
+  }
+
   async loadAmbulance(id: string) {
     this.loading = true;
     try {
-      const data: any[] = await this.firebaseService.getInformation('ambulance');
-      const amb: any = data.find(a => a.id === id);
+      const data: any[] = await this.firebaseService.getInformation(
+        'ambulance'
+      );
+      const amb: any = data.find((a) => a.id === id);
 
       if (amb) {
         this.ambulance = {
@@ -63,7 +70,7 @@ export class AmbulanceDetailsPage implements OnInit {
           area: amb.area || 'N/A',
           lat: amb.lat,
           lng: amb.lng,
-          remarks: amb.remarks || ''
+          remarks: amb.remarks || '',
         };
       } else {
         this.ambulance = null;
@@ -82,7 +89,11 @@ export class AmbulanceDetailsPage implements OnInit {
       return;
     }
 
-    if (this.platform.is('hybrid') || this.platform.is('ios') || this.platform.is('android')) {
+    if (
+      this.platform.is('hybrid') ||
+      this.platform.is('ios') ||
+      this.platform.is('android')
+    ) {
       window.open(`tel:${contact}`, '_system');
     } else {
       alert(`Call feature only available on mobile. Number: ${contact}`);
@@ -94,7 +105,10 @@ export class AmbulanceDetailsPage implements OnInit {
       alert('Location not available');
       return;
     }
-    window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
+      '_blank'
+    );
   }
 
   saveAmbulance(ambulance: Ambulance) {
@@ -104,26 +118,30 @@ export class AmbulanceDetailsPage implements OnInit {
 
   async reportIssue() {
     const alert = await this.alertCtrl.create({
-      header: 'Report Clinic',
+      header: 'Report Ambulance',
       inputs: [
-        { name: 'reason', type: 'text', placeholder: 'Enter reason for reporting' }
+        {
+          name: 'reason',
+          type: 'text',
+          placeholder: 'Enter reason for reporting',
+        },
       ],
       buttons: [
         { text: 'Cancel', role: 'cancel' },
-        { 
-          text: 'Submit', 
+        {
+          text: 'Submit',
           handler: async (data) => {
             console.log('Report submitted:', data.reason);
             const toast = await this.toastCtrl.create({
               message: 'Report submitted successfully!',
               duration: 1500,
               color: 'warning',
-              position: 'bottom'
+              position: 'bottom',
             });
             toast.present();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
     await alert.present();
   }

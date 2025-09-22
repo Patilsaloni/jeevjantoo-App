@@ -1,7 +1,7 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IonicModule, AlertController, ToastController } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
   styleUrls: ['./clinics-details.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ClinicsDetailsPage implements OnInit {
   clinic: any;
@@ -20,7 +20,8 @@ export class ClinicsDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private firebaseService: FirebaseService,
     private alertCtrl: AlertController,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private location: Location
   ) {}
 
   async ngOnInit() {
@@ -33,7 +34,9 @@ export class ClinicsDetailsPage implements OnInit {
   async loadClinic(id: string) {
     this.loading = true;
     try {
-      const clinics = await this.firebaseService.getInformation('veterinaryClinic');
+      const clinics = await this.firebaseService.getInformation(
+        'veterinaryClinic'
+      );
       this.clinic = clinics.find((c: any) => c.id === id);
     } catch (err) {
       console.error('Error loading clinic:', err);
@@ -80,45 +83,55 @@ export class ClinicsDetailsPage implements OnInit {
       message: 'Clinic saved successfully!',
       duration: 1500,
       color: 'success',
-      position: 'bottom'
+      position: 'bottom',
     });
     toast.present();
   }
 
   shareClinic() {
     if (navigator.share) {
-      navigator.share({
-        title: this.clinic.name,
-        text: `Check out this clinic: ${this.clinic.name} in ${this.clinic.city}`,
-        url: window.location.href
-      }).catch(err => console.error('Error sharing', err));
+      navigator
+        .share({
+          title: this.clinic.name,
+          text: `Check out this clinic: ${this.clinic.name} in ${this.clinic.city}`,
+          url: window.location.href,
+        })
+        .catch((err) => console.error('Error sharing', err));
     } else {
       alert('Sharing not supported on this device');
     }
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   async reportClinic() {
     const alert = await this.alertCtrl.create({
       header: 'Report Clinic',
       inputs: [
-        { name: 'reason', type: 'text', placeholder: 'Enter reason for reporting' }
+        {
+          name: 'reason',
+          type: 'text',
+          placeholder: 'Enter reason for reporting',
+        },
       ],
       buttons: [
         { text: 'Cancel', role: 'cancel' },
-        { 
-          text: 'Submit', 
+        {
+          text: 'Submit',
           handler: async (data) => {
             console.log('Report submitted:', data.reason);
             const toast = await this.toastCtrl.create({
               message: 'Report submitted successfully!',
               duration: 1500,
               color: 'warning',
-              position: 'bottom'
+              position: 'bottom',
             });
             toast.present();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
     await alert.present();
   }

@@ -73,7 +73,7 @@ export class EventDetailsPage implements OnInit {
     if (navigator.share) {
       navigator.share({
         title: this.event.name,
-        text: `Check out this clinic: ${this.event.name} in ${this.event.city}`,
+        text: `Check out this event : ${this.event.name} in ${this.event.city}`,
         url: window.location.href
       }).catch(err => console.error('Error sharing', err));
     } else {
@@ -83,7 +83,7 @@ export class EventDetailsPage implements OnInit {
 
   async reportEvent() {
     const alert = await this.alertCtrl.create({
-      header: 'Report Clinic',
+      header: 'Report Event',
       inputs: [
         { name: 'reason', type: 'text', placeholder: 'Enter reason for reporting' }
       ],

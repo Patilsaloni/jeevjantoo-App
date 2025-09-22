@@ -1,6 +1,6 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AlertController, ToastController } from '@ionic/angular';
@@ -11,7 +11,7 @@ import { AlertController, ToastController } from '@ionic/angular';
   styleUrls: ['./abc-details.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AbcDetailsPage implements OnInit {
   abcId: string | null = null;
@@ -21,13 +21,18 @@ export class AbcDetailsPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private firebaseService: FirebaseService,
-     private alertCtrl: AlertController,
-  private toastCtrl: ToastController
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private location: Location
   ) {}
 
   ngOnInit() {
     this.abcId = this.route.snapshot.paramMap.get('id');
     if (this.abcId) this.loadAbc(this.abcId);
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   async loadAbc(id: string) {
@@ -62,50 +67,66 @@ export class AbcDetailsPage implements OnInit {
 
   openMap() {
     if (this.abc?.lat && this.abc?.lng) {
-      window.open(`https://www.google.com/maps/search/?api=1&query=${this.abc.lat},${this.abc.lng}`, '_blank');
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${this.abc.lat},${this.abc.lng}`,
+        '_blank'
+      );
     } else if (this.abc?.location) {
-      window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(this.abc.location)}`, '_blank');
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          this.abc.location
+        )}`,
+        '_blank'
+      );
     } else {
       alert('Location not available');
     }
   }
 
-  saveRecord() { alert('Saved to favorites'); }
+  saveRecord() {
+    alert('Saved to favorites');
+  }
 
-  shareRecord() { 
+  shareRecord() {
     if (navigator.share) {
-      navigator.share({
-        title: this.abc.name,
-        text: `Check out this clinic: ${this.abc.name} in ${this.abc.city}`,
-        url: window.location.href
-      }).catch(err => console.error('Error sharing', err));
+      navigator
+        .share({
+          title: this.abc.name,
+          text: `Check out this record: ${this.abc.name} in ${this.abc.city}`,
+          url: window.location.href,
+        })
+        .catch((err) => console.error('Error sharing', err));
     } else {
       alert('Sharing not supported on this device');
     }
-   }
+  }
 
   async report() {
     const alert = await this.alertCtrl.create({
-      header: 'Report Clinic',
+      header: 'Report',
       inputs: [
-        { name: 'reason', type: 'text', placeholder: 'Enter reason for reporting' }
+        {
+          name: 'reason',
+          type: 'text',
+          placeholder: 'Enter reason for reporting',
+        },
       ],
       buttons: [
         { text: 'Cancel', role: 'cancel' },
-        { 
-          text: 'Submit', 
+        {
+          text: 'Submit',
           handler: async (data) => {
             console.log('Report submitted:', data.reason);
             const toast = await this.toastCtrl.create({
               message: 'Report submitted successfully!',
               duration: 1500,
               color: 'warning',
-              position: 'bottom'
+              position: 'bottom',
             });
             toast.present();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
     await alert.present();
   }

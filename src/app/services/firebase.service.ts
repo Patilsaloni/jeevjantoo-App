@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { 
-  getFirestore, collection, doc, setDoc, getDocs, updateDoc, getDoc, 
-  addDoc, query, where, deleteDoc, limit, orderBy, startAfter, serverTimestamp 
+import {
+  getFirestore, collection, doc, setDoc, getDocs, updateDoc, getDoc,
+  addDoc, query, where, deleteDoc, limit, orderBy, startAfter, serverTimestamp, WhereFilterOp
 } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { environment } from '../../environments/environment';
-import { 
-  getAuth, sendPasswordResetEmail, 
-  signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User 
+import {
+  getAuth, sendPasswordResetEmail,
+  signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User
 } from 'firebase/auth';
 
 export type PetStatus = 'Pending' | 'Active' | 'Adopted' | 'Inactive';
@@ -47,7 +47,7 @@ export class FirebaseService {
 
   async resetPasswordWithEmail(email: string) {
     await sendPasswordResetEmail(this.auth, email, {
-      url: 'http://localhost:4200/signin', 
+      url: 'http://localhost:4200/signin',
       handleCodeInApp: true
     });
   }
@@ -73,23 +73,23 @@ export class FirebaseService {
   async getInformation(collectionName: string) {
     const colRef = collection(this.db, collectionName);
     const snapshot = await getDocs(colRef);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
   }
 
-  async getFilteredInformation(collectionName: string, field: string, operator: any, value: any) {
+  async getFilteredInformation(collectionName: string, field: string, operator: WhereFilterOp, value: any) {
     const colRef = collection(this.db, collectionName);
     const q = query(colRef, where(field, operator, value));
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
   }
 
   async getPaginatedInformation(collectionName: string, pageSize: number, lastDoc: any = null) {
     const colRef = collection(this.db, collectionName);
-    let q = query(colRef, orderBy("createdAt", "desc"), limit(pageSize));
-    if (lastDoc) q = query(colRef, orderBy("createdAt", "desc"), startAfter(lastDoc), limit(pageSize));
+    let q = query(colRef, orderBy('createdAt', 'desc'), limit(pageSize));
+    if (lastDoc) q = query(colRef, orderBy('createdAt', 'desc'), startAfter(lastDoc), limit(pageSize));
     const snapshot = await getDocs(q);
     return {
-      data: snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+      data: snapshot.docs.map(d => ({ id: d.id, ...d.data() })),
       lastDoc: snapshot.docs[snapshot.docs.length - 1]
     };
   }
@@ -104,31 +104,37 @@ export class FirebaseService {
   async submitPet(petData: any) {
     const user = this.getCurrentUser();
     if (!user) throw new Error('User must be signed in to submit pets.');
-    petData.status = 'Pending' as PetStatus;
-    petData.createdAt = serverTimestamp();
-    petData.submitterUid = user.uid;
-    const docID = petData.petName + '_' + Date.now();
-    return this.addInformation(docID, petData, 'pet-adoption');
+
+    // Ensure Firestore doc id === saved "id" field
+    const docID = `${petData.petName}_${Date.now()}`;
+
+    const dataToSave = {
+      ...petData,
+      id: docID,                               // <-- align field with doc id
+      status: 'Pending' as PetStatus,
+      createdAt: serverTimestamp(),
+      submitterUid: user.uid
+    };
+
+    return this.addInformation(docID, dataToSave, 'pet-adoption');
   }
 
-    async updatePetStatus(docID: string, status: PetStatus) {
-    if (!docID) throw new Error("Pet document ID is required to update status.");
+  async updatePetStatus(docID: string, status: PetStatus) {
+    if (!docID) throw new Error('Pet document ID is required to update status.');
     const docRef = doc(this.db, 'pet-adoption', docID);
     await updateDoc(docRef, { status, updatedAt: serverTimestamp() });
     return true;
   }
-
 
   async getActivePets() {
     return this.getFilteredInformation('pet-adoption', 'status', '==', 'Active');
   }
 
   // ---------------- Storage Methods ----------------
-   async uploadFile(file: File, path: string): Promise<string> {
-    const storage = getStorage();
-    const storageRef = ref(storage, path);
-    await uploadBytes(storageRef, file);          // File upload
-    const downloadURL = await getDownloadURL(storageRef);  // URL get
+  async uploadFile(file: File, path: string): Promise<string> {
+    const storageRef = ref(this.storage, path);
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
     return downloadURL;
   }
 
@@ -178,38 +184,40 @@ export class FirebaseService {
     return !isFav;
   }
 
- async getFavoritePets(collectionName: string): Promise<any[]> {
-  const user = this.getCurrentUser();
-  if (!user) return [];
+  async getFavoritePets(collectionName: string): Promise<any[]> {
+    const user = this.getCurrentUser();
+    if (!user) return [];
 
-  const favSnapshot = await getDocs(
-    query(
-      collection(this.db, `${collectionName}_favorites`),
-      where('userId', '==', user.uid)
-    )
-  );
+    const favSnapshot = await getDocs(
+      query(collection(this.db, `${collectionName}_favorites`), where('userId', '==', user.uid))
+    );
 
-  return favSnapshot.docs.map(doc => {
-    const petId = doc.id.split('_')[1]; // extract original pet id
-    const data = doc.data();
+    return favSnapshot.docs.map(d => {
+      const petId = d.id.split('_')[1]; // original pet id
+      const data: any = d.data();
 
-    return {
-      id: petId,
-      petName: data['petName'] || 'Unknown',
-      breed: data['breed'] || 'Unknown',
-      age: data['age'] || 0,
-      gender: data['gender'] || '',
-      image: data['image'] || 'assets/default-pet.jpg',
-      category: data['category'] || 'Unknown',
-      favorite: true,
-      contact: data['contact'] || '',
-      location: data['location'] || 'Not available',
-      remarks: data['remarks'] || '',
-      timings: data['timings'] || 'Not available',
-    };
-  });
-}
+      // Prefer first photo if available; fallback to legacy 'image' or default
+      const image =
+        Array.isArray(data.photos) && data.photos.length > 0
+          ? data.photos[0]
+          : (data.image || 'assets/default-pet.jpg');
 
+      return {
+        id: petId,
+        petName: data.petName || 'Unknown',
+        breed: data.breed || 'Unknown',
+        age: data.age ?? 0,
+        gender: data.gender || '',
+        image,
+        category: data.category || 'Unknown',
+        favorite: true,
+        contact: data.contact || '',
+        location: data.location || 'Not available',
+        remarks: data.remarks || '',
+        timings: data.timings || 'Not available'
+      };
+    });
+  }
 
   // ---------------- Reports ----------------
   async reportEntry(collectionName: string, id: string, reason: string) {
@@ -228,6 +236,6 @@ export class FirebaseService {
   async getReports() {
     const colRef = collection(this.db, 'reports');
     const snapshot = await getDocs(colRef);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
   }
 }

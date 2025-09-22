@@ -95,41 +95,14 @@
 
 
   .filters {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d24e032 (filter and search in directory)
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
     margin-bottom: 1rem;
-<<<<<<< HEAD
   }
 
   
   /* No Data */
-=======
-    margin: 10px 0;
-
-    ion-select, ion-segment {
-      --background: #fff;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      --box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-
-    ion-segment {
-      --indicator-color: #6eb9ff;
-    }
-  }
-
->>>>>>> 325d64b (done)
-=======
-  }
-
-  
-  /* No Data */
->>>>>>> d24e032 (filter and search in directory)
   .no-data {
     text-align: center;
     margin-top: 40px;

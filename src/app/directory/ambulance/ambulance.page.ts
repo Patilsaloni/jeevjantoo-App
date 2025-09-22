@@ -261,15 +261,7 @@ interface Ambulance {
   area: string;
   lat?: number;
   lng?: number;
-<<<<<<< HEAD
-<<<<<<< HEAD
   expanded?: boolean;
-=======
-   expanded?: boolean;
->>>>>>> 325d64b (done)
-=======
-  expanded?: boolean;
->>>>>>> d24e032 (filter and search in directory)
   variant?: string;
 }
 
@@ -323,18 +315,8 @@ export class AmbulancePage implements OnInit {
           area: amb.area || 'N/A',
           lat: amb.lat,
           lng: amb.lng,
-<<<<<<< HEAD
-<<<<<<< HEAD
           expanded: false,
           variant: ['a', 'b', 'c', 'd', 'e'][idx % 5]
-=======
-            expanded: false,
-          variant: ['a', 'b', 'c', 'd', 'e'][res.indexOf(amb) % 5]
->>>>>>> 325d64b (done)
-=======
-          expanded: false,
-          variant: ['a', 'b', 'c', 'd', 'e'][idx % 5]
->>>>>>> d24e032 (filter and search in directory)
         }));
       this.filteredAmbulances = [...this.ambulances];
       this.areas = Array.from(new Set(this.ambulances.map(a => a.area).filter(a => a))).sort();

@@ -1,17 +1,80 @@
+/* Container for list/map toggle + location button */
 .toggle-container {
-  padding: 8px;
+  padding: 8px 12px;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--ion-color-light);
+  border-radius: 12px;
+  margin: 8px;
 }
 
+/* Empty state styling */
 .empty-state {
   text-align: center;
-  margin-top: 40%;
-  color: gray;
+  margin-top: 20%;
+  color: var(--ion-color-medium);
+}
+.empty-state ion-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
 }
 
+/* Card styles (if you switch back to card view instead of sliding items) */
 ion-card {
   margin: 10px;
   border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Avatar thumbnail for list items */
+.thumb {
+  --border-radius: 12px;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+}
+
+/* Title + badges row */
+.row1 {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.row1 h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Location line under title */
+.loc {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--ion-color-medium);
+}
+
+/* Tags (chips) */
+.tags {
+  margin-top: 6px;
+}
+.tags ion-chip {
+  --padding-start: 6px;
+  --padding-end: 6px;
+  font-size: 12px;
+  height: 22px;
+}
+
+/* Map container */
+.map {
+  height: calc(100vh - 220px);
+  width: 100%;
+  border-radius: 12px;
+  margin: 8px;
   overflow: hidden;
 }

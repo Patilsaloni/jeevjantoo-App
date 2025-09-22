@@ -29,11 +29,7 @@ export class AdoptionPage implements OnInit {
   // Category icons for horizontally scrollable list
   categoryIcons = [
     { name: 'All', icon: 'assets/img/pets2.png' },
-<<<<<<< HEAD
-    { name: 'dog', icon: 'assets/img/dog.jpg' },
-=======
     { name: 'dog', icon: 'assets/img/dog.jpg' }, // Updated to match species values
->>>>>>> 325d64b (done)
     { name: 'cat', icon: 'assets/img/cat.jpg' },
     { name: 'bird', icon: 'assets/img/bird.jpg' },
     { name: 'fish', icon: 'assets/img/fish.jfif' },
@@ -62,27 +58,16 @@ export class AdoptionPage implements OnInit {
     try {
       const activePets: any[] = await this.firebaseService.getActivePets();
       const favoritePets: any[] = await this.firebaseService.getFavoritePets('pet-adoption');
-      const favoriteIds = new Set(favoritePets.map(p => p.id));
+      const favoriteIds = favoritePets.map(p => p.id);
 
-      this.pets = (activePets ?? []).map(p => {
-        const image =
-          Array.isArray(p?.photos) && p.photos.length > 0
-            ? p.photos[0]
-            : (p?.image || 'assets/default-pet.jpg');
-
-        // Normalize species/category once for consistent filtering & display
-        const species = (p?.species ?? p?.category ?? '').toString().toLowerCase();
-
-        return {
-          ...p,
-          species,                      // keep a normalized species
-          category: p?.category ?? species,
-          favorite: favoriteIds.has(p?.id),
-          image
-        } as Pet & { image: string; favorite: boolean; species: string; category?: string };
-      });
-
-      console.log('Loaded pets:', this.pets);
+      this.pets = activePets.map(p => ({
+        ...p,
+        favorite: favoriteIds.includes(p.id) || false,
+        image: Array.isArray(p.photos) && p.photos.length > 0 
+          ? p.photos[0] 
+          : p.image || 'assets/default-pet.jpg'
+      }));
+      console.log('Loaded pets:', this.pets); // Debug: Log pets to verify species/category data
     } catch (err) {
       console.error('Error loading pets:', err);
       this.showToast('Failed to load pets.', 'danger');
@@ -93,59 +78,11 @@ export class AdoptionPage implements OnInit {
 
   applyFilter(cat: string) {
     this.selectedFilter = cat;
-    console.log('Selected filter:', this.selectedFilter);
-    console.log('Filtered pets:', this.filteredPets());
+    console.log('Selected filter:', this.selectedFilter); // Debug: Log selected filter
+    console.log('Filtered pets:', this.filteredPets()); // Debug: Log filtered results
   }
 
   filteredPets(): Pet[] {
-<<<<<<< HEAD
-    const q = this.searchText.trim().toLowerCase();
-
-    return this.pets.filter((pet: any) => {
-      // Category filter (species-based)
-      const matchesCategory =
-        this.selectedFilter === 'All' ||
-        (!!pet?.species && pet.species === this.selectedFilter.toLowerCase());
-
-      // Modal filters
-      const matchesSpecies =
-        this.filters.species.length === 0 ||
-        (!!pet?.species && this.filters.species.includes(pet.species));
-
-      const matchesGender =
-        this.filters.gender.length === 0 ||
-        (!!pet?.gender && this.filters.gender.includes(pet.gender));
-
-      const matchesCity =
-        !this.filters.city ||
-        (!!pet?.location && pet.location === this.filters.city);
-
-      const matchesArea =
-        !this.filters.area ||
-        (!!pet?.area && pet.area === this.filters.area);
-
-      const matchesVaccinated =
-        this.filters.vaccinated === false ||
-        pet?.vaccinated === this.filters.vaccinated;
-
-      // Search text across key fields
-      const matchesSearch =
-        q === '' ||
-        (!!pet?.petName && pet.petName.toLowerCase().includes(q)) ||
-        (!!pet?.species && pet.species.toLowerCase().includes(q)) ||
-        (!!pet?.category && pet.category.toLowerCase().includes(q)) ||
-        (!!pet?.location && pet.location.toLowerCase().includes(q));
-
-      return (
-        matchesCategory &&
-        matchesSpecies &&
-        matchesGender &&
-        matchesCity &&
-        matchesArea &&
-        matchesVaccinated &&
-        matchesSearch
-      );
-=======
     return this.pets.filter(pet => {
       // Category filter (based on species)
       const matchesCategory = this.selectedFilter === 'All' || (pet.species && pet.species === this.selectedFilter);
@@ -165,36 +102,26 @@ export class AdoptionPage implements OnInit {
         (pet.location && pet.location.toLowerCase().includes(this.searchText.toLowerCase()));
 
       return matchesCategory && matchesSpecies && matchesGender && matchesCity && matchesArea && matchesVaccinated && matchesSearch;
->>>>>>> 325d64b (done)
     });
   }
 
   openPetDetails(pet: Pet) {
-    if (!pet?.id) return;
     this.router.navigate(['/adoption/pet-details', pet.id]);
   }
 
   async toggleFavorite(pet: Pet, event: MouseEvent) {
     event.stopPropagation();
-    if (!pet?.id) return;
-
-    // Auth guard: favorites require signed-in user
-    const user = this.firebaseService.getCurrentUser();
-    if (!user) {
-      this.showToast('Please sign in to save favorites.', 'danger');
-      return;
-    }
-
-    // Optimistic UI + rollback on error
-    const prev = !!pet.favorite;
-    pet.favorite = !prev;
+    if (!pet.id) return;
 
     try {
-      await this.firebaseService.setFavorite('pet-adoption', pet.id, !prev);
-      this.showToast(pet.favorite ? 'Added to favorites!' : 'Removed from favorites!', 'success');
+      await this.firebaseService.setFavorite('pet-adoption', pet.id, !pet.favorite);
+      pet.favorite = !pet.favorite;
+      this.showToast(
+        pet.favorite ? 'Added to favorites!' : 'Removed from favorites!',
+        'success'
+      );
     } catch (err) {
       console.error('Error toggling favorite:', err);
-      pet.favorite = prev; // rollback
       this.showToast('Failed to toggle favorite.', 'danger');
     }
   }
@@ -217,25 +144,15 @@ export class AdoptionPage implements OnInit {
     const modal = await this.modalController.create({
       component: FilterModalComponent,
       componentProps: {
-<<<<<<< HEAD
-        filters: { ...this.filters }
-=======
         filters: { ...this.filters } // Pass current filters to modal
->>>>>>> 325d64b (done)
       }
     });
 
     modal.onDidDismiss().then(({ data }) => {
       if (data) {
-<<<<<<< HEAD
-        this.filters = { ...data };
-        console.log('Applied filters:', this.filters);
-        console.log('Filtered pets:', this.filteredPets());
-=======
         this.filters = { ...data }; // Update filters with modal output
         console.log('Applied filters:', this.filters); // Debug: Log applied filters
         console.log('Filtered pets:', this.filteredPets()); // Debug: Log filtered results
->>>>>>> 325d64b (done)
       }
     });
 

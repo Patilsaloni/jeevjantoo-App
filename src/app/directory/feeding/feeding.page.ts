@@ -178,15 +178,7 @@ interface FeedingPoint {
   lng?: number | null;
   food_items: string[]; // ✅ always array
   city?: string;
-<<<<<<< HEAD
-<<<<<<< HEAD
   expanded?: boolean;
-=======
-   expanded?: boolean;
->>>>>>> 325d64b (done)
-=======
-  expanded?: boolean;
->>>>>>> d24e032 (filter and search in directory)
   variant?: string;
 }
 
@@ -225,13 +217,6 @@ export class FeedingPage implements OnInit {
     this.loading = true;
     try {
       let data: any[] = await this.firebaseService.getInformation('food') || [];
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 325d64b (done)
-=======
->>>>>>> d24e032 (filter and search in directory)
       this.feedingPoints = data.map((fp, index) => {
         let items: string[] = [];
         if (Array.isArray(fp.food_items)) {
@@ -247,25 +232,11 @@ export class FeedingPage implements OnInit {
           individual: fp.individual || 'N',
           lat: fp.lat ?? null,
           lng: fp.lng ?? null,
-<<<<<<< HEAD
-<<<<<<< HEAD
           food_items: items,
           city: fp.city || 'N/A',
           expanded: false,
           variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
         };
-=======
-           expanded: false,
-          variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
-        } as FeedingPoint;
->>>>>>> 325d64b (done)
-=======
-          food_items: items,
-          city: fp.city || 'N/A',
-          expanded: false,
-          variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
-        };
->>>>>>> d24e032 (filter and search in directory)
       });
       this.filteredPoints = [...this.feedingPoints];
       this.addresses = Array.from(

@@ -6,10 +6,6 @@
 .premium-ngos {
   padding: 1rem;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d24e032 (filter and search in directory)
 /* Search and Filter Bar */
   .nav-container {
     display: flex;
@@ -79,7 +75,6 @@
   }
 
     /* No Data */
-<<<<<<< HEAD
   .no-data {
     text-align: center;
     margin-top: 40px;
@@ -99,32 +94,6 @@
     margin-bottom: 1rem;
   }
 
-=======
-=======
->>>>>>> d24e032 (filter and search in directory)
-  .no-data {
-    text-align: center;
-    margin-top: 40px;
-    color: #888;
-
-    ion-icon {
-      font-size: 40px;
-      color: #ff0000;
-      margin-bottom: 8px;
-    }
-  }
-<<<<<<< HEAD
->>>>>>> 325d64b (done)
-=======
-  
-  .filters {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-  }
-
->>>>>>> d24e032 (filter and search in directory)
 
   .ngo-cards {
     display: flex;

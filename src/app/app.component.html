@@ -1,6 +1,7 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay" class="premium-menu">
+    <!-- Keep the menu mounted; disable when hidden -->
+    <ion-menu [disabled]="!showMenu" contentId="main-content" type="overlay" class="premium-menu" menuId="main-menu">
       <ion-content>
         <!-- Profile Header -->
         <div class="menu-profile">
@@ -13,33 +14,23 @@
         <!-- Menu List -->
         <ion-list class="menu-list" lines="none">
           <ion-menu-toggle auto-hide="false">
-            <ion-item routerLink="/dashboard" (click)="navigareToHome()">
+            <ion-item routerLink="/dashboard" (click)="navigateToHome()">
               <ion-icon name="home-outline" slot="start"></ion-icon>
               <ion-label>Dashboard</ion-label>
             </ion-item>
           </ion-menu-toggle>
+
           <ion-menu-toggle auto-hide="false">
             <ion-item routerLink="/profile" (click)="navigateToProfile()">
               <ion-icon name="person-outline" slot="start"></ion-icon>
               <ion-label>Profile</ion-label>
             </ion-item>
           </ion-menu-toggle>
+
           <ion-menu-toggle auto-hide="false">
             <ion-item routerLink="/pets" (click)="navigateToAdopt()">
               <ion-icon name="paw-outline" slot="start"></ion-icon>
               <ion-label>Adopt</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-          <ion-menu-toggle auto-hide="false">
-            <ion-item routerLink="/adoption" routerDirection="root">
-              <ion-icon name="heart-outline" slot="start"></ion-icon>
-              <ion-label>Put for Adoption</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-          <ion-menu-toggle auto-hide="false">
-            <ion-item routerLink="/contact" routerDirection="root">
-              <ion-icon name="mail-outline" slot="start"></ion-icon>
-              <ion-label>Contact</ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>

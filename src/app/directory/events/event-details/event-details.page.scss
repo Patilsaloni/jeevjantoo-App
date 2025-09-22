@@ -1,62 +1,93 @@
+// .premium-event-details {
+//   padding: 1rem;
+
+//   .event-card {
+//     border-radius: 20px;
+//     overflow: hidden;
+//     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+//     border-top: 5px solid #6eb9ff;
+
+//     ion-card-header {
+//       background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
+//       padding: 1rem;
+
+//       ion-card-title {
+//         font-size: 1.35rem;
+//         font-weight: 700;
+//         color: #333;
+//       }
+
+//       ion-card-subtitle {
+//         font-size: 1rem;
+//         color: #555;
+//       }
+//     }
+
+//     .event-info {
+//       padding: 0.8rem 1rem;
+
+//       p {
+//         margin: 0.3rem 0;
+//         font-size: 0.95rem;
+//         color: #333;
+//       }
+//     }
+
+//       ion-card-footer {
+//       padding: 0.5rem 1rem;
+
+//       ion-button {
+//         width: 100%;
+//         border-radius: 12px;
+//         font-weight: 600;
+//         color: #fff;
+//         transition: all 0.2s ease;
+
+//         &:hover { transform: translateY(-2px); }
+
+//         &.call-btn { --background: #6eb9ff; ion-icon { color: #d4edda; } }
+//         &.whatsapp-btn { --background: #21C063; ion-icon { color: #dcf8c6; } }
+//         &.map-btn { --background: #40c11d; ion-icon { color: #cce5ff; } }
+//         &.save-btn { --background: #ffdc6e; ion-icon { color: #fff3cd; } }
+//         &.share-btn { --background: #6284ad; ion-icon { color: #e2e3e5; } }
+//         &.report-btn { --background: #ff8d6b; ion-icon { color: #f8d7da; } }
+//       }
+//     }
+//   }
+
+//    .spinner-overlay {
+//   position: fixed;   /* stay on top */
+//   top: 0;
+//   left: 0;
+//   width: 100vw;
+//   height: 100vh;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   background: rgba(255, 255, 255, 0.7); // optional dim background
+//   z-index: 9999;
+// }
+
+//   .no-data {
+//     text-align: center;
+//     margin-top: 2rem;
+//     font-size: 1.2rem;
+//     color: gray;
+//   }
+// }
+
+
+
+
+
 .premium-event-details {
-  padding: 1rem;
+  background: linear-gradient(135deg, #dee6fa 0%, #f4efef 90%);
+  min-height: 100vh;
+  padding: 0;
+}
 
-  .event-card {
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    border-top: 5px solid #6eb9ff;
-
-    ion-card-header {
-      background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
-      padding: 1rem;
-
-      ion-card-title {
-        font-size: 1.35rem;
-        font-weight: 700;
-        color: #333;
-      }
-
-      ion-card-subtitle {
-        font-size: 1rem;
-        color: #555;
-      }
-    }
-
-    .event-info {
-      padding: 0.8rem 1rem;
-
-      p {
-        margin: 0.3rem 0;
-        font-size: 0.95rem;
-        color: #333;
-      }
-    }
-
-      ion-card-footer {
-      padding: 0.5rem 1rem;
-
-      ion-button {
-        width: 100%;
-        border-radius: 12px;
-        font-weight: 600;
-        color: #fff;
-        transition: all 0.2s ease;
-
-        &:hover { transform: translateY(-2px); }
-
-        &.call-btn { --background: #6eb9ff; ion-icon { color: #d4edda; } }
-        &.whatsapp-btn { --background: #21C063; ion-icon { color: #dcf8c6; } }
-        &.map-btn { --background: #40c11d; ion-icon { color: #cce5ff; } }
-        &.save-btn { --background: #ffdc6e; ion-icon { color: #fff3cd; } }
-        &.share-btn { --background: #6284ad; ion-icon { color: #e2e3e5; } }
-        &.report-btn { --background: #ff8d6b; ion-icon { color: #f8d7da; } }
-      }
-    }
-  }
-
-   .spinner-overlay {
-  position: fixed;   /* stay on top */
+.spinner-overlay {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -64,14 +95,156 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(255, 255, 255, 0.7); // optional dim background
+  background: rgba(255, 255, 255, 0.7);
   z-index: 9999;
 }
 
-  .no-data {
-    text-align: center;
-    margin-top: 2rem;
-    font-size: 1.2rem;
-    color: gray;
+/* Curved, glassy card with shadow and textured accent */
+.event-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2.5rem 1.5rem 2.7rem 2rem / 2.2rem 2.6rem 1.5rem 2.7rem;
+  box-shadow: 0 8px 34px -4px rgba(48, 87, 209, 0.15),
+    0 2px 6px 0 rgba(56, 56, 56, 0.09);
+  background: rgba(255, 255, 255, 0.87);
+  margin: 1rem;
+  padding-bottom: 1.1rem;
+  .card-accent-bg {
+    position: absolute;
+    top: -40px;
+    right: -80px;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle at 20% 30%, #79ffd3 60%, #69a6ff 100%);
+    opacity: 0.18;
+    border-radius: 50% 65% 70% 44%;
+    filter: blur(6px);
+    z-index: 1;
   }
+  ion-card-header,
+  ion-card-content,
+  ion-card-footer {
+    position: relative;
+    z-index: 2;
+  }
+  ion-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e2746;
+  }
+  ion-card-subtitle {
+    color: #39b7ad;
+    font-size: 1.04rem;
+    margin-bottom: 0.2rem;
+    font-weight: 500;
+  }
+  .event-info {
+    color: #333853;
+    font-size: 1rem;
+    strong {
+      font-weight: 600;
+      color: #474fa3;
+      margin-right: 6px;
+    }
+  }
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 1rem;
+  justify-content: space-evenly;
+}
+
+.icon-btn {
+  border: none;
+  outline: none;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  margin: 0 3px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px 0 rgba(70, 110, 240, 0.12),
+    0 1px 2px 0 rgba(70, 110, 240, 0.13);
+  background: linear-gradient(145deg, #e9edf7 40%, #cad3f2 100%);
+  transition: transform 0.17s cubic-bezier(0.32, 1.56, 0.71, 1.11),
+    box-shadow 0.17s cubic-bezier(0.32, 1.56, 0.71, 1.11);
+  position: relative;
+  top: 0;
+  ion-icon {
+    font-size: 1.7rem;
+    filter: drop-shadow(0 2px 6px rgba(80, 140, 240, 0.11));
+    transition: filter 0.12s;
+  }
+  &:active,
+  &:focus {
+    transform: translateY(-4px) scale(1.09);
+    box-shadow: 0 10px 24px -2px rgba(55, 140, 220, 0.21);
+    ion-icon {
+      filter: brightness(1.18) drop-shadow(0 4px 12px #568cf5bd);
+    }
+  }
+}
+
+/* Unique gradients for each action */
+.call-btn {
+  background: linear-gradient(135deg, #61e0ff, #58acfa);
+}
+.whatsapp-btn {
+  background: linear-gradient(135deg, #6ddf89, #1ec54b);
+}
+.map-btn {
+  background: linear-gradient(135deg, #dda5d1 40%, #7932eb 100%);
+}
+.save-btn {
+  background: linear-gradient(135deg, #f3a50e, #f7d358 100%);
+}
+.share-btn {
+  background: linear-gradient(135deg, #a478fa, #4bdec2 100%);
+}
+.report-btn {
+  background: linear-gradient(135deg, #f36868, #eeaeae 100%);
+}
+
+.icon-btn:active {
+  animation: jelly-pop 0.27s;
+}
+
+@keyframes jelly-pop {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(0.91, 1.08);
+  }
+  60% {
+    transform: scale(1.11, 0.89);
+  }
+  85% {
+    transform: scale(0.95, 1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Small touch fix */
+@media (max-width: 400px) {
+  .event-card {
+    margin: 1rem;
+  }
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.no-data {
+  text-align: center;
+  color: #bb3939;
+  margin-top: 3.5rem;
+  font-size: 1.1rem;
 }

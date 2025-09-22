@@ -1,6 +1,6 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common'; // <-- Add this
+import { CommonModule, Location } from '@angular/common'; // <-- Add this
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AlertController, ToastController } from '@ionic/angular';
@@ -12,9 +12,9 @@ import { AlertController, ToastController } from '@ionic/angular';
   standalone: true,
   imports: [
     IonicModule,
-    CommonModule // <-- Needed for *ngIf, *ngFor, etc.
+    CommonModule, // <-- Needed for *ngIf, *ngFor, etc.
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] // <-- Needed for ion-card-footer etc.
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], // <-- Needed for ion-card-footer etc.
 })
 export class EventDetailsPage implements OnInit {
   eventId: string | null = null;
@@ -25,13 +25,18 @@ export class EventDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private firebaseService: FirebaseService,
-     private alertCtrl: AlertController,
-  private toastCtrl: ToastController
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private location: Location
   ) {}
 
   ngOnInit() {
     this.eventId = this.route.snapshot.paramMap.get('id');
     if (this.eventId) this.loadEvent(this.eventId);
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   async loadEvent(id: string) {
@@ -49,7 +54,8 @@ export class EventDetailsPage implements OnInit {
   }
 
   callOrganizer() {
-    if (this.event?.contactPerson) window.open(`tel:${this.event.contactPerson}`, '_system');
+    if (this.event?.contactPerson)
+      window.open(`tel:${this.event.contactPerson}`, '_system');
     else alert('Contact not available');
   }
 
@@ -67,42 +73,50 @@ export class EventDetailsPage implements OnInit {
     } else alert('Location not available');
   }
 
-  saveEvent() { alert('Saved to favorites'); }
+  saveEvent() {
+    alert('Saved to favorites');
+  }
 
-  shareEvent() { 
+  shareEvent() {
     if (navigator.share) {
-      navigator.share({
-        title: this.event.name,
-        text: `Check out this event : ${this.event.name} in ${this.event.city}`,
-        url: window.location.href
-      }).catch(err => console.error('Error sharing', err));
+      navigator
+        .share({
+          title: this.event.name,
+          text: `Check out this event : ${this.event.name} in ${this.event.city}`,
+          url: window.location.href,
+        })
+        .catch((err) => console.error('Error sharing', err));
     } else {
       alert('Sharing not supported on this device');
     }
-   }
+  }
 
   async reportEvent() {
     const alert = await this.alertCtrl.create({
       header: 'Report Event',
       inputs: [
-        { name: 'reason', type: 'text', placeholder: 'Enter reason for reporting' }
+        {
+          name: 'reason',
+          type: 'text',
+          placeholder: 'Enter reason for reporting',
+        },
       ],
       buttons: [
         { text: 'Cancel', role: 'cancel' },
-        { 
-          text: 'Submit', 
+        {
+          text: 'Submit',
           handler: async (data) => {
             console.log('Report submitted:', data.reason);
             const toast = await this.toastCtrl.create({
               message: 'Report submitted successfully!',
               duration: 1500,
               color: 'warning',
-              position: 'bottom'
+              position: 'bottom',
             });
             toast.present();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
     await alert.present();
   }

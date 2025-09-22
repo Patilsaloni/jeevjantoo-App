@@ -1,16 +1,14 @@
+
 <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title>Event Details</ion-title>
-      <ion-buttons slot="end">
-        <ion-button>
-          <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Event Details</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content class="premium-event-details" [fullscreen]="true">
    <div *ngIf="loading" class="spinner-overlay">
@@ -18,7 +16,8 @@
   </div>
 
   <div *ngIf="!loading && event">
-    <ion-card class="event-card" [style.border-top-color]="event.color || '#6eb9ff'">
+    <ion-card class="event-card">
+      <div class="card-accent-bg"></div>
       <ion-card-header>
         <ion-card-title>{{ event.name }}</ion-card-title>
       </ion-card-header>
@@ -30,6 +29,31 @@
         <p *ngIf="event.remarks"><strong>Remarks:</strong> {{ event.remarks }}</p>
       </ion-card-content>
 
+
+      <ion-card-footer>
+        <div class="actions-row">
+          <button class="icon-btn call-btn" (click)="callOrganizer()">
+            <ion-icon name="call-outline"></ion-icon>
+          </button>
+          <button class="icon-btn whatsapp-btn" (click)="openWhatsApp()">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+          </button>
+          <button class="icon-btn map-btn" (click)="openMap()">
+            <ion-icon name="location-outline"></ion-icon>
+          </button>
+          <button class="icon-btn save-btn" (click)="saveEvent()">
+            <ion-icon name="bookmark-outline"></ion-icon>
+          </button>
+          <button class="icon-btn share-btn" (click)="shareEvent()">
+            <ion-icon name="share-social-outline"></ion-icon>
+          </button>
+          <button class="icon-btn report-btn" (click)="reportEvent()">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+          </button>
+        </div>
+      </ion-card-footer>
+
+<!-- 
      <ion-card-footer>
         <ion-grid>
           <ion-row>
@@ -71,7 +95,7 @@
             </ion-col>
           </ion-row>
         </ion-grid>
-      </ion-card-footer>
+      </ion-card-footer> -->
     </ion-card>
   </div>
 

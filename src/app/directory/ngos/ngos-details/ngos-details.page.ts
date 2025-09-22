@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
+import { IonicModule, ToastController, AlertController } from '@ionic/angular';
+import { CommonModule, Location } from '@angular/common';
 import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
@@ -9,7 +9,8 @@ import { FirebaseService } from 'src/app/services/firebase.service';
   templateUrl: './ngos-details.page.html',
   styleUrls: ['./ngos-details.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [IonicModule, CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgosDetailsPage implements OnInit {
   ngo: any = null;
@@ -17,12 +18,19 @@ export class NgosDetailsPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private location: Location,
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController
   ) {}
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) await this.loadNGO(id);
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   async loadNGO(id: string) {
@@ -74,15 +82,40 @@ export class NgosDetailsPage implements OnInit {
       navigator.share({
         title: this.ngo.name,
         text: `Check out ${this.ngo.name}`,
-        url: window.location.href
+        url: window.location.href,
       });
     } else {
       alert('Share not supported on this device');
     }
   }
 
-  reportNGO() {
-    // future: send to Firebase "reports" collection
-    alert('Reported to admin');
+  async reportNGO() {
+    const alert = await this.alertCtrl.create({
+      header: 'Report NGO',
+      inputs: [
+        {
+          name: 'reason',
+          type: 'text',
+          placeholder: 'Enter reason for reporting',
+        },
+      ],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Submit',
+          handler: async (data) => {
+            console.log(`Report submitted for ${this.ngo.name}:`, data.reason);
+            const toast = await this.toastCtrl.create({
+              message: 'Report submitted successfully!',
+              duration: 1500,
+              color: 'warning',
+              position: 'bottom',
+            });
+            await toast.present();
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 }

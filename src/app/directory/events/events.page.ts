@@ -315,6 +315,9 @@ export class EventsPage implements OnInit {
     this.loading = true;
     try {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d24e032 (filter and search in directory)
       const res = await this.firebaseService.getInformation('events');
       this.events = res.map((ev: any, index: number) => ({
         id: ev.id,
@@ -344,6 +347,7 @@ export class EventsPage implements OnInit {
       console.log('Areas:', this.areas);
       console.log('Places:', this.places);
       console.log('Timings:', this.timings);
+<<<<<<< HEAD
 =======
       this.events = await this.firebaseService.getInformation('events');
 
@@ -359,6 +363,8 @@ export class EventsPage implements OnInit {
 
       this.filteredEvents = this.events;
 >>>>>>> 325d64b (done)
+=======
+>>>>>>> d24e032 (filter and search in directory)
     } catch (error) {
       console.error('Error loading events:', error);
       this.events = [];

@@ -120,10 +120,14 @@ export class InsurancePage implements OnInit {
   filteredInsurances: Insurance[] = [];
   loading = true;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d24e032 (filter and search in directory)
   searchTerm = '';
   filters = { coverage: '', city: '' };
   coverages: string[] = [];
   cities: string[] = [];
+<<<<<<< HEAD
 =======
 expanded?: boolean;
   variant?: string;
@@ -132,6 +136,8 @@ expanded?: boolean;
     city: ''
   };
 >>>>>>> 325d64b (done)
+=======
+>>>>>>> d24e032 (filter and search in directory)
 
   constructor(
     private firebaseService: FirebaseService,
@@ -146,6 +152,9 @@ expanded?: boolean;
     this.loading = true;
     try {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d24e032 (filter and search in directory)
       const res = await this.firebaseService.getInformation('medical-insurance');
       this.insurances = res.map((ins: any, index: number) => ({
         id: ins.id,
@@ -155,6 +164,7 @@ expanded?: boolean;
         website: ins.website || 'N/A',
         contact: ins.contact || 'N/A',
         city: ins.city || 'N/A',
+<<<<<<< HEAD
         expanded: false,
         variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
       }));
@@ -173,6 +183,17 @@ expanded?: boolean;
       }));
       this.applyFilters();
 >>>>>>> 325d64b (done)
+=======
+        expanded: false,
+        variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
+      }));
+      this.filteredInsurances = [...this.insurances];
+      this.coverages = Array.from(new Set(this.insurances.map(i => i.coverage).filter(c => c && c !== 'N/A'))).sort();
+      // this.cities = Array.from(new Set(this.insurances.map(i => i.city).filter(c => c && c !== 'N/A'))).sort();
+      console.log('Loaded Insurances:', this.insurances);
+      console.log('Coverages:', this.coverages);
+      console.log('Cities:', this.cities);
+>>>>>>> d24e032 (filter and search in directory)
     } catch (err) {
       console.error('Error fetching insurance:', err);
       this.insurances = [];

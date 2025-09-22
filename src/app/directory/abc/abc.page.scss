@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 .premium-abc {
   padding: 1rem;
@@ -191,10 +192,79 @@
 
 
 
+=======
+>>>>>>> d24e032 (filter and search in directory)
 
 .premium-abc {
   padding: 1rem;
 >>>>>>> 325d64b (done)
+
+ /* Search and Filter Bar */
+  .nav-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background-color: var(--ion-background-color, #fff);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  ion-searchbar.abc-search {
+    --background: var(--ion-color-light, #f4f5f8);
+    --border-radius: 12px;
+    --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    --icon-color: var(--ion-color-primary, #3880ff);
+    flex-grow: 1;
+    max-width: none;
+    height: 42px;
+    padding: 0;
+    margin: 0;
+  }
+
+  button.filter-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+
+    ion-icon {
+      font-size: 25px;
+      color: var(--ion-color-primary);
+      transition: color 0.25s ease;
+    }
+
+    &:hover ion-icon {
+      color: var(--ion-color-primary-shade);
+    }
+  }
+
+  /* Responsive adjustments for search/filter */
+  @media (max-width: 600px) {
+    .nav-container {
+      gap: 5px;
+      padding: 8px 0px;
+    }
+
+    ion-searchbar.adoption-search {
+      height: 38px;
+    }
+
+    button.filter-button {
+      height: 34px;
+      width: 34px;
+
+      ion-icon {
+        font-size: 22px;
+      }
+    }
+  }
 
   .filters {
     display: flex;

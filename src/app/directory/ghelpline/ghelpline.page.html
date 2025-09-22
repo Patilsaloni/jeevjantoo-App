@@ -86,8 +86,8 @@
 </ion-content>
 =======
 
-   <div class="helpline-cards">
-    <div *ngFor="let h of helplines" class="helpline-card" [ngClass]="h.variant">
+  <div class="helpline-cards" *ngIf="!loading && filteredHelplines.length > 0">
+    <div *ngFor="let h of filteredHelplines" class="helpline-card" [ngClass]="h.variant">
       <div class="helpline-header">
         <div style="display: flex; align-items: center;">
           <div class="card-initial">{{ h.helplineServices ? h.helplineServices[0] : 'H' }}</div>
@@ -106,7 +106,7 @@
             <td>Contact</td>
             <td>{{ h.contact || 'N/A' }}</td>
           </tr>
-                    <tr>
+          <tr>
             <td>Govt Body</td>
             <td>{{ h.govtBody || 'N/A' }}</td>
           </tr>
@@ -116,14 +116,23 @@
           </tr>
         </table>
         <div class="helpline-actions-row">
-          <button ion-button class="details-btn" (click)="openDetails(h)">DETAILS</button>
+          <button class="call-btn" (click)="call(h.contact)">CALL</button>
         </div>
       </div>
     </div>
   </div>
+<<<<<<< HEAD
   
   <p *ngIf="!loading && helplines.length === 0" class="no-data">
     No helplines found.
   </p>
 </ion-content>
 >>>>>>> 325d64b (done)
+=======
+
+  <div *ngIf="!loading && filteredHelplines.length === 0" class="no-data">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>No helplines found.</p>
+  </div>
+</ion-content>
+>>>>>>> d24e032 (filter and search in directory)

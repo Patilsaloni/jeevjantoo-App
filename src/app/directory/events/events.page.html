@@ -79,6 +79,9 @@
       </ion-card>
     </div> -->
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d24e032 (filter and search in directory)
     <div *ngIf="!isMapView" class="event-cards">
       <div *ngFor="let ev of filteredEvents" class="event-card" [ngClass]="ev.variant">
         <div class="event-header">
@@ -88,6 +91,7 @@
               <div class="event-title">{{ ev.name }}</div>
               <div class="event-subtitle">{{ ev.area || 'N/A' }}</div>
             </div>
+<<<<<<< HEAD
           </div>
           <button class="expand-btn" (click)="ev.expanded = !ev.expanded">
             <ion-icon [name]="ev.expanded ? 'remove' : 'add'"></ion-icon>
@@ -124,35 +128,40 @@
           <div>
             <div class="event-title">{{ ev.name }}</div>
             <div class="event-subtitle">{{ ev.place || 'N/A' }}</div>
+=======
+>>>>>>> d24e032 (filter and search in directory)
           </div>
+          <button class="expand-btn" (click)="ev.expanded = !ev.expanded">
+            <ion-icon [name]="ev.expanded ? 'remove' : 'add'"></ion-icon>
+          </button>
         </div>
-        <button class="expand-btn" (click)="ev.expanded = !ev.expanded">
-          <ion-icon [name]="ev.expanded ? 'remove' : 'add'"></ion-icon>
-        </button>
-      </div>
-      <div class="event-accordion" *ngIf="ev.expanded" [ngClass]="ev.variant">
-        <table>
-          <tr>
-            <td>Place</td>
-            <td>{{ ev.area || 'N/A' }}</td>
-          </tr>
-          <tr>
-            <td>Contact</td>
-            <td>{{ ev.contactPerson || 'N/A' }}</td>
-          </tr>
-          <tr>
-            <td>Timing</td>
-            <td>{{ convertTo12HourFormat(ev.timeFrom) }} - {{ convertTo12HourFormat(ev.timeTo) }}</td>
-          </tr>
-        </table>
-        <div class="event-actions-row">
-          <button ion-button class="details-btn" (click)="viewDetails(ev)">DETAILS</button>
-          <button ion-button class="map-btn" (click)="openMap(ev)">MAP</button>
+        <div class="event-accordion" *ngIf="ev.expanded" [ngClass]="ev.variant">
+          <table>
+            <tr>
+              <td>Place</td>
+              <td>{{ ev.area || 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Contact</td>
+              <td>{{ ev.contactPerson || 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Timing</td>
+              <td>{{ convertTo12HourFormat(ev.timeFrom) }} - {{ convertTo12HourFormat(ev.timeTo) }}</td>
+            </tr>
+          </table>
+          <div class="event-actions-row">
+            <button ion-button class="details-btn" (click)="viewDetails(ev)">DETAILS</button>
+            <button ion-button class="map-btn" (click)="openMap(ev)">MAP</button>
+          </div>
         </div>
       </div>
     </div>
+<<<<<<< HEAD
   </div>
 >>>>>>> 325d64b (done)
+=======
+>>>>>>> d24e032 (filter and search in directory)
     <!-- Map View -->
     <div *ngIf="isMapView && filteredEvents.length > 0" class="map-container">
       <google-map [center]="{lat: defaultLat, lng: defaultLng}" [zoom]="12" height="400px" width="100%">

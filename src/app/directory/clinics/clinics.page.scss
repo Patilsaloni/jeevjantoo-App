@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d24e032 (filter and search in directory)
 /* Search and Filter Bar */
   .nav-container {
     display: flex;
@@ -10,6 +13,7 @@
     top: 0;
     z-index: 10;
   }
+<<<<<<< HEAD
 
   ion-searchbar.card-search {
     --background: var(--ion-color-light, #f4f5f8);
@@ -92,253 +96,86 @@
 =======
 // // .premium-clinics {
 // //   padding: 1rem;
+=======
+>>>>>>> d24e032 (filter and search in directory)
 
-// //   .no-data {
-// //     text-align: center;
-// //     font-size: 1.2rem;
-// //     color: gray;
-// //     margin-top: 2rem;
-// //   }
+  ion-searchbar.card-search {
+    --background: var(--ion-color-light, #f4f5f8);
+    --border-radius: 12px;
+    --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    --icon-color: var(--ion-color-primary, #3880ff);
+    flex-grow: 1;
+    max-width: none;
+    height: 42px;
+    padding: 0;
+    margin: 0;
+  }
 
-// //   .clinic-cards {
-// //     display: grid;
-// //     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-// //     gap: 1rem;
-// //   }
+  button.filter-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
 
-// //   .clinic-card {
-// //     display: flex;                  // make card a flex container
-// //     flex-direction: column;         // vertical layout
-// //     justify-content: space-between; // push footer to bottom
-// //     background: #ffffff;
-// //     border-radius: 20px;
-// //     overflow: hidden;
-// //     position: relative;
-// //     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-// //     border-top: 5px solid #6eb9ff;
-// //     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    ion-icon {
+      font-size: 25px;
+      color: var(--ion-color-primary);
+      transition: color 0.25s ease;
+      margin: 0;
+    }
 
-// //     &:hover {
-// //       transform: translateY(-7px);
-// //       box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-// //     }
+    &:hover ion-icon {
+      color: var(--ion-color-primary-shade);
+    }
+  }
 
-// //     ion-card-header {
-// //       background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
-// //       padding: 1rem;
-// //       border-bottom: 1px solid #eee;
-// //     }
+  /* Responsive adjustments for search/filter */
+  @media (max-width: 600px) {
+    .nav-container {
+      gap: 5px;
+      padding: 8px 0px;
+    }
 
-// //     ion-card-title {
-// //       font-size: 1.35rem;
-// //       font-weight: 700;
-// //       color: #333;
-// //     }
+    ion-searchbar.adoption-search {
+      height: 38px;
+    }
 
-// //     ion-card-subtitle {
-// //       font-size: 1rem;
-// //       color: #555;
-// //     }
+    button.filter-button {
+      height: 34px;
+      width: 34px;
 
-// //     .clinic-info {
-// //       padding: 0.8rem 1rem;
-// //       flex-grow: 1; // let content take up remaining space
+      ion-icon {
+        font-size: 22px;
+      }
+    }
+  }
 
-// //       p {
-// //         margin: 0.3rem 0;
-// //         font-size: 0.95rem;
-// //         color: #333;
-// //       }
-// //     }
 
-// //     ion-card-footer {
-// //       padding: 0.5rem 1rem;
+    /* No Data */
+  .no-data {
+    text-align: center;
+    margin-top: 40px;
+    color: #888;
 
-// //       ion-button {
-// //         border-radius: 12px;
-// //         --background: #6eb9ff;
-// //         --color: #fff;
-// //         --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-// //         transition: all 0.2s ease;
+    ion-icon {
+      font-size: 40px;
+      color: #ff0000;
+      margin-bottom: 8px;
+    }
+  }
 
-// //         &:hover {
-// //           --background: #5aa0e0;
-// //           transform: translateY(-2px);
-// //         }
-// //       }
-// //     }
-// //   }
-
-// //   .spinner-center {
-// //     display: flex;
-// //     justify-content: center;
-// //     align-items: center;
-// //     height: 50vh;
-// //   }
-// // .spinner-container {
-// //   position: absolute;   // cover full content
-// //   top: 0;
-// //   left: 0;
-// //   width: 100%;
-// //   height: 100%;
-
-// //   display: flex;
-// //   justify-content: center;
-// //   align-items: center;
-
-// //   background: rgba(255, 255, 255, 0.6); // optional dim background
-// //   z-index: 9999; // keep it above content
-// // }
-
-// //   .add-clinic-btn {
-// //     --background: #ff8d6b;
-// //     --color: #fff;
-// //     --box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-// //     border-radius: 50%;
-// //     width: 60px;
-// //     height: 60px;
-// //     position: fixed;
-// //     bottom: 20px;
-// //     right: 20px;
-// //     font-size: 1.5rem;
-// //     transition: all 0.3s ease;
-
-// //     &:hover {
-// //       --background: #ff6f4a;
-// //       transform: translateY(-3px);
-// //     }
-// //   }
-// // }
-
-// .spinner-center {
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   height: 50vh;
-// }
-// .spinner-container {
-//   position: absolute; // cover full content
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-// }
-
-// .clinic-card {
-//   margin: 20px 10px;
-//   box-shadow: 0 6px 22px #dce6ff44;
-//   border-radius: 17px;
-//   overflow: hidden;
-//   background: #fff;
-//   border: none;
-//   position: relative;
-//   padding: 0;
-//   transition: box-shadow 0.2s;
-// }
-
-// .clinic-header {
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   background: linear-gradient(to right, #f1dcc0, #ffaacf);
-//   // background: linear-gradient(100deg, #fff7fa 0%, #f1fcff 55%, #fbe9e7 100%);
-//   padding: 1.2rem 1rem 0.9rem 1.1rem;
-//   border-bottom: 1.5px solid #f3f3f6;
-// }
-
-// .clinic-title {
-//   font-size: 1.22rem;
-//   font-weight: bold;
-//   color: #2b2a32;
-//   margin-bottom: 0.1rem;
-// }
-
-// .clinic-subtitle {
-//   color: #877b82;
-//   font-size: 0.98rem;
-// }
-
-// .expand-btn {
-//   background: linear-gradient(135deg, #edf6ff 40%, #fff0e7 100%);
-//   border: none;
-//   border-radius: 50%;
-//   width: 32px;
-//   height: 32px;
-//   box-shadow: 0 2px 8px #fafbfd8e;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   cursor: pointer;
-//   transition: background 0.13s;
-//   outline: none;
-
-//   ion-icon {
-//     font-size: 1.43rem;
-//     color: #2091ff;
-//   }
-// }
-
-// .clinic-accordion {
-//   padding: 1.1rem 1rem 0.7rem 1.1rem;
-//   border-top: 1px solid #f0eded;
-//   background: #fff;
-//   animation: fadeInAcc 0.44s cubic-bezier(0.36, 0.32, 0.29, 1);
-
-//   table {
-//     width: 100%;
-//     td {
-//       font-size: 1.02rem;
-//       color: #222;
-//       vertical-align: top;
-//       padding: 3.5px 5px 2.5px 0;
-//     }
-//     td:first-child {
-//       font-weight: 700;
-//       color: #24272b;
-//       text-align: left;
-//       min-width: 78px;
-//     }
-//   }
-// }
-
-// .clinic-actions-row {
-//   display: flex;
-//   justify-content: space-between;
-//   gap: 12px;
-//   margin-top: 1rem;
-
-//   .details-btn {
-//     flex: 1;
-//     background: linear-gradient(90deg, #e8e3fd 40%, #eaf6ff 100%);
-//     color: #535a90;
-//     border: none;
-//     border-radius: 10px;
-//     padding: 0.6rem 0;
-//     font-weight: 600;
-//     font-size: 1rem;
-//   }
-//   .map-btn {
-//     flex: 1;
-//     background: linear-gradient(90deg, #ffeccc 0%, #fff4e7 90%);
-//     color: #a86000;
-//     border: none;
-//     border-radius: 10px;
-//     padding: 0.6rem 0;
-//     font-weight: 600;
-//     font-size: 1rem;
-//   }
-// }
-
-// @keyframes fadeInAcc {
-//   from {
-//     opacity: 0;
-//     transform: translateY(-13px);
-//   }
-//   to {
-//     opacity: 1;
-//     transform: translateY(0);
-//   }
-// }
+  
+  .filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
 
 >>>>>>> 325d64b (done)
 .clinic-cards {

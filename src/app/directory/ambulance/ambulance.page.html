@@ -70,10 +70,14 @@
 
   <div class="ambulance-cards">
 <<<<<<< HEAD
+<<<<<<< HEAD
     <div *ngFor="let amb of filteredAmbulances" class="ambulance-card" [ngClass]="amb.variant">
 =======
     <div *ngFor="let amb of ambulances" class="ambulance-card" [ngClass]="amb.variant">
 >>>>>>> 325d64b (done)
+=======
+    <div *ngFor="let amb of filteredAmbulances" class="ambulance-card" [ngClass]="amb.variant">
+>>>>>>> d24e032 (filter and search in directory)
       <div class="ambulance-header">
         <div style="display: flex; align-items: center;">
           <div class="card-initial">{{ amb.name[0] }}</div>
@@ -114,10 +118,14 @@
   </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
   
 >>>>>>> 325d64b (done)
+=======
+
+>>>>>>> d24e032 (filter and search in directory)
   <!-- No Ambulances -->
   <div *ngIf="!loading && filteredAmbulances.length === 0" class="no-data">
     <ion-icon name="alert-circle-outline"></ion-icon>

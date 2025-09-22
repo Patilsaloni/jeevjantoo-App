@@ -138,6 +138,7 @@ export class AbcPage implements OnInit {
     try {
       this.abcs = await this.firebaseService.getInformation('abcs');
       const variants = ['a', 'b', 'c', 'd', 'e'];
+<<<<<<< HEAD
       this.abcs.forEach((abc, idx) => {
         abc.expanded = false;
         abc.variant = variants[idx % variants.length];
@@ -157,17 +158,31 @@ export class AbcPage implements OnInit {
 =======
 
         const variants = ['a', 'b', 'c', 'd', 'e'];
+=======
+>>>>>>> d24e032 (filter and search in directory)
       this.abcs.forEach((abc, idx) => {
         abc.expanded = false;
         abc.variant = variants[idx % variants.length];
+        abc.title = abc.type; // Set title for search (matches accordion header)
       });
       this.filteredAbcs = [...this.abcs];
 
+<<<<<<< HEAD
       
       this.cities = Array.from(new Set(this.abcs.map(a => a.city).filter(c => c)));
       this.types = Array.from(new Set(this.abcs.map(a => a.type).filter(t => t)));
 
 >>>>>>> 325d64b (done)
+=======
+      // Populate states and citiesByState
+      this.states = Array.from(
+        new Set(this.abcs.map((a) => a.state).filter((s) => s))
+      ).sort();
+      this.updateCitiesByState();
+      this.updateCities();
+      console.log('Loaded ABCs:', this.abcs);
+      console.log('States:', this.states);
+>>>>>>> d24e032 (filter and search in directory)
     } catch (error) {
       console.error('Error loading ABCs:', error);
       this.abcs = [];

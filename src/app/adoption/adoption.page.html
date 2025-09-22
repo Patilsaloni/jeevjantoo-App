@@ -13,22 +13,30 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- Pull to refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingText="Pull to refresh"></ion-refresher-content>
+  </ion-refresher>
+
   <!-- Top Bar: New (icon only), Search, Filter -->
   <div class="nav-container">
     <ion-button fill="outline" color="primary" shape="round" (click)="newAdoptionNavigation()" aria-label="Add New Pet">
       <ion-icon slot="icon-only" name="add-outline"></ion-icon>
     </ion-button>
+
     <ion-searchbar
       [(ngModel)]="searchText"
       placeholder="Quick search by pet name, species, or city."
       debounce="300"
       animated="true"
-      class="adoption-search"
-    ></ion-searchbar>
+      class="adoption-search">
+    </ion-searchbar>
+
     <ion-button fill="clear" shape="round" color="primary" aria-label="Filter" (click)="openFilterModal()">
       <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
     </ion-button>
   </div>
+
 
   <!-- Categories Horizontal Scroll -->
   <div class="category-scroller" style="display: flex; overflow-x: auto;">
@@ -36,14 +44,16 @@
       class="category-item"
       *ngFor="let cat of categoryIcons"
       [class.active]="selectedFilter === cat.name"
-      (click)="applyFilter(cat.name)"
-    >
+      (click)="applyFilter(cat.name)">
       <ion-avatar>
         <img [src]="cat.icon" alt="{{cat.name}}" />
       </ion-avatar>
       <div class="category-label">{{ cat.name }}</div>
     </div>
   </div>
+
+  <!-- Featured Carousel -->
+
 
   <!-- Pet Cards List -->
   <ion-grid fixed>
@@ -55,20 +65,28 @@
             <div class="pet-card-header">
               <div>
                 <div class="pet-name">{{ pet.petName }}</div>
-                <div class="pet-location">
-                  <ion-icon name="location-outline"></ion-icon>
-                  Distance (Near 15km)
-                </div>
+
+              
               </div>
+
               <ion-icon
                 [name]="pet.favorite ? 'heart' : 'heart-outline'"
                 color="danger"
                 class="heart-icon"
-                (click)="toggleFavorite(pet, $event)"
-              ></ion-icon>
+                (click)="toggleFavorite(pet, $event)">
+              </ion-icon>
             </div>
+
             <div class="pet-details">
-              {{ pet.breed }} - {{ pet.age }} yrs
+              {{ pet.breed || 'Mixed' }} • {{ pet.age }} yrs • {{ pet.gender || 'Unknown' }}
+            </div>
+
+            <!-- View Details button (prevents bubbling to card click) -->
+            <div class="card-actions">
+              <ion-button size="small" fill="clear" color="primary"
+                          (click)="onViewDetails(pet, $event)">
+                View Details
+              </ion-button>
             </div>
           </ion-card-content>
         </ion-card>

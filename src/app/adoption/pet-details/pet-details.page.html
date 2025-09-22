@@ -1,63 +1,94 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/pets"></ion-back-button>
+      <ion-back-button defaultHref="/adoption"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ pet.name }}</ion-title>
+    <ion-title>{{ pet?.petName || 'Details' }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="toggleFavorite()">
-        <ion-icon [name]="pet.favorite ? 'heart' : 'heart-outline'"></ion-icon>
+      <ion-button (click)="sharePet()">
+        <ion-icon name="share-social-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="pet-details-content">
-  <div class="pet-details-card">
+<ion-content *ngIf="!loading; else loadingTpl" class="ion-padding">
 
-    <!-- Pet Info & Gallery -->
-    <div class="pet-header-row">
-      <div class="pet-name-block">
-        <h2>{{ pet.name }}</h2>
-        <p class="breed">{{ pet.breed }}</p>
-        <div class="pet-meta">
-          <ion-icon name="location-outline"></ion-icon>
-          <span>{{ pet.distance }} away</span>
-        </div>
-      </div>
-      <div class="pet-age-sex">
-        <span class="age">{{ pet.age }}</span>
-        <ion-icon [name]="pet.gender === 'Male' ? 'male' : 'female'"></ion-icon>
-      </div>
-    </div>
-
-    <!-- Gallery Thumbnails -->
-    <div class="pet-gallery-section">
-      <div class="pet-thumb-list">
-        <img *ngFor="let img of pet.gallery; let i = index"
-             [src]="img"
-             [class.active-thumb]="i === selectedImage"
-             (click)="selectedImage = i" />
-      </div>
-      <div class="pet-main-image">
-        <img [src]="pet.gallery[selectedImage]" />
-      </div>
-    </div>
-
-    <!-- About Section -->
-    <div class="about-section">
-      <h3>About</h3>
-      <p>{{ pet.about }}</p>
+  <!-- Photos -->
+  <div class="photo-hero" *ngIf="photoList().length; else noPhoto">
+    <img [src]="photoList()[0]" [alt]="pet?.petName" class="hero-img" />
+    <div class="thumb-row" *ngIf="photoList().length > 1">
+      <img class="thumb" *ngFor="let p of photoList().slice(1)" [src]="p" [alt]="pet?.petName" />
     </div>
   </div>
+  <ng-template #noPhoto>
+    <div class="placeholder-photo">No photo available</div>
+  </ng-template>
 
-  <!-- Adopt Button -->
-  <ion-footer>
-    <ion-toolbar>
-      <ion-button expand="block" color="danger" class="adopt-btn">
-        <ion-icon name="paw" slot="start"></ion-icon>
-        Adopt
-      </ion-button>
-    </ion-toolbar>
-  </ion-footer>
+  <!-- Quick Info -->
+  <ion-card>
+    <ion-card-content>
+      <h2 class="pet-title">{{ pet?.petName }}</h2>
+      <div class="meta">
+        <ion-badge color="primary" *ngIf="pet?.species">{{ pet?.species | titlecase }}</ion-badge>
+        <ion-badge color="tertiary" *ngIf="pet?.gender">{{ pet?.gender }}</ion-badge>
+        <ion-badge color="medium" *ngIf="pet?.age !== undefined">{{ pet?.age }} yrs</ion-badge>
+        <ion-badge [color]="pet?.vaccinated ? 'success' : 'warning'">
+          {{ pet?.vaccinated ? 'Vaccinated' : 'Not Vaccinated' }}
+        </ion-badge>
+      </div>
+
+      <div class="loc" *ngIf="pet?.location">
+        <ion-icon name="location-outline"></ion-icon>
+        {{ pet?.location }}
+        <ion-button size="small" fill="clear" (click)="openInMaps()">
+          Open in Maps
+        </ion-button>
+      </div>
+
+      <div class="owner" *ngIf="pet?.ownerName || pet?.ownerPhone">
+        <ion-icon name="person-outline"></ion-icon>
+        <span *ngIf="pet?.ownerName">{{ pet?.ownerName }}</span>
+        <span *ngIf="pet?.ownerPhone"> • {{ pet?.ownerPhone }}</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Actions -->
+  <div class="action-row">
+    <ion-button fill="outline" (click)="toggleFavorite()">
+      <ion-icon [name]="pet?.favorite ? 'heart' : 'heart-outline'" slot="start" color="danger"></ion-icon>
+      {{ pet?.favorite ? 'Saved' : 'Save' }}
+    </ion-button>
+
+    <ion-button (click)="callOwner()" [disabled]="!pet?.ownerPhone">
+      <ion-icon name="call-outline" slot="start"></ion-icon>
+      Call
+    </ion-button>
+
+    <ion-button color="success" (click)="whatsappOwner()" [disabled]="!pet?.ownerPhone">
+      <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+      WhatsApp
+    </ion-button>
+
+    <ion-button color="medium" (click)="sharePet()">
+      <ion-icon name="share-social-outline" slot="start"></ion-icon>
+      Share
+    </ion-button>
+
+    <ion-button color="warning" fill="outline" (click)="markAdopted()">
+      <ion-icon name="checkmark-done-outline" slot="start"></ion-icon>
+      Mark Adopted
+    </ion-button>
+  </div>
+
 </ion-content>
+
+<ng-template #loadingTpl>
+  <ion-content class="ion-padding">
+    <ion-skeleton-text animated style="width: 60%; height: 24px"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 100%; height: 180px; border-radius: 12px"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 90%; height: 16px"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 80%; height: 16px"></ion-skeleton-text>
+  </ion-content>
+</ng-template>

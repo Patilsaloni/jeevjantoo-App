@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar class="premium-toolbar">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -75,5 +75,61 @@
     </ion-card>
   </div>
 
+  <p *ngIf="!loading && !abc" class="no-data">Record not found.</p>
+</ion-content> -->
+
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>ABC Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-abc-details">
+  <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <div *ngIf="!loading && abc">
+    <ion-card class="abc-card">
+      <div class="card-accent-bg"></div>
+      <ion-card-header>
+        <ion-card-title>{{ abc.name }}</ion-card-title>
+        <ion-card-subtitle>{{ abc.type }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content class="abc-info">
+        <p><strong>Location:</strong> {{ abc.city }}, {{ abc.state }}, {{ abc.pincode }}</p>
+        <p><strong>Person In-Charge:</strong> {{ abc.personIncharge }}</p>
+        <p><strong>Contact:</strong> {{ abc.contactNumber }}</p>
+        <p *ngIf="abc.remarks"><strong>Remarks:</strong> {{ abc.remarks }}</p>
+      </ion-card-content>
+      <ion-card-footer>
+        <div class="actions-row">
+          <button class="icon-btn call-btn" (click)="callPerson()">
+            <ion-icon name="call-outline"></ion-icon>
+          </button>
+          <button class="icon-btn whatsapp-btn" (click)="whatsappPerson()">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+          </button>
+          <button class="icon-btn map-btn" (click)="openMap()">
+            <ion-icon name="location-outline"></ion-icon>
+          </button>
+          <button class="icon-btn save-btn" (click)="saveRecord()">
+            <ion-icon name="bookmark-outline"></ion-icon>
+          </button>
+          <button class="icon-btn share-btn" (click)="shareRecord()">
+            <ion-icon name="share-social-outline"></ion-icon>
+          </button>
+          <button class="icon-btn report-btn" (click)="report()">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+          </button>
+        </div>
+      </ion-card-footer>
+    </ion-card>
+  </div>
   <p *ngIf="!loading && !abc" class="no-data">Record not found.</p>
 </ion-content>

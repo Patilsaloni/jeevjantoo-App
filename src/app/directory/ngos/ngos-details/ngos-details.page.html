@@ -1,48 +1,68 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Ngos Details</ion-title>
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      <ion-button (click)="goBack()">
+        <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-title>NGO Details</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="premium-ngo-details">
+<ion-content [fullscreen]="true" class="premium-ngo-details">
 
   <!-- Loading Spinner -->
-  <div *ngIf="loading" class="spinner-center">
+  <div *ngIf="loading" class="spinner-overlay">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
 
   <!-- NGO Card -->
-  <ion-card *ngIf="!loading && ngo" class="ngo-card">
+  <div *ngIf="!loading && ngo">
 
-    <!-- Header -->
-    <ion-card-header>
-      <ion-card-title>{{ ngo.name }}</ion-card-title>
-      <ion-card-subtitle>
-        {{ ngo.location?.city }}, {{ ngo.location?.area }}
-      </ion-card-subtitle>
-    </ion-card-header>
+    <ion-card class="ngo-card">
+      <div class="card-accent-bg"></div>
+      <ion-card-header>
+        <ion-card-title>{{ ngo.name }}</ion-card-title>
+        <ion-card-subtitle>{{ ngo.location?.city }}{{ ngo.location?.area ? ', ' + ngo.location?.area : ''
+          }}</ion-card-subtitle>
+      </ion-card-header>
 
-    <!-- Info Section -->
-    <div class="ngo-info">
-      <p *ngIf="ngo.remark"><strong>About:</strong> {{ ngo.remark }}</p>
-      <p *ngIf="ngo.contact"><strong>Contact:</strong> {{ ngo.contact }}</p>
-      <p *ngIf="ngo.email"><strong>Email:</strong> {{ ngo.email }}</p>
-      <p *ngIf="ngo.website"><strong>Website:</strong> {{ ngo.website }}</p>
-      <p *ngIf="ngo.location?.address">
-        <strong>Address:</strong> {{ ngo.location.address }}
-      </p>
-    </div>
+      <!-- Info Section -->
+      <ion-card-content class="ngo-info">
+        <p *ngIf="ngo.remark"><strong>About:</strong> {{ ngo.remark }}</p>
+        <p *ngIf="ngo.contact"><strong>Contact:</strong> {{ ngo.contact }}</p>
+        <p *ngIf="ngo.email"><strong>Email:</strong> {{ ngo.email }}</p>
+        <p *ngIf="ngo.website"><strong>Website:</strong> {{ ngo.website }}</p>
+        <p *ngIf="ngo.location?.address">
+          <strong>Address:</strong> {{ ngo.location.address }}
+        </p>
+      </ion-card-content>
 
-    <!-- Footer Buttons -->
-    <div class="card-footer">
+      <!-- Footer Buttons -->
+
+      <ion-card-footer>
+        <div class="actions-row">
+          <button class="icon-btn call-btn" (click)="callNGO()">
+            <ion-icon name="call-outline"></ion-icon>
+          </button>
+          <button class="icon-btn whatsapp-btn" (click)="openWhatsApp()">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+          </button>
+          <button class="icon-btn map-btn" (click)="openMap()">
+            <ion-icon name="location-outline"></ion-icon>
+          </button>
+          <button class="icon-btn save-btn" (click)="saveNGO()">
+            <ion-icon name="bookmark-outline"></ion-icon>
+          </button>
+          <button class="icon-btn share-btn" (click)="shareNGO()">
+            <ion-icon name="share-social-outline"></ion-icon>
+          </button>
+          <button class="icon-btn report-btn" (click)="reportNGO()">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+          </button>
+        </div>
+      </ion-card-footer>
+      <!-- <div class="card-footer">
       <ion-grid>
         <ion-row>
           <ion-col size="6">
@@ -77,10 +97,10 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-    </div>
+    </div> -->
 
-  </ion-card>
-
+    </ion-card>
+  </div>
   <!-- No Data -->
   <div *ngIf="!loading && !ngo" class="no-data">
     NGO details not available.

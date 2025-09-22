@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
@@ -32,8 +32,7 @@
         <p *ngIf="clinic.remarks"><strong>Remarks:</strong> {{ clinic.remarks }}</p>
       </ion-card-content>
 
-      <!-- Footer with all actions -->
-     <!-- Footer with all actions in 3 rows -->
+     
 <ion-card-footer>
         <ion-grid>
           <ion-row>
@@ -84,4 +83,61 @@
 
   <p *ngIf="!loading && !clinic" class="no-data">Clinic not found.</p>
 
+</ion-content> -->
+
+
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+       <ion-button (click)="goBack()">
+        <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Clinic Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="premium-clinic-details">
+  <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <div *ngIf="!loading && clinic">
+    <ion-card class="clinic-card">
+      <div class="card-accent-bg"></div>
+      <ion-card-header>
+        <ion-card-title>{{ clinic.name }}</ion-card-title>
+        <ion-card-subtitle>{{ clinic.type }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content class="clinic-info">
+        <p><strong>Address:</strong> {{ clinic.area }}, {{ clinic.city }}, {{ clinic.state }} - {{ clinic.pincode }}</p>
+        <p><strong>Contact:</strong> {{ clinic.contact }}</p>
+        <p><strong>Timings:</strong> {{ formatTiming(clinic.timeFrom, clinic.timeTo) }}</p>
+        <p *ngIf="clinic.remarks"><strong>Remarks:</strong> {{ clinic.remarks }}</p>
+      </ion-card-content>
+      <ion-card-footer>
+        <div class="actions-row">
+          <button class="icon-btn call-btn" (click)="callClinic()">
+            <ion-icon name="call-outline"></ion-icon>
+          </button>
+          <button class="icon-btn whatsapp-btn" (click)="openWhatsApp()">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+          </button>
+          <button class="icon-btn map-btn" (click)="openMap()">
+            <ion-icon name="location-outline"></ion-icon>
+          </button>
+          <button class="icon-btn save-btn" (click)="saveClinic()">
+            <ion-icon name="bookmark-outline"></ion-icon>
+          </button>
+          <button class="icon-btn share-btn" (click)="shareClinic()">
+            <ion-icon name="share-social-outline"></ion-icon>
+          </button>
+          <button class="icon-btn report-btn" (click)="reportClinic()">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+          </button>
+        </div>
+      </ion-card-footer>
+    </ion-card>
+  </div>
+  <p *ngIf="!loading && !clinic" class="no-data">Clinic not found.</p>
 </ion-content>

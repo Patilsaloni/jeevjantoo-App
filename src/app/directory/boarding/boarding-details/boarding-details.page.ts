@@ -1,7 +1,7 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule, Platform } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AlertController, ToastController } from '@ionic/angular';
 
@@ -27,7 +27,6 @@ interface Boarding {
   standalone: true,
   imports: [IonicModule, CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  
 })
 export class BoardingDetailsPage implements OnInit {
   boarding: Boarding | null = null;
@@ -38,8 +37,9 @@ export class BoardingDetailsPage implements OnInit {
     private router: Router,
     private firebaseService: FirebaseService,
     private platform: Platform,
-     private alertCtrl: AlertController,
-  private toastCtrl: ToastController
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -48,11 +48,17 @@ export class BoardingDetailsPage implements OnInit {
     else this.loading = false;
   }
 
+  goBack() {
+    this.location.back();
+  }
+
   async loadBoarding(id: string) {
     this.loading = true;
     try {
-      const data: any[] = await this.firebaseService.getInformation('boardings');
-      const b = data.find(item => item.id === id);
+      const data: any[] = await this.firebaseService.getInformation(
+        'boardings'
+      );
+      const b = data.find((item) => item.id === id);
 
       if (b) {
         this.boarding = {
@@ -67,7 +73,7 @@ export class BoardingDetailsPage implements OnInit {
           timeTo: b.timeTo || 'N/A',
           lat: b.lat,
           lng: b.lng,
-          remarks: b.remarks || ''
+          remarks: b.remarks || '',
         };
       } else {
         this.boarding = null;
@@ -86,7 +92,11 @@ export class BoardingDetailsPage implements OnInit {
       return;
     }
 
-    if (this.platform.is('hybrid') || this.platform.is('ios') || this.platform.is('android')) {
+    if (
+      this.platform.is('hybrid') ||
+      this.platform.is('ios') ||
+      this.platform.is('android')
+    ) {
       window.open(`tel:${contact}`, '_system');
     } else {
       alert(`Call feature only available on mobile. Number: ${contact}`);
@@ -98,7 +108,10 @@ export class BoardingDetailsPage implements OnInit {
       alert('Location not available');
       return;
     }
-    window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
+      '_blank'
+    );
   }
 
   saveBoarding(boarding: Boarding) {
@@ -108,26 +121,30 @@ export class BoardingDetailsPage implements OnInit {
 
   async reportIssue() {
     const alert = await this.alertCtrl.create({
-      header: 'Report Clinic',
+      header: 'Report Boarding',
       inputs: [
-        { name: 'reason', type: 'text', placeholder: 'Enter reason for reporting' }
+        {
+          name: 'reason',
+          type: 'text',
+          placeholder: 'Enter reason for reporting',
+        },
       ],
       buttons: [
         { text: 'Cancel', role: 'cancel' },
-        { 
-          text: 'Submit', 
+        {
+          text: 'Submit',
           handler: async (data) => {
             console.log('Report submitted:', data.reason);
             const toast = await this.toastCtrl.create({
               message: 'Report submitted successfully!',
               duration: 1500,
               color: 'warning',
-              position: 'bottom'
+              position: 'bottom',
             });
             toast.present();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
     await alert.present();
   }

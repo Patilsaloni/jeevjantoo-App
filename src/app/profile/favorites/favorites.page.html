@@ -1,80 +1,122 @@
+<!-- favorites.page.html -->
 <ion-header>
   <ion-toolbar>
     <ion-title>Favorites</ion-title>
   </ion-toolbar>
 
-  <!-- 🔎 Search + Filters -->
   <ion-toolbar>
-    <ion-searchbar
-      [(ngModel)]="searchQuery"
-      placeholder="Search favorites"
-      (ionInput)="applyFilters()">
-    </ion-searchbar>
+    <!-- Row 1: Search -->
+    <div class="toolbar-row">
+      <ion-searchbar
+        [(ngModel)]="searchQuery"
+        placeholder="Search by name, tag, location"
+        (ionInput)="applyFilters()">
+      </ion-searchbar>
+    </div>
 
-    <ion-segment [(ngModel)]="selectedFilter" (ionChange)="applyFilters()" value="all">
-      <ion-segment-button value="all">All</ion-segment-button>
-      <ion-segment-button value="clinic">Clinic</ion-segment-button>
-      <ion-segment-button value="ngo">NGO</ion-segment-button>
-      <ion-segment-button value="event">Event</ion-segment-button>
-    </ion-segment>
+    <!-- Row 2: Group / Type / Sort -->
+    <div class="toolbar-row">
+      <ion-segment [(ngModel)]="selectedGroup" (ionChange)="applyFilters()" value="all">
+        <ion-segment-button value="all">All</ion-segment-button>
+        <ion-segment-button value="directories">Directories</ion-segment-button>
+        <ion-segment-button value="adoption">Adoption</ion-segment-button>
+      </ion-segment>
+
+      <ion-segment [(ngModel)]="selectedType" (ionChange)="applyFilters()" value="any">
+        <ion-segment-button value="any">Any</ion-segment-button>
+        <ion-segment-button value="clinic">Clinic</ion-segment-button>
+        <ion-segment-button value="ngo">NGO</ion-segment-button>
+        <ion-segment-button value="event">Event</ion-segment-button>
+      </ion-segment>
+
+      <ion-select interface="popover" label="Sort" [(ngModel)]="sortBy" (ionChange)="sortNow()">
+        <ion-select-option value="name">Name</ion-select-option>
+        <ion-select-option value="date">Date Added</ion-select-option>
+        <ion-select-option value="distance" [disabled]="!hasLocation">Distance</ion-select-option>
+      </ion-select>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <!-- 🟢 Toggle for List / Map -->
+  <!-- Pull to refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingText="Pull to refresh"></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- View mode toggle + location -->
   <div class="toggle-container ion-padding">
-    <ion-segment [(ngModel)]="viewMode" value="list">
+    <ion-segment [(ngModel)]="viewMode" (ionChange)="onViewModeChange()" value="list">
       <ion-segment-button value="list">List</ion-segment-button>
-      <ion-segment-button value="map">Map</ion-segment-button>
+      <ion-segment-button value="map" [disabled]="filtered.length === 0">Map</ion-segment-button>
     </ion-segment>
+
+    <ion-button size="small" fill="outline" (click)="tryGetLocation()" [disabled]="isLocLoading">
+      <ion-icon name="navigate-outline" slot="start"></ion-icon>
+      {{ hasLocation ? 'Update Location' : 'Use My Location' }}
+    </ion-button>
   </div>
 
-  <!-- 🟢 List View -->
+  <!-- ===== List View ===== -->
   <ng-container *ngIf="viewMode === 'list'">
-    <ion-card *ngFor="let pet of filteredFavorites">
-      <img [src]="pet.image || 'assets/default-pet.jpg'" alt="pet image" />
+    <ion-list *ngIf="filtered.length > 0">
+      <ion-item-sliding *ngFor="let item of filtered">
+        <ion-item (click)="openDetails(item)">
+          <ion-avatar slot="start" class="thumb">
+            <ion-img [src]="item.image || 'assets/default-thumb.png'" loading="lazy"></ion-img>
+          </ion-avatar>
 
-      <ion-card-header>
-        <ion-card-title>{{ pet.petName }}</ion-card-title>
-        <ion-card-subtitle>{{ pet.category | titlecase }}</ion-card-subtitle>
-      </ion-card-header>
+          <ion-label>
+            <div class="row1">
+              <h2>{{ item.name }}</h2>
+              <ion-badge [color]="badgeColor(item)">{{ typeLabel(item) }}</ion-badge>
+              <ion-badge *ngIf="item.status" [color]="statusColor(item.status)">{{ item.status | titlecase }}</ion-badge>
+            </div>
 
-      <ion-card-content>
-        <p><b>Address:</b> {{ pet.location || 'Not available' }}</p>
-        <p><b>Timings:</b> {{ pet.timings || 'Not available' }}</p>
-        <p><b>Remarks:</b> {{ pet.remarks || '-' }}</p>
+            <p class="loc" *ngIf="item.city || item.area">
+              <ion-icon name="location-outline"></ion-icon>
+              {{ item.city || '' }}<span *ngIf="item.city && item.area">, </span>{{ item.area || '' }}
+              <span *ngIf="hasLocation && item.distanceKm !== undefined"> • {{ item.distanceKm | number:'1.1-1' }} km</span>
+            </p>
 
-        <!-- 🔘 Action buttons -->
-        <ion-buttons>
-          <ion-button color="primary" (click)="call(pet.contact)" *ngIf="pet.contact">
-            <ion-icon slot="icon-only" name="call"></ion-icon>
-          </ion-button>
+            <p class="tags" *ngIf="(item.tags || []).length">
+              <ion-chip *ngFor="let t of item.tags" size="small" color="medium">
+                <ion-label>{{ t }}</ion-label>
+              </ion-chip>
+            </p>
+          </ion-label>
+        </ion-item>
 
-          <ion-button color="success" (click)="whatsapp(pet.contact)" *ngIf="pet.contact">
-            <ion-icon slot="icon-only" name="logo-whatsapp"></ion-icon>
-          </ion-button>
+        <!-- Slide actions -->
+        <ion-item-options side="end">
+          <ion-item-option color="primary" (click)="call(item)" [disabled]="!item.contact">
+            <ion-icon name="call" slot="icon-only"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="success" (click)="whatsapp(item)" [disabled]="!item.contact">
+            <ion-icon name="logo-whatsapp" slot="icon-only"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="tertiary" (click)="openInMaps(item)">
+            <ion-icon name="map-outline" slot="icon-only"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="medium" (click)="share(item)">
+            <ion-icon name="share-social" slot="icon-only"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="removeFavorite(item)">
+            <ion-icon name="star" slot="icon-only"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
 
-          <ion-button color="medium" (click)="share(pet)">
-            <ion-icon slot="icon-only" name="share-social"></ion-icon>
-          </ion-button>
-
-          <!-- 🔴 Updated remove button -->
-          <ion-button color="danger" (click)="removeFavorite(pet)">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-card-content>
-    </ion-card>
+    <!-- Empty State -->
+    <div *ngIf="filtered.length === 0" class="empty-state ion-text-center ion-padding">
+      <ion-icon name="heart-outline" size="large" color="medium"></ion-icon>
+      <p>You haven’t saved any favorites yet. Browse and tap ⭐ to add.</p>
+    </div>
   </ng-container>
 
-  <!-- 🟢 Map View -->
+  <!-- ===== Map View ===== -->
   <ng-container *ngIf="viewMode === 'map'">
-    <div id="map" style="height: 100vh; width: 100%;"></div>
+    <div id="fav-map" class="map"></div>
   </ng-container>
-
-  <!-- 🟢 Empty State -->
-  <div *ngIf="filteredFavorites.length === 0" class="empty-state ion-text-center ion-padding">
-    <ion-icon name="heart-outline" size="large" color="medium"></ion-icon>
-    <p>No favorites saved yet. Start adding to favorites!</p>
-  </div>
 </ion-content>

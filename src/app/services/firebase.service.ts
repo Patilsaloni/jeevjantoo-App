@@ -139,6 +139,19 @@ export class FirebaseService {
   }
 
   // ---------------- Favorites ----------------
+  private favoriteCol(collectionName: string) {
+    return `${collectionName}_favorites`;
+  }
+
+  private favoriteDocId(userUid: string, petId: string) {
+    return `${userUid}_${petId}`;
+  }
+
+  /**
+   * Save/remove favorite for current user.
+   * - Accepts either pet id (string) or full pet object
+   * - Writes minimal safe fields needed for list rendering
+   */
   async setFavorite(collectionName: string, pet: any | string, value: boolean) {
     const user = this.getCurrentUser();
     if (!user) throw new Error('User must be signed in to manage favorites.');
@@ -156,11 +169,24 @@ export class FirebaseService {
       petData = pet;
     }
 
-    const favRef = doc(this.db, `${collectionName}_favorites`, `${user.uid}_${petId}`);
+    const favRef = doc(this.db, this.favoriteCol(collectionName), this.favoriteDocId(user.uid, petId));
 
     if (value) {
+      // only persist necessary denormalized fields to render favorites quickly
       await setDoc(favRef, {
-        ...petData,
+        id: petId,
+        petName: petData.petName ?? '',
+        species: petData.species ?? petData.category ?? '',
+        category: petData.category ?? petData.species ?? '',
+        photos: Array.isArray(petData.photos) ? petData.photos : [],
+        image: petData.image ?? null,
+        breed: petData.breed ?? '',
+        age: petData.age ?? null,
+        gender: petData.gender ?? '',
+        contact: petData.contact ?? '',
+        location: petData.location ?? '',
+        remarks: petData.remarks ?? '',
+        timings: petData.timings ?? '',
         favorite: true,
         userId: user.uid,
         updatedAt: serverTimestamp()
@@ -173,7 +199,7 @@ export class FirebaseService {
   async isFavorite(collectionName: string, petId: string): Promise<boolean> {
     const user = this.getCurrentUser();
     if (!user) return false;
-    const favRef = doc(this.db, `${collectionName}_favorites`, `${user.uid}_${petId}`);
+    const favRef = doc(this.db, this.favoriteCol(collectionName), this.favoriteDocId(user.uid, petId));
     const snap = await getDoc(favRef);
     return snap.exists();
   }
@@ -184,19 +210,37 @@ export class FirebaseService {
     return !isFav;
   }
 
+  /**
+   * Fast helper to pre-mark heart icons on listing pages.
+   * Returns Set of petIds that are favorited by current user.
+   */
+  async getFavoriteIds(collectionName: string): Promise<Set<string>> {
+    const user = this.getCurrentUser();
+    if (!user) return new Set();
+
+    const favSnapshot = await getDocs(
+      query(collection(this.db, this.favoriteCol(collectionName)), where('userId', '==', user.uid))
+    );
+
+    const ids = favSnapshot.docs.map(d => d.id.split('_')[1]);
+    return new Set(ids);
+  }
+
+  /**
+   * Get denormalized favorite pet cards to show in Favorites screen.
+   */
   async getFavoritePets(collectionName: string): Promise<any[]> {
     const user = this.getCurrentUser();
     if (!user) return [];
 
     const favSnapshot = await getDocs(
-      query(collection(this.db, `${collectionName}_favorites`), where('userId', '==', user.uid))
+      query(collection(this.db, this.favoriteCol(collectionName)), where('userId', '==', user.uid))
     );
 
     return favSnapshot.docs.map(d => {
-      const petId = d.id.split('_')[1]; // original pet id
+      const petId = d.id.split('_')[1];
       const data: any = d.data();
 
-      // Prefer first photo if available; fallback to legacy 'image' or default
       const image =
         Array.isArray(data.photos) && data.photos.length > 0
           ? data.photos[0]
@@ -209,7 +253,8 @@ export class FirebaseService {
         age: data.age ?? 0,
         gender: data.gender || '',
         image,
-        category: data.category || 'Unknown',
+        // normalize category/species for UI
+        category: data.category || data.species || 'Unknown',
         favorite: true,
         contact: data.contact || '',
         location: data.location || 'Not available',

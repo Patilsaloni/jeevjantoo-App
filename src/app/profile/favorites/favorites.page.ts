@@ -17,8 +17,8 @@ export class FavoritesPage implements OnInit {
   filteredFavorites: Pet[] = [];
 
   searchQuery: string = '';
-  selectedFilter: string = 'all';
-  viewMode: string = 'list';
+  selectedFilter: string = 'all'; // all | clinic | ngo | event (or species/category)
+  viewMode: string = 'list';      // list | map
 
   constructor(private firebaseService: FirebaseService) {}
 
@@ -26,39 +26,48 @@ export class FavoritesPage implements OnInit {
     await this.loadFavorites();
   }
 
+  // (optional) refresh whenever page re-enters
+  async ionViewWillEnter() {
+    await this.loadFavorites();
+  }
+
   async loadFavorites() {
     try {
-      // Get favorite pets from Firebase (full pet objects)
-      const favPets: Pet[] = await this.firebaseService.getFavoritePets('pet-adoption');
+      const favPets: any[] = await this.firebaseService.getFavoritePets('pet-adoption');
 
-      // Map favorite pets safely
-      this.favoritePets = favPets.map(p => ({
+      // Normalize + safe mapping
+      this.favoritePets = favPets.map((p: any) => ({
         id: p.id,
         petName: p.petName || 'Unknown',
         breed: p.breed || 'Unknown',
-        age: p.age || 0,
+        age: typeof p.age === 'number' ? p.age : 0,
         gender: p.gender || '',
         image: p.image || 'assets/default-pet.jpg',
-        category: p.category || 'Unknown',
+        // normalize category/species naming for UI filters
+        category: (p.category || p.species || 'unknown').toString().toLowerCase(),
         favorite: true,
-        contact: p.contact || '',       
+        contact: p.contact || '',
         location: p.location || 'Not available',
         remarks: p.remarks || '',
         timings: p.timings || 'Not available',
-      }));
+      })) as Pet[];
 
       this.applyFilters();
     } catch (err) {
       console.error('Error loading favorites:', err);
+      this.favoritePets = [];
+      this.filteredFavorites = [];
     }
   }
 
   applyFilters() {
-    this.filteredFavorites = this.favoritePets.filter(pet => {
-      const matchesSearch =
-        pet.petName.toLowerCase().includes(this.searchQuery.toLowerCase());
-      const matchesFilter =
-        this.selectedFilter === 'all' || pet.category === this.selectedFilter;
+    const q = this.searchQuery.trim().toLowerCase();
+    const selected = (this.selectedFilter || 'all').toLowerCase();
+
+    this.filteredFavorites = this.favoritePets.filter((pet) => {
+      const hay = `${pet.petName ?? ''} ${pet.breed ?? ''} ${pet.location ?? ''} ${pet.category ?? ''}`.toLowerCase();
+      const matchesSearch = q === '' || hay.includes(q);
+      const matchesFilter = selected === 'all' || (pet.category ?? '') === selected;
       return matchesSearch && matchesFilter;
     });
   }
@@ -72,26 +81,30 @@ export class FavoritesPage implements OnInit {
   }
 
   share(pet: Pet) {
-    const text = `Check out this ${pet.category}: ${pet.petName}`;
-    if (navigator.share) {
-      navigator.share({ title: pet.petName, text, url: window.location.href });
+    const text = `Check out this ${pet.category || 'pet'}: ${pet.petName}`;
+    if ((navigator as any).share) {
+      (navigator as any).share({ title: pet.petName, text, url: window.location.href });
     } else {
       alert('Sharing not supported');
     }
   }
 
   async removeFavorite(pet: Pet) {
-    if (!pet) return;
+    if (!pet?.id) return;
 
-    // Update local array
-    this.favoritePets = this.favoritePets.filter(p => p.id !== pet.id);
+    // optimistic UI
+    const prev = [...this.favoritePets];
+    this.favoritePets = this.favoritePets.filter((p) => p.id !== pet.id);
     this.applyFilters();
 
     try {
-      // Pass full pet object to Firebase
-      await this.firebaseService.setFavorite('pet-adoption', pet, false);
+      // pass ONLY the id (consistent with service)
+      await this.firebaseService.setFavorite('pet-adoption', pet.id, false);
     } catch (err) {
       console.error('Error removing favorite:', err);
+      // rollback on failure
+      this.favoritePets = prev;
+      this.applyFilters();
     }
   }
 }

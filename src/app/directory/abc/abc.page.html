@@ -1,36 +1,49 @@
 <ion-header>
   <ion-toolbar class="premium-toolbar">
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-button href="/tabs/directory">
+       <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>ABC</ion-title>
-    <ion-buttons slot="end">
+    <!-- <ion-buttons slot="end">
       <ion-button>
         <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
       </ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="premium-abc">
   <!-- Loader -->
-<div *ngIf="loading" class="spinner-overlay">
-  <ion-spinner name="crescent"></ion-spinner>
-</div>
+  <div *ngIf="loading" class="spinner-overlay">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
 
 
 
 
   <!-- Search Bar -->
-  <ion-searchbar
+  <!-- <ion-searchbar
     *ngIf="!loading"
     placeholder="Search by location, type, or person"
     (ionInput)="filterAbcs($event)"
     animated>
-  </ion-searchbar>
+  </ion-searchbar> -->
+
+
+  <!-- Search and Filter Bar -->
+  <div class="nav-container">
+    <ion-searchbar class="abc-search" [(ngModel)]="searchTerm" (ionInput)="filterAbcs($event)"
+      placeholder="Search by name..."></ion-searchbar>
+    <ion-button class="filter-button" (click)="openFilterModal()">
+      <ion-icon name="filter-outline"></ion-icon>
+    </ion-button>
+  </div>
+
 
   <!-- Filters -->
-  <div class="filters" *ngIf="!loading">
+  <!-- <div class="filters" *ngIf="!loading">
     <ion-item>
       <ion-select placeholder="City" [(ngModel)]="cityFilter" (ionChange)="filterBySelect()">
         <ion-select-option *ngFor="let city of cities" [value]="city">{{ city }}</ion-select-option>
@@ -42,15 +55,16 @@
         <ion-select-option *ngFor="let type of types" [value]="type">{{ type }}</ion-select-option>
       </ion-select>
     </ion-item>
-  </div>
+  </div> -->
 
   <!-- No Data -->
-  <p *ngIf="!loading && filteredAbcs.length === 0" class="no-data">
-    No records available
-  </p>
+  <div *ngIf="!loading && filteredAbcs.length === 0" class="no-data">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>No records available</p>
+  </div>
 
   <!-- ABC Cards -->
-   
+
   <div class="abc-cards">
     <div *ngFor="let abc of filteredAbcs" class="abc-card" [ngClass]="abc.variant">
       <div class="abc-header">

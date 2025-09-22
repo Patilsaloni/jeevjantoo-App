@@ -1,0 +1,81 @@
+
+:host {
+  --ion-background-color: transparent; /* Ensure backdrop is visible */
+}
+
+/* Style the modal container as a centered pop-up */
+ion-modal.filter-popup-modal {
+  --width: 90%;
+  --max-width: 300px; /* Adjusted for a smaller dialog-like size, per Ionic examples */
+  --height: auto;
+  --max-height: 80vh;
+  --border-radius: 8px; /* Rounded corners */
+  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4); /* Shadow for depth */
+  --background: var(--ion-background-color, #fff);
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.32); /* Semi-transparent backdrop */
+
+  /* Center the modal */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Backdrop styling */
+ion-modal.filter-popup-modal::part(backdrop) {
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
+  backdrop-filter: blur(2px); /* Optional blur effect */
+}
+
+/* Content styling */
+ion-content {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  --overflow: auto; /* Allow scrolling if content overflows */
+}
+
+/* Header */
+ion-toolbar {
+  --border-width: 0;
+  --background: var(--ion-background-color, #fff);
+}
+
+ion-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Buttons */
+ion-button {
+  --border-radius: 8px;
+  margin: 8px;
+}
+
+/* Form fields */
+ion-item {
+  margin-top: 16px;
+  --padding-start: 0;
+  --border-color: transparent;
+}
+
+ion-label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--ion-text-color, #222);
+}
+
+ion-select {
+  --padding-start: 0;
+  width: 100%;
+}
+
+ion-chip {
+  margin: 8px;
+  cursor: pointer;
+}
+
+/* Ensure content fits within modal */
+ion-content::part(scroll) {
+  padding-bottom: 16px;
+}

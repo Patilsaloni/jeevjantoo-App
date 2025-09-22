@@ -1,36 +1,49 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+     <ion-button href="/tabs/directory">
+       <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
 
     <ion-title>Events</ion-title>
 
-    <ion-buttons slot="end">
+    <!-- <ion-buttons slot="end">
       <ion-button>
         <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
       </ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="premium-events">
-
-  <!-- Loader (only visible while loading) -->
-  <div *ngIf="loading" class="spinner-center">
+  <!-- Loader -->
+  <div *ngIf="loading" class="spinner-overlay">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
 
+  <div class="nav-container">
+    <ion-searchbar class="card-search" placeholder="Search by name, area, or governing body"
+      (ionInput)="filterEvents($event)" [debounce]="300"></ion-searchbar>
+    <ion-button class="filter-button" (click)="openFilterModal()">
+      <ion-icon name="filter-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+
   <!-- Main content (hidden while loading) -->
   <ng-container *ngIf="!loading">
-    <ion-toolbar>
+    <!-- <ion-toolbar>
       <ion-searchbar
         placeholder="Search by name or place"
         (ionInput)="filterEvents($event)">
       </ion-searchbar>
-    </ion-toolbar>
+    </ion-toolbar> -->
 
-    <p *ngIf="filteredEvents.length === 0" class="no-data">No events available</p>
+    <div *ngIf="filteredEvents.length === 0" class="no-data">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <p>No events available</p>
+    </div>
 
     <!-- <div class="event-cards" *ngIf="filteredEvents.length > 0">
       <ion-card *ngFor="let ev of filteredEvents" [style.border-top-color]="ev.color || '#6eb9ff'">
@@ -65,51 +78,49 @@
         </ion-card-footer>
       </ion-card>
     </div> -->
-<div *ngIf="!isMapView" class="event-cards">
-    <div *ngFor="let ev of filteredEvents" class="event-card" [ngClass]="ev.variant">
-      <div class="event-header">
-        <div style="display: flex; align-items: center;">
-          <div class="card-initial">{{ ev.name[0] }}</div>
-          <div>
-            <div class="event-title">{{ ev.name }}</div>
-            <div class="event-subtitle">{{ ev.place || 'N/A' }}</div>
+    <div *ngIf="!isMapView" class="event-cards">
+      <div *ngFor="let ev of filteredEvents" class="event-card" [ngClass]="ev.variant">
+        <div class="event-header">
+          <div style="display: flex; align-items: center;">
+            <div class="card-initial">{{ ev.name[0] }}</div>
+            <div>
+              <div class="event-title">{{ ev.name }}</div>
+              <div class="event-subtitle">{{ ev.area || 'N/A' }}</div>
+            </div>
           </div>
+          <button class="expand-btn" (click)="ev.expanded = !ev.expanded">
+            <ion-icon [name]="ev.expanded ? 'remove' : 'add'"></ion-icon>
+          </button>
         </div>
-        <button class="expand-btn" (click)="ev.expanded = !ev.expanded">
-          <ion-icon [name]="ev.expanded ? 'remove' : 'add'"></ion-icon>
-        </button>
-      </div>
-      <div class="event-accordion" *ngIf="ev.expanded" [ngClass]="ev.variant">
-        <table>
-          <tr>
-            <td>Place</td>
-            <td>{{ ev.area || 'N/A' }}</td>
-          </tr>
-          <tr>
-            <td>Contact</td>
-            <td>{{ ev.contactPerson || 'N/A' }}</td>
-          </tr>
-          <tr>
-            <td>Timing</td>
-            <td>{{ convertTo12HourFormat(ev.timeFrom) }} - {{ convertTo12HourFormat(ev.timeTo) }}</td>
-          </tr>
-        </table>
-        <div class="event-actions-row">
-          <button ion-button class="details-btn" (click)="viewDetails(ev)">DETAILS</button>
-          <button ion-button class="map-btn" (click)="openMap(ev)">MAP</button>
+        <div class="event-accordion" *ngIf="ev.expanded" [ngClass]="ev.variant">
+          <table>
+            <tr>
+              <td>Place</td>
+              <td>{{ ev.area || 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Contact</td>
+              <td>{{ ev.contactPerson || 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Timing</td>
+              <td>{{ convertTo12HourFormat(ev.timeFrom) }} - {{ convertTo12HourFormat(ev.timeTo) }}</td>
+            </tr>
+          </table>
+          <div class="event-actions-row">
+            <button ion-button class="details-btn" (click)="viewDetails(ev)">DETAILS</button>
+            <button ion-button class="map-btn" (click)="openMap(ev)">MAP</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
     <!-- Map View -->
     <div *ngIf="isMapView && filteredEvents.length > 0" class="map-container">
       <google-map [center]="{lat: defaultLat, lng: defaultLng}" [zoom]="12" height="400px" width="100%">
-        <map-marker *ngFor="let ev of filteredEvents"
-          [position]="{lat: ev.lat, lng: ev.lng}"
+        <map-marker *ngFor="let ev of filteredEvents" [position]="{lat: ev.lat, lng: ev.lng}"
           (mapClick)="viewDetails(ev)">
         </map-marker>
       </google-map>
     </div>
   </ng-container>
 </ion-content>
-

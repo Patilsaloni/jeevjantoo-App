@@ -84,10 +84,10 @@
   <div class="adoption-section">
     <div class="heading">
       <h2>Ready for Adoption</h2>
-      <ion-button fill="clear" size="small" class="view-all-btn" (click)="goToAdoptions()">View All</ion-button>
+      <ion-button fill="clear" size="small" class="view-all-btn" href="/tabs/adoption">View All</ion-button>
     </div>
     <ion-slides [options]="carouselOptions" class="carousel-swiper">
-      <ion-slide *ngFor="let pet of featuredPets">
+      <ion-slide *ngFor="let pet of latestAdoptions">
         <ion-card button (click)="goToAdoptionDetail(pet)">
           <ion-card-content>
             <div class="pet-img">

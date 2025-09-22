@@ -7,7 +7,6 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 import { Capacitor } from '@capacitor/core';
 
-
 bootstrapApplication(AppComponent, {
   providers: [
     // Only modules go here
@@ -15,11 +14,11 @@ bootstrapApplication(AppComponent, {
       IonicModule.forRoot({
         scrollAssist: false,
         scrollPadding: false,
-        inputShims: false
+        inputShims: false,
       })
     ),
     // Firebase providers are added directly, NOT inside importProvidersFrom
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideAuth(() => getAuth())
-  ]
+    provideAuth(() => getAuth()),
+  ],
 });

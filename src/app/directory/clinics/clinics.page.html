@@ -107,21 +107,36 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-button href="/tabs/directory">
+       <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>Clinics</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen="true" class="premium-clinics">
-  <div *ngIf="loading" class="spinner-center">
+
+<ion-content [fullscreen]="true" class="premium-abc">
+  <!-- Loader -->
+  <div *ngIf="loading" class="spinner-overlay">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
-  <div *ngIf="!loading && clinics.length === 0" class="no-data">
-    No clinics found
+
+  <div class="nav-container">
+    <ion-searchbar class="card-search" placeholder="Search by name, area, or governing body"
+      (ionInput)="filterClinics($event)" [debounce]="300"></ion-searchbar>
+    <ion-button class="filter-button" (click)="openFilterModal()">
+      <ion-icon name="filter-outline"></ion-icon>
+    </ion-button>
   </div>
+
+  <div *ngIf="!loading && filteredClinics.length === 0" class="no-data">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>No clinics found</p>
+  </div>
+
   <div class="clinic-cards">
-    <div *ngFor="let clinic of clinics" class="clinic-card" [ngClass]="clinic.variant">
+    <div *ngFor="let clinic of filteredClinics" class="clinic-card" [ngClass]="clinic.variant">
       <div class="clinic-header">
         <div>
           <div class="card-initial"> {{ clinic.name[0] }} </div>

@@ -1,28 +1,41 @@
- <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title>Boarding</ion-title>
-      <ion-buttons slot="end">
-        <ion-button>
-          <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+     <ion-button href="/tabs/directory">
+       <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Boarding</ion-title>
+    <!-- <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
 
 <ion-content [fullscreen]="true" class="premium-boarding-spa">
-   <div *ngIf="loading" class="spinner-overlay">
+  <div *ngIf="loading" class="spinner-overlay">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
-  
-  <p *ngIf="!loading && boardingSpas.length === 0" class="no-data">
-    No boarding/spa found
-  </p>
 
-    <div class="spa-cards">
-    <div *ngFor="let spa of boardingSpas" class="spa-card" [ngClass]="spa.variant">
+
+  <div class="nav-container">
+    <ion-searchbar class="card-search" placeholder="Search by name, area, or governing body"
+      (ionInput)="filterBoardings($event)" [debounce]="300"></ion-searchbar>
+    <ion-button class="filter-button" (click)="openFilterModal()">
+      <ion-icon name="filter-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+
+  <div *ngIf="!loading && filteredBoardingSpas.length === 0" class="no-data">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>No boarding/spa found</p>
+  </div>
+
+  <div class="spa-cards">
+    <div *ngFor="let spa of filteredBoardingSpas" class="spa-card" [ngClass]="spa.variant">
       <div class="spa-header">
         <div style="display: flex; align-items: center;">
           <div class="card-initial">{{ spa.name[0] }}</div>

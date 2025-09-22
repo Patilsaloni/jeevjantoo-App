@@ -1,124 +1,3 @@
-// /* Toolbar Gradient */
-// .premium-toolbar {
-//   background: linear-gradient(135deg, #9befe0 0%, #6eb9ff 100%);
-//   color: #000;  /* make default text black */
-
-//   ion-title,
-//   ion-icon,
-//   ion-button {
-//     color: #000 !important;  /* force black */
-//   }
-// }
-
-
-// /* Helpline Page Styling */
-// .premium-helpline {
-//   padding: 1rem;
-
-//   ion-searchbar {
-//     margin-bottom: 1rem;
-//     --border-radius: 15px;
-//     --background: #f0f4f8;
-//     --color: #000; /* black text */
-//   }
-
-//   .filters {
-//     display: flex;
-//     gap: 1rem;
-//     margin-bottom: 1rem;
-
-//     ion-select {
-//       flex: 1;
-//       --border-radius: 12px;
-//       --background: #f0f4f8;
-//       --color: #000; /* black text */
-//     }
-//   }
-
-//   .helpline-cards {
-//     display: grid;
-//     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-//     gap: 1rem;
-//   }
-
-//   .helpline-card {
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: space-between;
-//     background: #ffffff;
-//     border-radius: 20px;
-//     overflow: hidden;
-//     position: relative;
-//     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-//     border-top: 5px solid #6eb9ff; 
-//     transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-//     &:hover {
-//       transform: translateY(-5px);
-//       box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-//     }
-
-//     .card-header-gradient {
-//       background: linear-gradient(135deg, #9befe0 0%, #d4ef9b 100%);
-//       padding: 1rem;
-//       border-bottom: 1px solid #eee;
-
-//       ion-card-title {
-//         font-size: 1.3rem;
-//         font-weight: 700;
-//         color: #fff; /* keep white text in header */
-//       }
-
-//       ion-card-subtitle {
-//         font-size: 1rem;
-//         color: #f0f0f0;
-//       }
-//     }
-
-//     ion-card-content {
-//       padding: 0.8rem 1rem;
-//       color: #000; /* default black text */
-
-//       p {
-//         margin: 0.3rem 0;
-//         font-size: 0.95rem;
-//         color: #000; /* black text */
-
-//         ion-icon {
-//           vertical-align: middle;
-//           margin-right: 0.3rem;
-//           color: #6eb9ff;
-//         }
-//       }
-//     }
-//   }
-
-  
-
-//   .spinner-overlay {
-//   position: fixed;   /* stay on top */
-//   top: 0;
-//   left: 0;
-//   width: 100vw;
-//   height: 100vh;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   background: rgba(255, 255, 255, 0.7); // optional dim background
-//   z-index: 9999;
-// }
-
-
-//   .no-data {
-//     text-align: center;
-//     font-size: 1rem;
-//     color: #000; /* black text */
-//     margin-top: 40px;
-//   }
-// }
-
-
-
 /* Toolbar Gradient */
 .premium-toolbar {
   background: linear-gradient(135deg, #9befe0 0%, #6eb9ff 100%);
@@ -135,31 +14,112 @@
 .premium-helpline {
   padding: 1rem;
 
-  ion-searchbar {
-    margin-bottom: 1rem;
-    --border-radius: 15px;
-    --background: #f0f4f8;
-    --color: #000;
+  // ion-searchbar {
+  //   margin-bottom: 1rem;
+  //   --border-radius: 15px;
+  //   --background: #f0f4f8;
+  //   --color: #000;
+  // }
+
+  // .filters {
+  //   display: flex;
+  //   gap: 1rem;
+  //   margin-bottom: 1rem;
+
+  //   ion-select {
+  //     flex: 1;
+  //     --border-radius: 12px;
+  //     --background: #f0f4f8;
+  //     --color: #000;
+  //   }
+  // }
+
+  /* Search and Filter Bar */
+  .nav-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background-color: var(--ion-background-color, #fff);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  /* No Data */
+  .no-data {
+    text-align: center;
+    margin-top: 40px;
+    color: #888;
+
+    ion-icon {
+      font-size: 40px;
+      color: #ff0000;
+      margin-bottom: 8px;
+    }
+  }
+
+  ion-searchbar.card-search {
+    --background: var(--ion-color-light, #f4f5f8);
+    --border-radius: 12px;
+    --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    --icon-color: var(--ion-color-primary, #3880ff);
+    flex-grow: 1;
+    max-width: none;
+    height: 42px;
+    padding: 0;
+    margin: 0;
+  }
+
+  button.filter-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+
+    ion-icon {
+      font-size: 25px;
+      color: var(--ion-color-primary);
+      transition: color 0.25s ease;
+      margin: 0;
+    }
+
+    &:hover ion-icon {
+      color: var(--ion-color-primary-shade);
+    }
+  }
+
+  /* Responsive adjustments for search/filter */
+  @media (max-width: 600px) {
+    .nav-container {
+      gap: 5px;
+      padding: 8px 0px;
+    }
+
+    ion-searchbar.adoption-search {
+      height: 38px;
+    }
+
+    button.filter-button {
+      height: 34px;
+      width: 34px;
+
+      ion-icon {
+        font-size: 22px;
+      }
+    }
   }
 
   .filters {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
     margin-bottom: 1rem;
-
-    ion-select {
-      flex: 1;
-      --border-radius: 12px;
-      --background: #f0f4f8;
-      --color: #000;
-    }
-  }
-
-  .no-data {
-    text-align: center;
-    font-size: 1rem;
-    color: #000;
-    margin-top: 40px;
   }
 
   .helpline-cards {
@@ -297,16 +257,16 @@
     }
   }
 
-  .helpline-actions-row {
+ .helpline-actions-row {
     display: flex;
     justify-content: space-between;
     gap: 12px;
     margin-top: 1rem;
 
-    .details-btn {
+    .call-btn {
       flex: 1;
       background: none;
-      color: #535a90;
+      color: #00796b;
       border: 1px solid;
       border-radius: 10px;
       padding: 0.6rem 0;

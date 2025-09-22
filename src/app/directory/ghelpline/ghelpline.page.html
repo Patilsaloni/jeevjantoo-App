@@ -1,29 +1,23 @@
 <ion-header>
   <ion-toolbar class="premium-toolbar">
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Govt Helpline</ion-title>
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      <ion-button href="/tabs/directory">
+        <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-title>Govt Helpline</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="premium-helpline">
   <!-- Search with glass effect -->
-  <ion-searchbar
-    [(ngModel)]="searchTerm"
-    (ionInput)="loadHelplines()"
-    placeholder="Search helpline..."
-    class="glass-search">
-  </ion-searchbar>
-
+  <div class="nav-container">
+    <ion-searchbar class="card-search" placeholder="Search by service or contact" [(ngModel)]="searchTerm"
+      (ionInput)="filterHelplines($event)" debounce="300"></ion-searchbar>
+  </div>
   <!-- Loader -->
   <!-- <ion-spinner *ngIf="loading" class="spinner-center"></ion-spinner> -->
-   <div *ngIf="loading" class="spinner-overlay">
+  <div *ngIf="loading" class="spinner-overlay">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
 
@@ -48,8 +42,8 @@
     </ion-card>
   </div> -->
 
-   <div class="helpline-cards">
-    <div *ngFor="let h of helplines" class="helpline-card" [ngClass]="h.variant">
+  <div class="helpline-cards" *ngIf="!loading && filteredHelplines.length > 0">
+    <div *ngFor="let h of filteredHelplines" class="helpline-card" [ngClass]="h.variant">
       <div class="helpline-header">
         <div style="display: flex; align-items: center;">
           <div class="card-initial">{{ h.helplineServices ? h.helplineServices[0] : 'H' }}</div>
@@ -68,7 +62,7 @@
             <td>Contact</td>
             <td>{{ h.contact || 'N/A' }}</td>
           </tr>
-                    <tr>
+          <tr>
             <td>Govt Body</td>
             <td>{{ h.govtBody || 'N/A' }}</td>
           </tr>
@@ -78,13 +72,14 @@
           </tr>
         </table>
         <div class="helpline-actions-row">
-          <button ion-button class="details-btn" (click)="openDetails(h)">DETAILS</button>
+          <button class="call-btn" (click)="call(h.contact)">CALL</button>
         </div>
       </div>
     </div>
   </div>
-  
-  <p *ngIf="!loading && helplines.length === 0" class="no-data">
-    No helplines found.
-  </p>
+
+  <div *ngIf="!loading && filteredHelplines.length === 0" class="no-data">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>No helplines found.</p>
+  </div>
 </ion-content>

@@ -174,9 +174,16 @@ export class AbcDetailsPage implements OnInit {
   async checkFavorite(id: string) {
     try {
       this.saved = await this.firebaseService.isFavorite('abc', id);
-    } catch (err) {
-      console.error('Error checking favorite:', err);
+    } catch (err: any) {
+      console.error('Error checking favorite for abcs collection:', err);
       this.saved = false;
+      const toast = await this.toastCtrl.create({
+        message: 'Unable to check favorite status for this ABC record',
+        duration: 1500,
+        position: 'bottom',
+        color: 'warning',
+      });
+      await toast.present();
     }
   }
 
@@ -244,10 +251,14 @@ export class AbcDetailsPage implements OnInit {
         position: 'bottom',
       });
       await toast.present();
-    } catch (err) {
-      console.error('Error saving favorite:', err);
+    } catch (err: any) {
+      console.error('Error saving favorite for abcs collection:', err);
+      let errorMessage = 'Failed to update favorites';
+      if (err.message.includes('Pet not found')) {
+        errorMessage = 'Cannot save this ABC record as a favorite. Please try again later.';
+      }
       const toast = await this.toastCtrl.create({
-        message: 'Failed to update favorites',
+        message: errorMessage,
         duration: 1500,
         position: 'bottom',
         color: 'danger',

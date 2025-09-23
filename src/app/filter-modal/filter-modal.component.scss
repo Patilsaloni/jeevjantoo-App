@@ -1,81 +1,154 @@
-
-:host {
-  --ion-background-color: transparent; /* Ensure backdrop is visible */
-}
-
-/* Style the modal container as a centered pop-up */
-ion-modal.filter-popup-modal {
-  --width: 90%;
-  --max-width: 300px; /* Adjusted for a smaller dialog-like size, per Ionic examples */
-  --height: auto;
-  --max-height: 80vh;
-  --border-radius: 8px; /* Rounded corners */
-  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4); /* Shadow for depth */
-  --background: var(--ion-background-color, #fff);
-  --backdrop-opacity: var(--ion-backdrop-opacity, 0.32); /* Semi-transparent backdrop */
-
-  /* Center the modal */
+.modal-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 8px 20px 8px 20px;
+  background: #bda6db;
+  border-radius: 0;
+  box-shadow: 0 -2px 12px rgb(0 0 0 / 0.07);
+
+  .close-btn {
+    font-size: 18px;
+    --padding-start: 0;
+    --padding-end: 0;
+    color: #4a4a4a;
+  }
+
+  .modal-title {
+    flex: 1;
+    text-align: center;
+    font-weight: 700;
+    font-size: 18px;
+    color: #121212;
+  }
+
+  .reset-btn {
+    color: #eeefff;
+    font-weight: 600;
+    font-size: 14px;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
 }
 
-/* Backdrop styling */
-ion-modal.filter-popup-modal::part(backdrop) {
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
-  backdrop-filter: blur(2px); /* Optional blur effect */
+.bottom-filter-sheet {
+  border-radius: 24px 24px 0 0;
+  --height: 50vh; // default half screen height, Ionic uses breakpoint to control height
+  // No fixed height here. Handled by Ionic modal breakpoints
 }
 
-/* Content styling */
 ion-content {
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --padding-top: 16px;
-  --padding-bottom: 16px;
-  --overflow: auto; /* Allow scrolling if content overflows */
+  background: #fafbfe;
+  border-radius: 0 0 24px 24px;
+  padding: 0 20px 0 20px;
 }
 
-/* Header */
-ion-toolbar {
-  --border-width: 0;
-  --background: var(--ion-background-color, #fff);
-}
-
-ion-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-/* Buttons */
-ion-button {
-  --border-radius: 8px;
-  margin: 8px;
-}
-
-/* Form fields */
-ion-item {
-  margin-top: 16px;
-  --padding-start: 0;
-  --border-color: transparent;
-}
-
-ion-label {
-  font-weight: 500;
+.section-header {
+  margin-top: 24px;
   margin-bottom: 8px;
-  color: var(--ion-text-color, #222);
+  font-weight: 600;
+  font-size: 16px;
+  color: #333444;
 }
 
-ion-select {
-  --padding-start: 0;
-  width: 100%;
+.chips-horizontal,
+.chips-vertical {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chips-horizontal {
+  flex-direction: row;
+}
+
+.chips-vertical {
+  flex-direction: column;
+}
+
+.chips-horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  gap: 10px;
+  white-space: nowrap;
+
+  ion-chip {
+    flex: 0 0 auto; // prevent shrinking
+  }
 }
 
 ion-chip {
-  margin: 8px;
-  cursor: pointer;
+  border-radius: 14px;
+  background-color: #f5f7fb;
+  font-weight: 500;
+  padding: 0 12px;
+  height: 28px;
+  ion-label {
+    font-size: 14px;
+    color: #888a8c;
+  }
+  &.selected {
+    background-color: #2562fc;
+    ion-label {
+      color: white;
+    }
+  }
 }
 
-/* Ensure content fits within modal */
-ion-content::part(scroll) {
-  padding-bottom: 16px;
+.filters-group {
+  margin-top: 16px;
+}
+
+.dropdown-group {
+  margin-top: 16px;
+}
+
+ion-item {
+  --highlight-color-focused: #2562fc;
+  --background-focused: #f5f7fb;
+  --border-radius: 14px;
+  margin-top: 12px;
+  font-weight: 600;
+  font-size: 15px;
+
+  ion-select {
+    --background: #fff;
+    --min-height: 44px;
+    border-radius: 14px;
+  }
+}
+.padded-ion-select {
+  --padding-start: 12px; /* padding inside ion-item */
+  --padding-end: 12px;
+  ion-select {
+    --padding-start: 12px; /* padding inside ion-select displayed text */
+    --padding-end: 12px;
+  }
+}
+
+.scrollable-content {
+  // max-height: calc(50vh - 6px); // 50vh minus header + some padding
+  overflow-y: auto;
+  padding-bottom: 10px;
+}
+
+.filter-buttons {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  // background: #fafbfe;
+  padding: 16px 20px 32px 20px;
+  border-radius: 0 0 24px 24px;
+  // box-shadow: 0 -8px 16px rgba(37, 98, 252, 0.15);
+
+  .apply-btn {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 14px;
+    background: #2562fc;
+    --background-hover: #1d4de6;
+  }
 }

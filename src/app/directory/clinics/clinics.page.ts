@@ -345,7 +345,9 @@ export class ClinicsPage implements OnInit {
           { key: 'area', label: 'Area', type: 'dropdown', options: this.areas },
           { key: 'timing', label: 'Timing', type: 'dropdown', options: this.timings }
         ]
-      }
+      },
+      breakpoints: [0, 0.5, 0.9],  // enable modal snap points for sliding modal
+    initialBreakpoint: 0.5,      // initial height when modal is presented
     });
     modal.onDidDismiss().then(({ data }) => {
       if (data) {

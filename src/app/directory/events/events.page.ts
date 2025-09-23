@@ -391,7 +391,9 @@ export class EventsPage implements OnInit {
           { key: 'place', label: 'Place', type: 'dropdown', options: this.places },
           { key: 'timing', label: 'Timing', type: 'dropdown', options: this.timings }
         ]
-      }
+      },
+      breakpoints: [0, 0.5, 0.9],  // enable modal snap points for sliding modal
+    initialBreakpoint: 0.5,      // initial height when modal is presented
     });
     modal.onDidDismiss().then(({ data }) => {
       if (data) {

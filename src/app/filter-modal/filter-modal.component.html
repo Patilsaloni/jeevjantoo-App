@@ -1,3 +1,66 @@
-<p>
-  filter-modal works!
-</p>
+<ion-header>
+  <div class="modal-header">
+    <ion-button fill="clear" class="close-btn" (click)="dismiss()">
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
+    <div class="modal-title">{{ filterTitle }}</div>
+    <ion-button fill="clear" class="reset-btn" (click)="resetFilters()">Reset</ion-button>
+  </div>
+</ion-header>
+
+<ion-content class="ion-padding scrollable-content">
+  <!-- Main Chips Section -->
+  <ng-container *ngIf="mainChipField">
+    <div class="section-header">{{ mainChipField.label }}</div>
+    <div class="chips-horizontal">
+      <ion-chip *ngFor="let option of getOptions(mainChipField)" 
+                [class.selected]="isChipSelected(mainChipField.key, option)" 
+                (click)="toggleChip(mainChipField.key, option)">
+        <ion-label>{{ option | titlecase }}</ion-label>
+      </ion-chip>
+    </div>
+  </ng-container>
+
+  <!-- Secondary Chips Section -->
+ <ng-container *ngIf="secondaryChipField">
+  <div class="section-header">{{ secondaryChipField.label }}</div>
+  <div class="chips-horizontal-scroll">
+    <ion-chip *ngFor="let option of getOptions(secondaryChipField)" 
+              [class.selected]="isChipSelected(secondaryChipField.key, option)" 
+              (click)="toggleChip(secondaryChipField.key, option)">
+      <ion-label>{{ option | titlecase }}</ion-label>
+    </ion-chip>
+  </div>
+</ng-container>
+
+  <!-- Other Fields: chips, toggles, dropdowns -->
+  <ng-container *ngFor="let field of otherFields">
+    <div *ngIf="field.type === 'chips'" class="section-header vertical-margin">{{ field.label }}</div>
+    <div *ngIf="field.type === 'chips'" class="chips-horizontal">
+      <ion-chip *ngFor="let option of getOptions(field)" 
+                [class.selected]="isChipSelected(field.key, option)"
+                (click)="toggleChip(field.key, option)">
+        <ion-label>{{ option | titlecase }}</ion-label>
+      </ion-chip>
+    </div>
+
+    <ion-item *ngIf="field.type === 'toggle'" lines="none">
+      <ion-label>{{ field.label }}</ion-label>
+      <ion-toggle [(ngModel)]="filters[field.key]"></ion-toggle>
+    </ion-item>
+
+    <ion-item *ngIf="field.type === 'dropdown'" lines="none" class="padded-ion-select">
+      <ion-label>{{ field.label }}</ion-label>
+      <ion-select [(ngModel)]="filters[field.key]" [interface]="'popover'" [disabled]="field.dependsOn ? !filters[field.dependsOn] : false">
+        <ion-select-option *ngFor="let opt of getOptions(field)" [value]="opt">{{ opt }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ng-container>
+
+  <!-- Fixed footer with button -->
+<div class="filter-buttons">
+  <ion-button expand="block" class="apply-btn" (click)="applyFilters()">Apply Filter</ion-button>
+</div>
+</ion-content>
+
+

@@ -82,7 +82,6 @@
 //   }
 // }
 
-
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
@@ -112,7 +111,7 @@ interface NGO {
   styleUrls: ['./ngos.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgosPage implements OnInit {
   ngos: NGO[] = [];
@@ -151,10 +150,12 @@ export class NgosPage implements OnInit {
           lat: ngo.lat ?? 0,
           lng: ngo.lng ?? 0,
           expanded: false,
-          variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
+          variant: ['a', 'b', 'c', 'd', 'e'][index % 5],
         }));
       this.filteredNGOs = [...this.ngos];
-      this.states = Array.from(new Set(this.ngos.map(n => n.state).filter(s => s && s !== 'N/A'))).sort();
+      this.states = Array.from(
+        new Set(this.ngos.map((n) => n.state).filter((s) => s && s !== 'N/A'))
+      ).sort();
       this.citiesByState = this.ngos.reduce((acc, n) => {
         if (n.state && n.state !== 'N/A' && n.city && n.city !== 'N/A') {
           acc[n.state] = acc[n.state] || [];
@@ -181,14 +182,18 @@ export class NgosPage implements OnInit {
   }
 
   applyFilters() {
-    this.filteredNGOs = this.ngos.filter(n => {
+    this.filteredNGOs = this.ngos.filter((n) => {
       const matchesSearch =
         this.searchTerm === '' ||
         n.name?.toLowerCase().includes(this.searchTerm) ||
         n.city?.toLowerCase().includes(this.searchTerm) ||
         n.contact?.toLowerCase().includes(this.searchTerm);
-      const matchesState = this.filters.state ? n.state === this.filters.state : true;
-      const matchesCity = this.filters.city ? n.city === this.filters.city : true;
+      const matchesState = this.filters.state
+        ? n.state === this.filters.state
+        : true;
+      const matchesCity = this.filters.city
+        ? n.city === this.filters.city
+        : true;
       return matchesSearch && matchesState && matchesCity;
     });
     console.log('Filtered NGOs:', this.filteredNGOs);
@@ -202,10 +207,23 @@ export class NgosPage implements OnInit {
         filters: { ...this.filters },
         filterType: 'ngos',
         filterConfig: [
-          { key: 'state', label: 'State', type: 'dropdown', options: this.states },
-          { key: 'city', label: 'City', type: 'dropdown', options: this.citiesByState, dependsOn: 'state' }
-        ]
-      }
+          {
+            key: 'state',
+            label: 'State',
+            type: 'dropdown',
+            options: this.states,
+          },
+          {
+            key: 'city',
+            label: 'City',
+            type: 'dropdown',
+            options: this.citiesByState,
+            dependsOn: 'state',
+          },
+        ],
+      },
+      breakpoints: [0, 0.5, 0.9], // enable modal snap points for sliding modal
+      initialBreakpoint: 0.5, // initial height when modal is presented
     });
     modal.onDidDismiss().then(({ data }) => {
       if (data) {
@@ -222,7 +240,10 @@ export class NgosPage implements OnInit {
       return;
     }
     const query = encodeURIComponent(`${ngo.lat},${ngo.lng}`);
-    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${query}`,
+      '_blank'
+    );
   }
 
   viewDetails(ngo: NGO) {

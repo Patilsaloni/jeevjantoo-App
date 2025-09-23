@@ -222,7 +222,9 @@ export class GhelplinePage implements OnInit {
           { key: 'state', label: 'State', type: 'dropdown', options: this.states },
           { key: 'city', label: 'City', type: 'dropdown', options: this.citiesByState, dependsOn: 'state' }
         ]
-      }
+      },
+      breakpoints: [0, 0.5, 0.9],  // enable modal snap points for sliding modal
+    initialBreakpoint: 0.5,      // initial height when modal is presented
     });
     modal.onDidDismiss().then(({ data }) => {
       if (data) {

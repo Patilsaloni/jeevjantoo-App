@@ -373,44 +373,88 @@ export class AdoptionPage implements OnInit {
     this.router.navigate(['submit-pet'], { relativeTo: this.route });
   }
 
+  // async openFilterModal() {
+  //   const modal = await this.modalController.create({
+  //     component: FilterModalComponent,
+  //     componentProps: { 
+  //       filters: { ...this.filters },
+  //       filterType: 'pet',
+  //       filterConfig: [
+  //         { key: 'species', label: 'Species', type: 'chips', options: ['dog', 'cat', 'other'] },
+  //         { key: 'gender', label: 'Gender', type: 'chips', options: ['male', 'female', 'unknown'] },
+  //         { key: 'ageRange', label: 'Age Range', type: 'chips', options: ['Puppy', 'Kitten', 'Young', 'Adult', 'Senior'] },
+  //         { key: 'city', label: 'City', type: 'dropdown', options: ['New York', 'Los Angeles', 'Chicago'] },
+  //         { 
+  //           key: 'area', 
+  //           label: 'Area', 
+  //           type: 'dropdown', 
+  //           dependsOn: 'city',
+  //           options: {
+  //             'New York': ['Manhattan', 'Brooklyn', 'Queens'],
+  //             'Los Angeles': ['Downtown', 'Hollywood', 'Santa Monica'],
+  //             'Chicago': ['Loop', 'Lincoln Park', 'Hyde Park']
+  //           }
+  //         },
+  //         { key: 'vaccinated', label: 'Vaccinated', type: 'toggle' },
+  //         { key: 'dewormed', label: 'Dewormed', type: 'toggle' },
+  //         { key: 'neutered', label: 'Neutered', type: 'toggle' }
+  //       ]
+  //     },
+  //   });
+
+  //   modal.onDidDismiss().then(({ data }) => {
+  //     if (data) {
+  //       this.filters = { ...data };
+  //       this.cdr.detectChanges(); // Force UI update after filter changes
+  //     }
+  //   });
+
+  //   await modal.present();
+  // }
+
+
   async openFilterModal() {
-    const modal = await this.modalController.create({
-      component: FilterModalComponent,
-      componentProps: { 
-        filters: { ...this.filters },
-        filterType: 'pet',
-        filterConfig: [
-          { key: 'species', label: 'Species', type: 'chips', options: ['dog', 'cat', 'other'] },
-          { key: 'gender', label: 'Gender', type: 'chips', options: ['male', 'female', 'unknown'] },
-          { key: 'ageRange', label: 'Age Range', type: 'chips', options: ['Puppy', 'Kitten', 'Young', 'Adult', 'Senior'] },
-          { key: 'city', label: 'City', type: 'dropdown', options: ['New York', 'Los Angeles', 'Chicago'] },
-          { 
-            key: 'area', 
-            label: 'Area', 
-            type: 'dropdown', 
-            dependsOn: 'city',
-            options: {
-              'New York': ['Manhattan', 'Brooklyn', 'Queens'],
-              'Los Angeles': ['Downtown', 'Hollywood', 'Santa Monica'],
-              'Chicago': ['Loop', 'Lincoln Park', 'Hyde Park']
-            }
-          },
-          { key: 'vaccinated', label: 'Vaccinated', type: 'toggle' },
-          { key: 'dewormed', label: 'Dewormed', type: 'toggle' },
-          { key: 'neutered', label: 'Neutered', type: 'toggle' }
-        ]
-      },
-    });
+  const modal = await this.modalController.create({
+    component: FilterModalComponent,
+    componentProps: { 
+      filterTitle: 'Filter Pets', // Custom title
+      filterType: 'pet',
+      filters: { ...this.filters },
+      filterConfig: [
+        { key: 'species', label: 'Pet Categories', type: 'chips', options: ['dog', 'cat', 'other'], priority: 1 }, // Main chips
+        { key: 'ageRange', label: 'Age Range', type: 'chips', options: ['Puppy', 'Kitten', 'Young', 'Adult', 'Senior'], priority: 2 }, // Secondary chips
+        { key: 'gender', label: 'Gender', type: 'chips', options: ['male', 'female', 'unknown'] },
+        { key: 'city', label: 'City', type: 'dropdown', options: ['New York', 'Los Angeles', 'Chicago'] },
+        { 
+          key: 'area', 
+          label: 'Area', 
+          type: 'dropdown', 
+          dependsOn: 'city',
+          options: {
+            'New York': ['Manhattan', 'Brooklyn', 'Queens'],
+            'Los Angeles': ['Downtown', 'Hollywood', 'Santa Monica'],
+            'Chicago': ['Loop', 'Lincoln Park', 'Hyde Park']
+          }
+        },
+        { key: 'vaccinated', label: 'Vaccinated', type: 'toggle' },
+        { key: 'dewormed', label: 'Dewormed', type: 'toggle' },
+        { key: 'neutered', label: 'Neutered', type: 'toggle' }
+      ]
+    },
+    breakpoints: [0, 0.5, 0.9],  // Add 0.9 or 1 to allow larger size
+  initialBreakpoint: 0.5,       // Start nearly fully expanded
+  cssClass: 'bottom-filter-sheet'
+  });
 
-    modal.onDidDismiss().then(({ data }) => {
-      if (data) {
-        this.filters = { ...data };
-        this.cdr.detectChanges(); // Force UI update after filter changes
-      }
-    });
+  modal.onDidDismiss().then(({ data }) => {
+    if (data) {
+      this.filters = { ...data };
+      this.cdr.detectChanges();
+    }
+  });
 
-    await modal.present();
-  }
+  await modal.present();
+}
 
   private async showToast(message: string, color: 'success' | 'danger') {
     const toast = await this.toastCtrl.create({ message, duration: 2000, color, position: 'bottom' });

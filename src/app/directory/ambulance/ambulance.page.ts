@@ -390,7 +390,9 @@ export class AmbulancePage implements OnInit {
             options: this.governingBodies
           }
         ]
-      }
+      },
+      breakpoints: [0, 0.5, 0.9],  // enable modal snap points for sliding modal
+    initialBreakpoint: 0.5,      // initial height when modal is presented
     });
 
     modal.onDidDismiss().then(({ data }) => {

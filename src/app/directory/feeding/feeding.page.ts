@@ -295,7 +295,9 @@ export class FeedingPage implements OnInit {
           { key: 'address', label: 'Address', type: 'dropdown', options: this.addresses },
           { key: 'food_item', label: 'Food Item', type: 'dropdown', options: this.foodItems }
         ]
-      }
+      },
+      breakpoints: [0, 0.5, 0.9],  // enable modal snap points for sliding modal
+    initialBreakpoint: 0.5,      // initial height when modal is presented
     });
     modal.onDidDismiss().then(({ data }) => {
       if (data) {

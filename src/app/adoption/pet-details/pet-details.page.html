@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/adoption"></ion-back-button>
@@ -14,7 +14,7 @@
 
 <ion-content *ngIf="!loading; else loadingTpl" class="ion-padding">
 
-  <!-- Photos -->
+ 
   <div class="photo-hero" *ngIf="photoList().length; else noPhoto">
     <img [src]="photoList()[0]" [alt]="pet?.petName" class="hero-img" />
     <div class="thumb-row" *ngIf="photoList().length > 1">
@@ -25,7 +25,7 @@
     <div class="placeholder-photo">No photo available</div>
   </ng-template>
 
-  <!-- Quick Info -->
+ 
   <ion-card>
     <ion-card-content>
       <h2 class="pet-title">{{ pet?.petName }}</h2>
@@ -54,7 +54,6 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Actions -->
   <div class="action-row">
     <ion-button fill="outline" (click)="toggleFavorite()">
       <ion-icon [name]="pet?.favorite ? 'heart' : 'heart-outline'" slot="start" color="danger"></ion-icon>
@@ -91,4 +90,103 @@
     <ion-skeleton-text animated style="width: 90%; height: 16px"></ion-skeleton-text>
     <ion-skeleton-text animated style="width: 80%; height: 16px"></ion-skeleton-text>
   </ion-content>
-</ng-template>
+</ng-template> -->
+
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button href="/tabs/adoption">
+       <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title></ion-title>
+    <ion-buttons slot="end">
+      <!-- Paw icon triggers side-action panel -->
+      <ion-button (click)="showActionsPanel = true">
+        <ion-icon name="paw-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content class="pet-details-content">
+  <div class="pet-details-card">
+    <!-- Header Row -->
+    <div class="pet-header-row">
+      <div class="pet-name-block">
+        <h2>{{ pet?.petName }}</h2>
+        <div class="breed">{{ pet?.breed || pet?.species }}</div>
+        <div class="pet-meta">
+          <ion-icon name="location-outline"></ion-icon>
+          <span *ngIf="pet?.location">{{ pet.location }}</span>
+          <span *ngIf="pet?.distanceKm">• {{ pet.distanceKm | number:'1.1-1' }} kms away</span>
+        </div>
+      </div>
+      <div class="pet-age-sex">
+        <span class="age">{{ pet?.age }} months old</span>
+        <ion-icon *ngIf="pet?.gender==='male'" name="male-outline"></ion-icon>
+        <ion-icon *ngIf="pet?.gender==='female'" name="female-outline"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Gallery Section -->
+   <div class="pet-gallery-section">
+  <div class="pet-thumb-list">
+    <img *ngFor="let photo of photoList() | slice:0:3; let idx=index"
+         [src]="photo"
+         [class.active-thumb]="idx === mainImageIdx"
+         (click)="mainImageIdx = idx" />
+  </div>
+  <div class="pet-main-image">
+    <img [src]="photoList()[mainImageIdx]" />
+  </div>
+</div>
+
+    <!-- About Section -->
+    <div class="about-section">
+      <h3>About</h3>
+      <p>{{ pet?.description || pet?.bio || 'No description available.' }}</p>
+    </div>
+  </div>
+
+  <!-- Actions side panel -->
+
+</ion-content>
+
+
+<!-- Place this OUTSIDE content and after content/footer for best results -->
+<!-- Sliding Actions Panel (custom div not ionic modal/popover) -->
+<div class="side-panel-backdrop" *ngIf="showActionsPanel" (click)="showActionsPanel = false"></div>
+<div class="side-panel" *ngIf="showActionsPanel">
+  <div class="side-panel-header">
+    <ion-icon name="paw" class="main-paw"></ion-icon>
+  </div>
+  <div class="side-panel-actions">
+    <ion-button fill="clear" (click)="callOwner()" class="side-icn"><ion-icon name="call"></ion-icon></ion-button>
+    <ion-button fill="clear" (click)="whatsappOwner()" class="side-icn"><ion-icon name="logo-whatsapp"></ion-icon></ion-button>
+    <ion-button fill="clear" (click)="sharePet()" class="side-icn"><ion-icon name="share-social"></ion-icon></ion-button>
+    <ion-button fill="clear" (click)="markAdopted()" class="side-icn"><ion-icon name="paw"></ion-icon></ion-button>
+    <!-- Add other original action icons as needed, use fill="clear" for icon-only style -->
+  </div>
+</div>
+
+
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <!-- Heart icon retains save logic as originally implemented -->
+      <ion-button (click)="toggleFavorite()">
+        <ion-icon [name]="pet?.favorite ? 'heart' : 'heart-outline'" color="danger"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button class="adopt-btn">
+        ADOPT
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

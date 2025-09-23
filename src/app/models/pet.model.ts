@@ -20,4 +20,8 @@ export interface Pet {
   status?: string;
   createdAt?: number;
   updatedAt?: number;
+    ageRange?: string;
+    dewormed: boolean;
+  neutered: boolean;
+  
 }

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicModule, Platform, ToastController } from '@ionic/angular';
-import { RouterModule, Router } from '@angular/router';
+import { IonicModule, ToastController } from '@ionic/angular';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { Keyboard, KeyboardResize } from '@capacitor/keyboard';
 import { getAuth, signOut } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { environment } from '../environments/environment';
-
 
 const app = initializeApp(environment.firebaseConfig);
 const auth = getAuth(app);
@@ -18,8 +18,35 @@ const auth = getAuth(app);
   imports: [IonicModule, RouterModule]
 })
 export class AppComponent {
+  showMenu = true;
+
   constructor(private router: Router, private toastCtrl: ToastController) {
     Keyboard.setResizeMode({ mode: KeyboardResize.None });
+
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const url = (event.urlAfterRedirects || event.url).split('?')[0].split('#')[0];
+
+        // Exact paths where the menu should be hidden
+        const hideOnExact = new Set<string>([
+          '/signin',
+          '/splash',
+          '/onboarding',
+          '/forgot-password',
+          '/signup'
+        ]);
+
+        // Prefixes (use if you want to hide whole route groups)
+        const hideOnPrefix: string[] = [
+          // '/auth', '/welcome'
+        ];
+
+        const hiddenByExact = hideOnExact.has(url);
+        const hiddenByPrefix = hideOnPrefix.some(p => url.startsWith(p));
+
+        this.showMenu = !(hiddenByExact || hiddenByPrefix);
+      });
   }
 
   ngOnInit() {
@@ -32,7 +59,6 @@ export class AppComponent {
     });
   }
 
-  // ---------------- Logout ----------------
   async logout() {
     try {
       await signOut(auth);
@@ -41,24 +67,17 @@ export class AppComponent {
       this.router.navigate(['/signin'], { replaceUrl: true });
       this.showToast('Logged out successfully', 'success');
     } catch (error: any) {
-      console.error('Logout failed:', error);
       this.showToast(error.message || 'Logout failed', 'danger');
     }
   }
 
-  async showToast(message: string, color: string = 'primary') {
+  private async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastCtrl.create({ message, duration: 2000, color });
-    toast.present();
+    await toast.present();
   }
 
-  navigareToHome(){
-    this.router.navigate(['/tabs/home'])
-  }
-  navigateToProfile(){
-    this.router.navigate(['/tabs/profile'])
-  }
-  
-  navigateToAdopt(){
-    this.router.navigate(['/tabs/adoption'])
-  }
+  // ✅ Fixed typo: navigareToHome → navigateToHome
+  navigateToHome() { this.router.navigate(['/tabs/home']); }
+  navigateToProfile() { this.router.navigate(['/tabs/profile']); }
+  navigateToAdopt() { this.router.navigate(['/tabs/adoption']); }
 }

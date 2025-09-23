@@ -185,19 +185,35 @@ export class HomePage implements OnInit {
   async loadLatestAdoptions() {
     this.loadingAdoptions = true;
     try {
-      const res = await this.firebaseService.getInformation('pet-adoption'); // Use FirebaseService
+      const res = await this.firebaseService.getInformation('pet-adoption');
       this.latestAdoptions = res
-        .filter((pet: any) => pet.status?.toLowerCase() === 'pending') // Filter by status 'Pending'
+        .filter((pet: any) => pet.status?.toLowerCase() === 'active') // Filter by status 'Active'
         .sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)) // Sort by createdAt descending
         .slice(0, 5) // Limit to 5
-        .map((pet: any) => ({
-          id: pet.id,
-          name: pet.petName || 'Unknown',
-          breed: pet.breed || 'Unknown',
-          age: pet.age ? `${pet.age} years` : 'Unknown',
-          photos: pet.photos && pet.photos.length ? pet.photos : ['assets/placeholder-pet.jpg'],
-          gender: pet.gender || 'Unknown'
-        }));
+        .map((pet: any) => {
+          // Format age as "X years, Y months" or "Y months" if no years
+          let ageDisplay = '';
+          const years = Number(pet.ageYears) || 0;
+          const months = Number(pet.ageMonths) || 0;
+          if (years > 0 && months > 0) {
+            ageDisplay = `${years} year${years > 1 ? 's' : ''}, ${months} month${months > 1 ? 's' : ''}`;
+          } else if (years > 0) {
+            ageDisplay = `${years} year${years > 1 ? 's' : ''}`;
+          } else if (months > 0) {
+            ageDisplay = `${months} month${months > 1 ? 's' : ''}`;
+          } else {
+            ageDisplay = 'Unknown';
+          }
+
+          return {
+            id: pet.id,
+            name: pet.petName || 'Unknown',
+            breed: pet.breed || 'Unknown',
+            age: ageDisplay,
+            photos: pet.photos && pet.photos.length ? pet.photos : ['assets/placeholder-pet.jpg'],
+            gender: pet.gender || 'Unknown'
+          };
+        });
       console.log('Latest adoptions:', this.latestAdoptions); // Debug
       this.loadingAdoptions = false;
     } catch (error) {
@@ -206,6 +222,31 @@ export class HomePage implements OnInit {
       this.loadingAdoptions = false;
     }
   }
+  
+  // async loadLatestAdoptions() {
+  //   this.loadingAdoptions = true;
+  //   try {
+  //     const res = await this.firebaseService.getInformation('pet-adoption'); // Use FirebaseService
+  //     this.latestAdoptions = res
+  //       .filter((pet: any) => pet.status?.toLowerCase() === 'pending') // Filter by status 'Pending'
+  //       .sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)) // Sort by createdAt descending
+  //       .slice(0, 5) // Limit to 5
+  //       .map((pet: any) => ({
+  //         id: pet.id,
+  //         name: pet.petName || 'Unknown',
+  //         breed: pet.breed || 'Unknown',
+  //         age: pet.age ? `${pet.age} years` : 'Unknown',
+  //         photos: pet.photos && pet.photos.length ? pet.photos : ['assets/placeholder-pet.jpg'],
+  //         gender: pet.gender || 'Unknown'
+  //       }));
+  //     console.log('Latest adoptions:', this.latestAdoptions); // Debug
+  //     this.loadingAdoptions = false;
+  //   } catch (error) {
+  //     console.error('Error fetching adoptions:', error);
+  //     this.latestAdoptions = [];
+  //     this.loadingAdoptions = false;
+  //   }
+  // }
 
   // Commented-out AdoptionService version (unchanged, kept as fallback)
   // loadLatestAdoptions() {

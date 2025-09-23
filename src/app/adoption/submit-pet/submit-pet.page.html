@@ -1,120 +1,3 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>New Adoption</ion-title>
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="submit-pet-content">
-  <div class="form-wrapper">
-    <div class="mascot-top">
-      <img src="assets/img/newPet.png" alt="Pet mascot" class="mascot-img" />
-    </div>
-
-    <div class="submit-pet-card">
-      <h2 class="form-title">Put Pet for <span class="highlight">Adoption</span></h2>
-
-     
-      <form *ngIf="step === 1" [formGroup]="petFormStep1">
-        <ion-item [class.invalid]="petFormStep1.get('petName')?.invalid && petFormStep1.get('petName')?.touched">
-          <ion-input formControlName="petName" placeholder="Pet Name"></ion-input>
-        </ion-item>
-        <ion-text color="danger" *ngIf="petFormStep1.get('petName')?.touched && petFormStep1.get('petName')?.invalid">
-          <p *ngIf="petFormStep1.get('petName')?.errors?.['required']">Pet Name is required.</p>
-          <p *ngIf="petFormStep1.get('petName')?.errors?.['minlength']">Minimum 2 characters required.</p>
-        </ion-text>
-
-        <ion-item [class.invalid]="petFormStep1.get('species')?.invalid && petFormStep1.get('species')?.touched">
-          <ion-label>Species</ion-label>
-          <ion-select formControlName="species" placeholder="Select Species">
-            <ion-select-option value="Dog">Dog 🐶</ion-select-option>
-            <ion-select-option value="Cat">Cat 🐱</ion-select-option>
-            <ion-select-option value="Other">Other</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-text color="danger" *ngIf="petFormStep1.get('species')?.touched && petFormStep1.get('species')?.invalid">
-          <p>Species is required.</p>
-        </ion-text>
-
-        <ion-item [class.invalid]="petFormStep1.get('age')?.invalid && petFormStep1.get('age')?.touched">
-          <ion-input formControlName="age" type="number" placeholder="Age (years)"></ion-input>
-        </ion-item>
-        <ion-text color="danger" *ngIf="petFormStep1.get('age')?.touched && petFormStep1.get('age')?.invalid">
-          <p *ngIf="petFormStep1.get('age')?.errors?.['required']">Age is required.</p>
-          <p *ngIf="petFormStep1.get('age')?.errors?.['min']">Age must be positive.</p>
-        </ion-text>
-
-        <ion-item [class.invalid]="petFormStep1.get('breed')?.invalid && petFormStep1.get('breed')?.touched">
-          <ion-input formControlName="breed" placeholder="Breed"></ion-input>
-        </ion-item>
-        <ion-text color="danger" *ngIf="petFormStep1.get('breed')?.touched && petFormStep1.get('breed')?.invalid">
-          <p *ngIf="petFormStep1.get('breed')?.errors?.['required']">Breed is required.</p>
-          <p *ngIf="petFormStep1.get('breed')?.errors?.['minlength']">Minimum 2 characters required.</p>
-        </ion-text>
-
-        <ion-item [class.invalid]="petFormStep1.get('description')?.invalid && petFormStep1.get('description')?.touched">
-          <ion-textarea formControlName="description" rows="3" placeholder="Description"></ion-textarea>
-        </ion-item>
-        <ion-text color="danger" *ngIf="petFormStep1.get('description')?.touched && petFormStep1.get('description')?.invalid">
-          <p *ngIf="petFormStep1.get('description')?.errors?.['required']">Description is required.</p>
-          <p *ngIf="petFormStep1.get('description')?.errors?.['minlength']">Minimum 10 characters required.</p>
-        </ion-text>
-
-        <ion-button expand="block" class="submit-btn" (click)="goNext()">Next →</ion-button>
-      </form>
-
-    
-      <form *ngIf="step === 2" [formGroup]="petFormStep2">
-        <ion-item [class.invalid]="petFormStep2.get('location')?.invalid && petFormStep2.get('location')?.touched">
-          <ion-input formControlName="location" placeholder="Location"></ion-input>
-        </ion-item>
-
-        <ion-item [class.invalid]="petFormStep2.get('contactName')?.invalid && petFormStep2.get('contactName')?.touched">
-          <ion-input formControlName="contactName" placeholder="Your Name"></ion-input>
-        </ion-item>
-        <ion-text color="danger" *ngIf="petFormStep2.get('contactName')?.touched && petFormStep2.get('contactName')?.invalid">
-          <p *ngIf="petFormStep2.get('contactName')?.errors?.['minlength']">Minimum 2 characters required.</p>
-        </ion-text>
-
-        <ion-item [class.invalid]="petFormStep2.get('contactPhone')?.invalid && petFormStep2.get('contactPhone')?.touched">
-          <ion-input formControlName="contactPhone" type="tel" placeholder="Phone Number"></ion-input>
-        </ion-item>
-        <ion-text color="danger" *ngIf="petFormStep2.get('contactPhone')?.touched && petFormStep2.get('contactPhone')?.invalid">
-          <p *ngIf="petFormStep2.get('contactPhone')?.errors?.['pattern']">Enter a valid phone number.</p>
-        </ion-text>
-
-     
-        <ion-item>
-          <div class="input-row image-upload-row">
-            <label>Pet Photos</label>
-            <button type="button" class="upload-btn" (click)="triggerFileInput()"> 
-              <ion-icon name="camera-outline"></ion-icon>
-              <span *ngIf="imageFileNames.length">{{ imageFileNames.join(', ') }}</span>
-              <span *ngIf="!imageFileNames.length">Upload Photos</span>
-            </button>
-            <input type="file" #petImageInput (change)="onFileChange($event)" accept="image/*" multiple style="display:none;" />
-          </div>
-        </ion-item>
-
-        <ion-button expand="block" class="submit-btn" (click)="goBack()">← Back</ion-button>
-        <ion-button expand="block" class="submit-btn" (click)="submitPet()" [disabled]="petFormStep2.invalid">Submit</ion-button>
-      </form>
-
-      <p class="back-link">
-        Back to adoption? <a (click)="navigateToAdoption()">Adoption List</a>
-      </p>
-    </div>
-  </div>
-</ion-content> -->
-
-
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -218,19 +101,16 @@
           </ion-item>
         </div>
 
-        <!-- Age errors: only after user interacts -->
-        <ion-text color="danger"
-                  *ngIf="petFormStep1.errors?.['ageRequired'] && (f1.ageYears.touched || f1.ageMonths.touched)">
+        <!-- Age errors -->
+        <ion-text color="danger" *ngIf="petFormStep1.errors?.['ageRequired'] && (f1.ageYears.touched || f1.ageMonths.touched)">
           <p>Please enter at least one of Years or Months.</p>
         </ion-text>
 
-        <ion-text color="danger"
-                  *ngIf="petFormStep1.errors?.['ageInvalid'] && (f1.ageYears.touched || f1.ageMonths.touched)">
+        <ion-text color="danger" *ngIf="petFormStep1.errors?.['ageInvalid'] && (f1.ageYears.touched || f1.ageMonths.touched)">
           <p>Age must be non-negative numbers.</p>
         </ion-text>
 
-        <ion-text color="danger"
-                  *ngIf="f1.ageMonths.touched && f1.ageMonths.errors?.['max']">
+        <ion-text color="danger" *ngIf="f1.ageMonths.touched && f1.ageMonths.errors?.['max']">
           <p>Months must be between 0 and 11.</p>
         </ion-text>
 
@@ -315,6 +195,12 @@
         <ion-text color="danger" *ngIf="f2.contactPhone.touched && f2.contactPhone.invalid">
           <p *ngIf="f2.contactPhone.errors?.['pattern']">Enter a valid phone number.</p>
         </ion-text>
+
+        <!-- Contact Public Toggle -->
+        <ion-item lines="none">
+          <ion-label>Make Contact Public</ion-label>
+          <ion-toggle formControlName="contactPublic"></ion-toggle>
+        </ion-item>
 
         <!-- Photos (full width) -->
         <ion-item class="image-item">

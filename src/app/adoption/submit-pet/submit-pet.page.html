@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -21,7 +21,7 @@
     <div class="submit-pet-card">
       <h2 class="form-title">Put Pet for <span class="highlight">Adoption</span></h2>
 
-      <!-- Step 1 Form -->
+     
       <form *ngIf="step === 1" [formGroup]="petFormStep1">
         <ion-item [class.invalid]="petFormStep1.get('petName')?.invalid && petFormStep1.get('petName')?.touched">
           <ion-input formControlName="petName" placeholder="Pet Name"></ion-input>
@@ -70,7 +70,7 @@
         <ion-button expand="block" class="submit-btn" (click)="goNext()">Next →</ion-button>
       </form>
 
-      <!-- Step 2 Form -->
+    
       <form *ngIf="step === 2" [formGroup]="petFormStep2">
         <ion-item [class.invalid]="petFormStep2.get('location')?.invalid && petFormStep2.get('location')?.touched">
           <ion-input formControlName="location" placeholder="Location"></ion-input>
@@ -90,7 +90,7 @@
           <p *ngIf="petFormStep2.get('contactPhone')?.errors?.['pattern']">Enter a valid phone number.</p>
         </ion-text>
 
-        <!-- Multiple Photo Upload -->
+     
         <ion-item>
           <div class="input-row image-upload-row">
             <label>Pet Photos</label>
@@ -104,6 +104,232 @@
         </ion-item>
 
         <ion-button expand="block" class="submit-btn" (click)="goBack()">← Back</ion-button>
+        <ion-button expand="block" class="submit-btn" (click)="submitPet()" [disabled]="petFormStep2.invalid">Submit</ion-button>
+      </form>
+
+      <p class="back-link">
+        Back to adoption? <a (click)="navigateToAdoption()">Adoption List</a>
+      </p>
+    </div>
+  </div>
+</ion-content> -->
+
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>New Adoption</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="submit-pet-content">
+  <div class="form-wrapper">
+    <div class="mascot-top">
+      <img src="assets/img/newPet.png" alt="Pet mascot" class="mascot-img" />
+    </div>
+
+    <div class="submit-pet-card equal-form">
+      <h2 class="form-title">Put Pet for <span class="highlight">Adoption</span></h2>
+
+      <!-- STEP 1 -->
+      <form *ngIf="step === 1" [formGroup]="petFormStep1">
+        <div class="two-col">
+          <!-- Pet name -->
+          <ion-item [class.invalid]="f1.petName.touched && f1.petName.invalid">
+            <ion-label position="stacked">Pet Name</ion-label>
+            <ion-input formControlName="petName" placeholder="e.g., Bruno"></ion-input>
+          </ion-item>
+
+          <!-- Species (uses code values) -->
+          <ion-item [class.invalid]="f1.species.touched && f1.species.invalid">
+            <ion-label position="stacked">Species</ion-label>
+            <ion-select
+              formControlName="species"
+              placeholder="Select Species"
+              interface="alert"
+              okText="OK"
+              cancelText="Cancel"
+            >
+              <ion-select-option *ngFor="let s of speciesOptions" [value]="s.code">
+                {{ s.label }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+
+        <div class="two-col">
+          <!-- Gender -->
+          <ion-item [class.invalid]="f1.gender.touched && f1.gender.invalid">
+            <ion-label position="stacked">Gender</ion-label>
+            <ion-select
+              formControlName="gender"
+              interface="alert"
+              okText="OK"
+              cancelText="Cancel"
+              placeholder="Select Gender"
+            >
+              <ion-select-option value="Male">Male</ion-select-option>
+              <ion-select-option value="Female">Female</ion-select-option>
+              <ion-select-option value="Unknown">Unknown</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Breed -->
+          <ion-item [class.invalid]="f1.breed.touched && f1.breed.invalid">
+            <ion-label position="stacked">Breed</ion-label>
+            <ion-input formControlName="breed" placeholder="e.g. Harz Roller"></ion-input>
+          </ion-item>
+        </div>
+
+        <!-- Age (2 equal fields) -->
+        <div class="two-col">
+          <ion-item
+            [class.invalid]="(f1.ageYears.touched || f1.ageMonths.touched) && (petFormStep1.errors?.['ageInvalid'] || petFormStep1.errors?.['ageRequired'])"
+          >
+            <ion-label position="stacked">Age (Years)</ion-label>
+            <ion-input
+              type="number"
+              inputmode="numeric"
+              min="0"
+              formControlName="ageYears"
+              placeholder="e.g., 1"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item
+            [class.invalid]="(f1.ageYears.touched || f1.ageMonths.touched) && (petFormStep1.errors?.['ageInvalid'] || f1.ageMonths.errors?.['max'])"
+          >
+            <ion-label position="stacked">Age (Months)</ion-label>
+            <ion-input
+              type="number"
+              inputmode="numeric"
+              min="0"
+              max="11"
+              formControlName="ageMonths"
+              placeholder="0–11"
+            ></ion-input>
+          </ion-item>
+        </div>
+
+        <!-- Age errors: only after user interacts -->
+        <ion-text color="danger"
+                  *ngIf="petFormStep1.errors?.['ageRequired'] && (f1.ageYears.touched || f1.ageMonths.touched)">
+          <p>Please enter at least one of Years or Months.</p>
+        </ion-text>
+
+        <ion-text color="danger"
+                  *ngIf="petFormStep1.errors?.['ageInvalid'] && (f1.ageYears.touched || f1.ageMonths.touched)">
+          <p>Age must be non-negative numbers.</p>
+        </ion-text>
+
+        <ion-text color="danger"
+                  *ngIf="f1.ageMonths.touched && f1.ageMonths.errors?.['max']">
+          <p>Months must be between 0 and 11.</p>
+        </ion-text>
+
+        <div class="two-col">
+          <!-- Health (single select) -->
+          <ion-item>
+            <ion-label position="stacked">Health</ion-label>
+            <ion-select
+              formControlName="health"
+              interface="alert"
+              okText="OK"
+              cancelText="Cancel"
+              placeholder="Select Health"
+            >
+              <ion-select-option *ngFor="let h of healthOptions" [value]="h">{{ h }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Temperament (single select) -->
+          <ion-item>
+            <ion-label position="stacked">Temperament</ion-label>
+            <ion-select
+              formControlName="temperament"
+              interface="alert"
+              okText="OK"
+              cancelText="Cancel"
+              placeholder="Select Temperament"
+            >
+              <ion-select-option *ngFor="let t of temperamentOptions" [value]="t">{{ t }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+
+        <!-- Description (full width) -->
+        <ion-item [class.invalid]="f1.description.touched && f1.description.invalid">
+          <ion-label position="stacked">Description</ion-label>
+          <ion-textarea formControlName="description" rows="3" placeholder="Tell adopters about the pet"></ion-textarea>
+        </ion-item>
+        <ion-text color="danger" *ngIf="f1.description.touched && f1.description.invalid">
+          <p *ngIf="f1.description.errors?.['required']">Description is required.</p>
+          <p *ngIf="f1.description.errors?.['minlength']">Minimum 10 characters required.</p>
+        </ion-text>
+
+        <ion-button expand="block" class="submit-btn" (click)="goNext()">Next →</ion-button>
+      </form>
+
+      <!-- STEP 2 -->
+      <form *ngIf="step === 2" [formGroup]="petFormStep2">
+        <div class="two-col">
+          <!-- Location -->
+          <ion-item [class.invalid]="f2.location.touched && f2.location.invalid">
+            <ion-label position="stacked">Location</ion-label>
+            <ion-input formControlName="location" placeholder="e.g., MG Road, Indore"></ion-input>
+          </ion-item>
+
+          <!-- Open Maps (aligned visually) -->
+          <ion-item class="action-item">
+            <ion-label position="stacked">Map</ion-label>
+            <ion-button expand="block" color="tertiary" (click)="openInMaps()">Open in Maps</ion-button>
+          </ion-item>
+        </div>
+        <ion-text color="danger" *ngIf="f2.location.touched && f2.location.invalid">
+          <p *ngIf="f2.location.errors?.['required']">Location is required.</p>
+        </ion-text>
+
+        <div class="two-col">
+          <!-- Contact Name -->
+          <ion-item [class.invalid]="f2.contactName.touched && f2.contactName.invalid">
+            <ion-label position="stacked">Contact Name</ion-label>
+            <ion-input formControlName="contactName" placeholder="Your Name"></ion-input>
+          </ion-item>
+
+          <!-- Contact Phone -->
+          <ion-item [class.invalid]="f2.contactPhone.touched && f2.contactPhone.invalid">
+            <ion-label position="stacked">Contact Phone</ion-label>
+            <ion-input formControlName="contactPhone" type="tel" placeholder="+91 98XXXXXXXX"></ion-input>
+          </ion-item>
+        </div>
+        <ion-text color="danger" *ngIf="f2.contactName.touched && f2.contactName.invalid">
+          <p *ngIf="f2.contactName.errors?.['minlength']">Minimum 2 characters required.</p>
+        </ion-text>
+        <ion-text color="danger" *ngIf="f2.contactPhone.touched && f2.contactPhone.invalid">
+          <p *ngIf="f2.contactPhone.errors?.['pattern']">Enter a valid phone number.</p>
+        </ion-text>
+
+        <!-- Photos (full width) -->
+        <ion-item class="image-item">
+          <ion-label position="stacked">Pet Photos</ion-label>
+          <div class="image-upload-row">
+            <button type="button" class="upload-btn" (click)="triggerFileInput()">
+              <ion-icon name="camera-outline"></ion-icon>
+              <span *ngIf="imageFileNames.length">{{ imageFileNames.join(', ') }}</span>
+              <span *ngIf="!imageFileNames.length">Upload Photos</span>
+            </button>
+            <input type="file" #petImageInput (change)="onFileChange($event)" accept="image/*" multiple style="display:none;" />
+          </div>
+        </ion-item>
+
+        <ion-button expand="block" class="submit-btn outline" (click)="goBack()">← Back</ion-button>
         <ion-button expand="block" class="submit-btn" (click)="submitPet()" [disabled]="petFormStep2.invalid">Submit</ion-button>
       </form>
 

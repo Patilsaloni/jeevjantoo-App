@@ -1,8 +1,8 @@
-// import { Component, OnInit } from '@angular/core';
+// import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 // import { FormsModule } from '@angular/forms';
 // import { IonicModule, ToastController, LoadingController, ModalController } from '@ionic/angular';
 // import { CommonModule } from '@angular/common';
-// import { Router, ActivatedRoute } from '@angular/router'; // ⬅️ added ActivatedRoute
+// import { Router, ActivatedRoute } from '@angular/router';
 // import { FirebaseService } from '../../app/services/firebase.service';
 // import { Pet } from '../models/pet.model';
 // import { FilterModalComponent } from '../filter-modal/filter-modal.component';
@@ -15,23 +15,19 @@
 //   imports: [FormsModule, IonicModule, CommonModule],
 // })
 // export class AdoptionPage implements OnInit {
-//   // --- UI state used by HTML ---
 //   searchText = '';
 //   selectedFilter: string = 'All';
-
-//   // --- data ---
 //   pets: Pet[] = [];
-
-//   // Filter modal state
 //   filters = {
 //     species: [] as string[],
 //     gender: [] as string[],
+//     ageRange: [] as string[],
 //     city: '',
 //     area: '',
 //     vaccinated: false,
+//     dewormed: false,
+//     neutered: false,
 //   };
-
-//   // Category icons for horizontally scrollable list
 //   categoryIcons = [
 //     { name: 'All', icon: 'assets/img/pets2.png' },
 //     { name: 'dog', icon: 'assets/img/dog.jpg' },
@@ -43,20 +39,18 @@
 
 //   constructor(
 //     private router: Router,
-//     private route: ActivatedRoute, // ⬅️ inject current route
+//     private route: ActivatedRoute,
 //     private firebaseService: FirebaseService,
 //     private toastCtrl: ToastController,
 //     private loadingCtrl: LoadingController,
-//     private modalController: ModalController
+//     private modalController: ModalController,
+//     private cdr: ChangeDetectorRef
 //   ) {}
 
 //   async ngOnInit() {
 //     await this.loadPets();
 //   }
 
-//   // -----------------------------
-//   // Load / Refresh
-//   // -----------------------------
 //   async loadPets() {
 //     const loading = await this.loadingCtrl.create({ message: 'Loading pets...', spinner: 'crescent' });
 //     await loading.present();
@@ -73,17 +67,21 @@
 
 //         return {
 //           ...p,
-//           // safe defaults to avoid undefined in template
 //           petName: p.petName || 'Unnamed',
 //           species: (p.species || p.category || '').toLowerCase(),
 //           breed: p.breed || 'Mixed',
 //           age: typeof p.age === 'number' ? p.age : (Number(p.age) || 0),
-//           gender: p.gender || 'Unknown',
+//           ageRange: p.ageRange || this.calculateAgeRange(p.age, p.species),
+//           gender: (p.gender || 'Unknown').toLowerCase(), // Normalize gender to lowercase
 //           location: p.location || '',
+//           vaccinated: p.vaccinated || false,
+//           dewormed: p.dewormed || false,
+//           neutered: p.neutered || false,
 //           favorite: favoriteIds.has(p.id),
 //           image,
 //         } as Pet;
 //       });
+//       console.log('Loaded pets:', this.pets); // Debugging
 //     } catch (err) {
 //       console.error('Error loading pets:', err);
 //       this.showToast('Failed to load pets.', 'danger');
@@ -92,36 +90,44 @@
 //     }
 //   }
 
+//   private calculateAgeRange(age: number, species: string): string {
+//     if (species === 'dog' || species === 'cat') {
+//       if (age < 1) return species === 'dog' ? 'Puppy' : 'Kitten';
+//       if (age < 3) return 'Young';
+//       if (age < 7) return 'Adult';
+//       return 'Senior';
+//     }
+//     return '';
+//   }
+
 //   async doRefresh(ev: any) {
 //     await this.loadPets();
 //     ev.target?.complete?.();
 //   }
 
-//   // -----------------------------
-//   // Filters / Search
-//   // -----------------------------
 //   applyFilter(cat: string) {
 //     this.selectedFilter = cat;
+//     this.cdr.detectChanges(); // Force UI update
 //   }
 
 //   filteredPets(): Pet[] {
 //     let list = [...this.pets];
 
-//     // Category chip (species)
 //     if (this.selectedFilter !== 'All') {
 //       const sel = this.selectedFilter.toLowerCase();
 //       list = list.filter(p => (p.species || '').toLowerCase() === sel);
 //     }
 
-//     // Modal filters
-//     const { species, gender, city, area, vaccinated } = this.filters;
-//     if (species.length) list = list.filter(p => !!p.species && species.includes(p.species));
-//     if (gender.length)  list = list.filter(p => !!p.gender && gender.includes(p.gender));
-//     if (city)           list = list.filter(p => !!p.location && p.location === city);
-//     if (area)           list = list.filter((p: any) => !!p.area && p.area === area);
-//     if (vaccinated)     list = list.filter((p: any) => p.vaccinated === true);
+//     const { species, gender, ageRange, city, area, vaccinated, dewormed, neutered } = this.filters;
+//     if (species.length) list = list.filter(p => !!p.species && species.includes(p.species.toLowerCase()));
+//     if (gender.length) list = list.filter(p => !!p.gender && gender.includes(p.gender.toLowerCase()));
+//     if (ageRange.length) list = list.filter(p => !!p.ageRange && ageRange.includes(p.ageRange));
+//     if (city) list = list.filter(p => !!p.location && p.location.toLowerCase() === city.toLowerCase());
+//     if (area) list = list.filter((p: any) => !!p.area && p.area.toLowerCase() === area.toLowerCase());
+//     if (vaccinated) list = list.filter((p: any) => p.vaccinated === true);
+//     if (dewormed) list = list.filter((p: any) => p.dewormed === true);
+//     if (neutered) list = list.filter((p: any) => p.neutered === true);
 
-//     // Search
 //     const q = this.searchText.trim().toLowerCase();
 //     if (q) {
 //       list = list.filter(p =>
@@ -133,14 +139,11 @@
 //       );
 //     }
 
+//     console.log('Filtered pets:', list, 'Filters:', this.filters); // Debugging
 //     return list;
 //   }
 
-//   // -----------------------------
-//   // Actions
-//   // -----------------------------
 //   openPetDetails(pet: Pet) {
-//     // ✅ relative navigation -> resolves to /tabs/adoption/pet-details/:id
 //     this.router.navigate(['pet-details', pet.id], {
 //       relativeTo: this.route,
 //       state: { pet },
@@ -166,37 +169,57 @@
 //   }
 
 //   newAdoptionNavigation() {
-//     // optional: also use relative navigation
 //     this.router.navigate(['submit-pet'], { relativeTo: this.route });
-//     // or keep your absolute version:
-//     // this.router.navigate(['/tabs/adoption/submit-pet']);
 //   }
 
-//   // -----------------------------
-//   // Modal
-//   // -----------------------------
 //   async openFilterModal() {
-//     const modal = await this.modalController.create({
-//       component: FilterModalComponent,
-//       componentProps: { filters: { ...this.filters } },
-//     });
+//   const modal = await this.modalController.create({
+//     component: FilterModalComponent,
+//     componentProps: { 
+//       filterTitle: 'Filter Pets', // Custom title
+//       filterType: 'pet',
+//       filters: { ...this.filters },
+//       filterConfig: [
+//         { key: 'species', label: 'Pet Categories', type: 'chips', options: ['dog', 'cat', 'other'], priority: 1 }, // Main chips
+//         { key: 'ageRange', label: 'Age Range', type: 'chips', options: ['Puppy', 'Kitten', 'Young', 'Adult', 'Senior'], priority: 2 }, // Secondary chips
+//         { key: 'gender', label: 'Gender', type: 'chips', options: ['male', 'female', 'unknown'] },
+//         { key: 'city', label: 'City', type: 'dropdown', options: ['New York', 'Los Angeles', 'Chicago'] },
+//         { 
+//           key: 'area', 
+//           label: 'Area', 
+//           type: 'dropdown', 
+//           dependsOn: 'city',
+//           options: {
+//             'New York': ['Manhattan', 'Brooklyn', 'Queens'],
+//             'Los Angeles': ['Downtown', 'Hollywood', 'Santa Monica'],
+//             'Chicago': ['Loop', 'Lincoln Park', 'Hyde Park']
+//           }
+//         },
+//         { key: 'vaccinated', label: 'Vaccinated', type: 'toggle' },
+//         { key: 'dewormed', label: 'Dewormed', type: 'toggle' },
+//         { key: 'neutered', label: 'Neutered', type: 'toggle' }
+//       ]
+//     },
+//     breakpoints: [0, 0.5, 0.9],  // Add 0.9 or 1 to allow larger size
+//   initialBreakpoint: 0.5,       // Start nearly fully expanded
+//   cssClass: 'bottom-filter-sheet'
+//   });
 
-//     modal.onDidDismiss().then(({ data }) => {
-//       if (data) this.filters = { ...data };
-//     });
+//   modal.onDidDismiss().then(({ data }) => {
+//     if (data) {
+//       this.filters = { ...data };
+//       this.cdr.detectChanges();
+//     }
+//   });
 
-//     await modal.present();
-//   }
+//   await modal.present();
+// }
 
-//   // -----------------------------
-//   // UI helper
-//   // -----------------------------
 //   private async showToast(message: string, color: 'success' | 'danger') {
 //     const toast = await this.toastCtrl.create({ message, duration: 2000, color, position: 'bottom' });
 //     await toast.present();
 //   }
 // }
-
 
 
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
@@ -205,8 +228,21 @@ import { IonicModule, ToastController, LoadingController, ModalController } from
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseService } from '../../app/services/firebase.service';
-import { Pet } from '../models/pet.model';
+import { Pet as BasePet } from '../models/pet.model';  // keep your shared model
 import { FilterModalComponent } from '../filter-modal/filter-modal.component';
+
+type PetVM = BasePet & {
+  // UI-computed / display fields
+  displayAge: string;        // "1y 3m", "7m", etc.
+  ageInMonths: number;       // canonical age number
+  image: string;             // first photo or fallback
+  favorite: boolean;         // heart state
+  // optional fields that filters might read
+  vaccinated?: boolean;
+  dewormed?: boolean;
+  neutered?: boolean;
+  ageRange?: string;
+};
 
 @Component({
   selector: 'app-adoption',
@@ -218,7 +254,8 @@ import { FilterModalComponent } from '../filter-modal/filter-modal.component';
 export class AdoptionPage implements OnInit {
   searchText = '';
   selectedFilter: string = 'All';
-  pets: Pet[] = [];
+  pets: PetVM[] = [];
+
   filters = {
     species: [] as string[],
     gender: [] as string[],
@@ -229,6 +266,7 @@ export class AdoptionPage implements OnInit {
     dewormed: false,
     neutered: false,
   };
+
   categoryIcons = [
     { name: 'All', icon: 'assets/img/pets2.png' },
     { name: 'dog', icon: 'assets/img/dog.jpg' },
@@ -252,6 +290,28 @@ export class AdoptionPage implements OnInit {
     await this.loadPets();
   }
 
+  private normalizeSpeciesCode(val: any): string {
+    const s = String(val || '').toLowerCase();
+    if (s.includes('dog')) return 'dog';
+    if (s.includes('cat')) return 'cat';
+    if (s.includes('bird')) return 'bird';
+    if (s.includes('fish')) return 'fish';
+    if (s.includes('rabbit')) return 'rabbit';
+    return 'other';
+  }
+
+  private toDisplayAge(p: any): { months: number; text: string } {
+    const m =
+      typeof p?.ageInMonths === 'number' ? p.ageInMonths :
+      (Number(p?.ageYears) || 0) * 12 + (Number(p?.ageMonths) || 0);
+
+    const months = Math.max(0, Math.floor(m));
+    const y = Math.floor(months / 12);
+    const mm = months % 12;
+    const text = y > 0 ? (mm > 0 ? `${y}y ${mm}m` : `${y}y`) : `${mm}m`;
+    return { months, text };
+  }
+
   async loadPets() {
     const loading = await this.loadingCtrl.create({ message: 'Loading pets...', spinner: 'crescent' });
     await loading.present();
@@ -259,46 +319,39 @@ export class AdoptionPage implements OnInit {
     try {
       const activePets: any[] = await this.firebaseService.getActivePets();
       const favoritePets: any[] = await this.firebaseService.getFavoritePets('pet-adoption');
-      const favoriteIds = new Set(favoritePets.map(p => p.id));
+      const favoriteIds = new Set((favoritePets || []).map(p => p.id));
 
       this.pets = (activePets || []).map((p: any) => {
         const image =
           Array.isArray(p.photos) && p.photos.length > 0 ? p.photos[0] :
           p.image || 'assets/default-pet.jpg';
 
-        return {
+        const speciesCode = this.normalizeSpeciesCode(p.species || p.category);
+        const { months, text } = this.toDisplayAge(p);
+
+        const vm: PetVM = {
           ...p,
           petName: p.petName || 'Unnamed',
-          species: (p.species || p.category || '').toLowerCase(),
+          species: speciesCode,                 // dog/cat/bird/fish/rabbit/other
           breed: p.breed || 'Mixed',
-          age: typeof p.age === 'number' ? p.age : (Number(p.age) || 0),
-          ageRange: p.ageRange || this.calculateAgeRange(p.age, p.species),
-          gender: (p.gender || 'Unknown').toLowerCase(), // Normalize gender to lowercase
+          ageInMonths: months,                  // canonical numeric
+          displayAge: text,                     // e.g., "1y 3m" or "7m"
+          gender: (p.gender || 'Unknown').toLowerCase(),
           location: p.location || '',
           vaccinated: p.vaccinated || false,
           dewormed: p.dewormed || false,
           neutered: p.neutered || false,
           favorite: favoriteIds.has(p.id),
           image,
-        } as Pet;
+        };
+        return vm;
       });
-      console.log('Loaded pets:', this.pets); // Debugging
     } catch (err) {
       console.error('Error loading pets:', err);
       this.showToast('Failed to load pets.', 'danger');
     } finally {
       await loading.dismiss();
     }
-  }
-
-  private calculateAgeRange(age: number, species: string): string {
-    if (species === 'dog' || species === 'cat') {
-      if (age < 1) return species === 'dog' ? 'Puppy' : 'Kitten';
-      if (age < 3) return 'Young';
-      if (age < 7) return 'Adult';
-      return 'Senior';
-    }
-    return '';
   }
 
   async doRefresh(ev: any) {
@@ -308,10 +361,10 @@ export class AdoptionPage implements OnInit {
 
   applyFilter(cat: string) {
     this.selectedFilter = cat;
-    this.cdr.detectChanges(); // Force UI update
+    this.cdr.detectChanges();
   }
 
-  filteredPets(): Pet[] {
+  filteredPets(): PetVM[] {
     let list = [...this.pets];
 
     if (this.selectedFilter !== 'All') {
@@ -320,14 +373,14 @@ export class AdoptionPage implements OnInit {
     }
 
     const { species, gender, ageRange, city, area, vaccinated, dewormed, neutered } = this.filters;
-    if (species.length) list = list.filter(p => !!p.species && species.includes(p.species.toLowerCase()));
-    if (gender.length) list = list.filter(p => !!p.gender && gender.includes(p.gender.toLowerCase()));
-    if (ageRange.length) list = list.filter(p => !!p.ageRange && ageRange.includes(p.ageRange));
-    if (city) list = list.filter(p => !!p.location && p.location.toLowerCase() === city.toLowerCase());
-    if (area) list = list.filter((p: any) => !!p.area && p.area.toLowerCase() === area.toLowerCase());
-    if (vaccinated) list = list.filter((p: any) => p.vaccinated === true);
-    if (dewormed) list = list.filter((p: any) => p.dewormed === true);
-    if (neutered) list = list.filter((p: any) => p.neutered === true);
+    if (species.length)   list = list.filter(p => !!p.species && species.includes(p.species.toLowerCase()));
+    if (gender.length)    list = list.filter(p => !!p.gender && gender.includes(p.gender.toLowerCase()));
+    if (ageRange.length)  list = list.filter(p => !!p.ageRange && ageRange.includes(p.ageRange));
+    if (city)             list = list.filter(p => !!p.location && p.location.toLowerCase() === city.toLowerCase());
+    if (area)             list = list.filter((p: any) => !!p.area && p.area.toLowerCase() === area.toLowerCase());
+    if (vaccinated)       list = list.filter((p: any) => p.vaccinated === true);
+    if (dewormed)         list = list.filter((p: any) => p.dewormed === true);
+    if (neutered)         list = list.filter((p: any) => p.neutered === true);
 
     const q = this.searchText.trim().toLowerCase();
     if (q) {
@@ -339,30 +392,25 @@ export class AdoptionPage implements OnInit {
         (p.location && p.location.toLowerCase().includes(q))
       );
     }
-
-    console.log('Filtered pets:', list, 'Filters:', this.filters); // Debugging
     return list;
   }
 
-  openPetDetails(pet: Pet) {
-    this.router.navigate(['pet-details', pet.id], {
-      relativeTo: this.route,
-      state: { pet },
-    });
+  openPetDetails(p: PetVM) {
+    this.router.navigate(['pet-details', (p as any).id], { relativeTo: this.route, state: { pet: p } });
   }
 
-  onViewDetails(pet: Pet, ev: Event) {
+  onViewDetails(pet: PetVM, ev: Event) {
     ev.stopPropagation();
     this.openPetDetails(pet);
   }
 
-  async toggleFavorite(pet: Pet, event: MouseEvent) {
+  async toggleFavorite(pet: PetVM, event: MouseEvent) {
     event.stopPropagation();
-    if (!pet.id) return;
+    if (!(pet as any).id) return;
     try {
-      await this.firebaseService.setFavorite('pet-adoption', pet.id, !pet.favorite);
-      pet.favorite = !pet.favorite;
-      this.showToast(pet.favorite ? 'Added to favorites!' : 'Removed from favorites!', 'success');
+      await this.firebaseService.setFavorite('pet-adoption', (pet as any).id, !(pet as any).favorite);
+      (pet as any).favorite = !(pet as any).favorite;
+      this.showToast((pet as any).favorite ? 'Added to favorites!' : 'Removed from favorites!', 'success');
     } catch (err) {
       console.error('Error toggling favorite:', err);
       this.showToast('Failed to toggle favorite.', 'danger');
@@ -380,15 +428,12 @@ export class AdoptionPage implements OnInit {
   //       filters: { ...this.filters },
   //       filterType: 'pet',
   //       filterConfig: [
-  //         { key: 'species', label: 'Species', type: 'chips', options: ['dog', 'cat', 'other'] },
-  //         { key: 'gender', label: 'Gender', type: 'chips', options: ['male', 'female', 'unknown'] },
-  //         { key: 'ageRange', label: 'Age Range', type: 'chips', options: ['Puppy', 'Kitten', 'Young', 'Adult', 'Senior'] },
-  //         { key: 'city', label: 'City', type: 'dropdown', options: ['New York', 'Los Angeles', 'Chicago'] },
+  //         { key: 'species',  label: 'Species',   type: 'chips',    options: ['dog','cat','bird','fish','rabbit','other'] },
+  //         { key: 'gender',   label: 'Gender',    type: 'chips',    options: ['male','female','unknown'] },
+  //         { key: 'ageRange', label: 'Age Range', type: 'chips',    options: ['Puppy','Kitten','Young','Adult','Senior'] },
+  //         { key: 'city',     label: 'City',      type: 'dropdown', options: ['New York', 'Los Angeles', 'Chicago'] },
   //         { 
-  //           key: 'area', 
-  //           label: 'Area', 
-  //           type: 'dropdown', 
-  //           dependsOn: 'city',
+  //           key: 'area', label: 'Area', type: 'dropdown', dependsOn: 'city',
   //           options: {
   //             'New York': ['Manhattan', 'Brooklyn', 'Queens'],
   //             'Los Angeles': ['Downtown', 'Hollywood', 'Santa Monica'],
@@ -396,22 +441,18 @@ export class AdoptionPage implements OnInit {
   //           }
   //         },
   //         { key: 'vaccinated', label: 'Vaccinated', type: 'toggle' },
-  //         { key: 'dewormed', label: 'Dewormed', type: 'toggle' },
-  //         { key: 'neutered', label: 'Neutered', type: 'toggle' }
+  //         { key: 'dewormed',   label: 'Dewormed',   type: 'toggle' },
+  //         { key: 'neutered',   label: 'Neutered',   type: 'toggle' }
   //       ]
   //     },
   //   });
 
-  //   modal.onDidDismiss().then(({ data }) => {
-  //     if (data) {
-  //       this.filters = { ...data };
-  //       this.cdr.detectChanges(); // Force UI update after filter changes
-  //     }
-  //   });
-
-  //   await modal.present();
+  //   const { data } = await modal.onDidDismiss();
+  //   if (data) {
+  //     this.filters = { ...data };
+  //     this.cdr.detectChanges();
+  //   }
   // }
-
 
   async openFilterModal() {
   const modal = await this.modalController.create({
@@ -441,9 +482,9 @@ export class AdoptionPage implements OnInit {
         { key: 'neutered', label: 'Neutered', type: 'toggle' }
       ]
     },
-    breakpoints: [0, 0.5, 0.9],  // Add 0.9 or 1 to allow larger size
-  initialBreakpoint: 0.5,       // Start nearly fully expanded
-  cssClass: 'bottom-filter-sheet'
+    breakpoints: [0, 0.5, 0.9],  // modal snap points for sliding effect
+    initialBreakpoint: 0.5,       // start nearly expanded
+    cssClass: 'bottom-filter-sheet' // custom styling for border-radius and height
   });
 
   modal.onDidDismiss().then(({ data }) => {

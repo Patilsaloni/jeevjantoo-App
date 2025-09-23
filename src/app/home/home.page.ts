@@ -111,7 +111,6 @@
 
 // }
 
-
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NavController, IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
@@ -119,6 +118,7 @@ import { DirectoryService } from 'src/app/services/directory.service';
 import { AdoptionService } from '../services/adoption.service';
 import { FirebaseService } from 'src/app/services/firebase.service'; // Import FirebaseService
 import { Router } from '@angular/router';
+import { Unsubscribe } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dashboard',
@@ -126,49 +126,139 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [CommonModule, IonicModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomePage implements OnInit {
-
   stats = [
     { title: 'Clinics', value: 0 },
     { title: 'NGOs', value: 0 },
     { title: 'Adoptions', value: 0 },
-    { title: 'Events', value: 0 }
+    { title: 'Events', value: 0 },
   ];
 
   tiles = [
-    { label: 'Clinics', svgPath: 'assets/icons/clinic.svg', bgColor: '#fff9db', route: 'clinics', type: 'Clinics' },
-    { label: 'NGOs', svgPath: 'assets/icons/ngo.svg', bgColor: '#e9f4f0', route: 'ngos', type: 'NGOs' },
-    { label: 'Ambulance', svgPath: 'assets/icons/ambulance.svg', bgColor: '#fff0f0', route: 'ambulance' },
-    { label: 'Boarding', svgPath: 'assets/icons/boarding.svg', bgColor: '#faf5ea', route: 'boarding' },
-    { label: 'Govt Helpline', svgPath: 'assets/icons/helpline.svg', bgColor: '#e2efff', route: 'ghelpline' },
-    { label: 'Feeding', svgPath: 'assets/icons/feeding.svg', bgColor: '#f4f4f4', route: 'feeding' },
-    { label: 'Insurance', svgPath: 'assets/icons/insurance.svg', bgColor: '#edf5ff', route: 'insurance' }
+    {
+      label: 'Clinics',
+      svgPath: 'assets/icons/clinic.svg',
+      bgColor: '#fff9db',
+      route: 'clinics',
+      type: 'Clinics',
+    },
+    {
+      label: 'NGOs',
+      svgPath: 'assets/icons/ngo.svg',
+      bgColor: '#e9f4f0',
+      route: 'ngos',
+      type: 'NGOs',
+    },
+    {
+      label: 'Ambulance',
+      svgPath: 'assets/icons/ambulance.svg',
+      bgColor: '#fff0f0',
+      route: 'ambulance',
+    },
+    {
+      label: 'Boarding',
+      svgPath: 'assets/icons/boarding.svg',
+      bgColor: '#faf5ea',
+      route: 'boarding',
+    },
+    {
+      label: 'Govt Helpline',
+      svgPath: 'assets/icons/helpline.svg',
+      bgColor: '#e2efff',
+      route: 'ghelpline',
+    },
+    {
+      label: 'Feeding',
+      svgPath: 'assets/icons/feeding.svg',
+      bgColor: '#f4f4f4',
+      route: 'feeding',
+    },
+    {
+      label: 'Insurance',
+      svgPath: 'assets/icons/insurance.svg',
+      bgColor: '#edf5ff',
+      route: 'insurance',
+    },
   ];
 
   categories = [
-    { name: 'Dogs', icon: 'paw-outline', route: 'dogs', imageUrl: 'assets/img/dogs.jpg' },
-    { name: 'Cats', icon: 'paw-outline', route: 'cats', imageUrl: 'assets/img/cats.jpg' },
-    { name: 'Birds', icon: 'paw-outline', route: 'birds', imageUrl: 'assets/img/birds.jpg' },
-    { name: 'Rabbits', icon: 'paw-outline', route: 'rabbits', imageUrl: 'assets/img/rabbits.jpg' },
-    { name: 'Small Pets', icon: 'paw-outline', route: 'small-pets', imageUrl: 'assets/img/hamster.jpg' }
+    {
+      name: 'Dogs',
+      icon: 'paw-outline',
+      route: 'dogs',
+      imageUrl: 'assets/img/dogs.jpg',
+    },
+    {
+      name: 'Cats',
+      icon: 'paw-outline',
+      route: 'cats',
+      imageUrl: 'assets/img/cats.jpg',
+    },
+    {
+      name: 'Birds',
+      icon: 'paw-outline',
+      route: 'birds',
+      imageUrl: 'assets/img/birds.jpg',
+    },
+    {
+      name: 'Rabbits',
+      icon: 'paw-outline',
+      route: 'rabbits',
+      imageUrl: 'assets/img/rabbits.jpg',
+    },
+    {
+      name: 'Small Pets',
+      icon: 'paw-outline',
+      route: 'small-pets',
+      imageUrl: 'assets/img/hamster.jpg',
+    },
   ];
 
   featuredPets = [
-    { id: 1, name: 'Buddy', breed: 'Golden Retriever', age: '2 years', photos: ['assets/img/buddy.jpg'] },
-    { id: 2, name: 'Lucy', breed: 'Siamese', age: '1 year', photos: ['assets/img/lucy.jpg'] },
-    { id: 3, name: 'Max', breed: 'German Shepherd', age: '3 years', photos: ['assets/img/max.jpg'] },
-    { id: 4, name: 'Mochi', breed: 'Shiba Inu', age: '1 year', photos: ['assets/img/mochi.jpg'] }
+    {
+      id: 1,
+      name: 'Buddy',
+      breed: 'Golden Retriever',
+      age: '2 years',
+      photos: ['assets/img/buddy.jpg'],
+    },
+    {
+      id: 2,
+      name: 'Lucy',
+      breed: 'Siamese',
+      age: '1 year',
+      photos: ['assets/img/lucy.jpg'],
+    },
+    {
+      id: 3,
+      name: 'Max',
+      breed: 'German Shepherd',
+      age: '3 years',
+      photos: ['assets/img/max.jpg'],
+    },
+    {
+      id: 4,
+      name: 'Mochi',
+      breed: 'Shiba Inu',
+      age: '1 year',
+      photos: ['assets/img/mochi.jpg'],
+    },
   ];
 
   latestAdoptions: any[] = [];
   loadingStats = true;
   loadingAdoptions = true;
-
+  private unsubscribeAdoptions: Unsubscribe | null = null;
   bannerOptions = { slidesPerView: 1, loop: true, autoplay: true };
   tilesOptions = { slidesPerView: 2.5, spaceBetween: 15, freeMode: true };
-  carouselOptions = { slidesPerView: 1.2, spaceBetween: 15, loop: true, centeredSlides: true };
+  carouselOptions = {
+    slidesPerView: 1.2,
+    spaceBetween: 15,
+    loop: true,
+    centeredSlides: true,
+  };
 
   constructor(
     private directoryService: DirectoryService,
@@ -182,47 +272,57 @@ export class HomePage implements OnInit {
     this.loadLatestAdoptions();
   }
 
-  async loadLatestAdoptions() {
+  loadLatestAdoptions() {
     this.loadingAdoptions = true;
-    try {
-      const res = await this.firebaseService.getInformation('pet-adoption');
-      this.latestAdoptions = res
-        .filter((pet: any) => pet.status?.toLowerCase() === 'active') // Filter by status 'Active'
-        .sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)) // Sort by createdAt descending
-        .slice(0, 5) // Limit to 5
-        .map((pet: any) => {
-          // Format age as "X years, Y months" or "Y months" if no years
-          let ageDisplay = '';
-          const years = Number(pet.ageYears) || 0;
-          const months = Number(pet.ageMonths) || 0;
-          if (years > 0 && months > 0) {
-            ageDisplay = `${years} year${years > 1 ? 's' : ''}, ${months} month${months > 1 ? 's' : ''}`;
-          } else if (years > 0) {
-            ageDisplay = `${years} year${years > 1 ? 's' : ''}`;
-          } else if (months > 0) {
-            ageDisplay = `${months} month${months > 1 ? 's' : ''}`;
-          } else {
-            ageDisplay = 'Unknown';
-          }
 
-          return {
-            id: pet.id,
-            name: pet.petName || 'Unknown',
-            breed: pet.breed || 'Unknown',
-            age: ageDisplay,
-            photos: pet.photos && pet.photos.length ? pet.photos : ['assets/placeholder-pet.jpg'],
-            gender: pet.gender || 'Unknown'
-          };
-        });
-      console.log('Latest adoptions:', this.latestAdoptions); // Debug
-      this.loadingAdoptions = false;
-    } catch (error) {
-      console.error('Error fetching adoptions:', error);
-      this.latestAdoptions = [];
-      this.loadingAdoptions = false;
-    }
+    this.unsubscribeAdoptions = this.firebaseService.listenToCollection(
+      'pet-adoption',
+      (res: any[]) => {
+        this.latestAdoptions = res
+          .filter((pet: any) => pet.status?.toLowerCase() === 'active')
+          .sort(
+            (a: any, b: any) =>
+              (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+          )
+          .slice(0, 5)
+          .map((pet: any) => {
+            let ageDisplay = '';
+            const years = Number(pet.ageYears) || 0;
+            const months = Number(pet.ageMonths) || 0;
+            if (years > 0 && months > 0) {
+              ageDisplay = `${years} year${
+                years > 1 ? 's' : ''
+              }, ${months} month${months > 1 ? 's' : ''}`;
+            } else if (years > 0) {
+              ageDisplay = `${years} year${years > 1 ? 's' : ''}`;
+            } else if (months > 0) {
+              ageDisplay = `${months} month${months > 1 ? 's' : ''}`;
+            } else {
+              ageDisplay = 'Unknown';
+            }
+
+            return {
+              id: pet.id,
+              name: pet.petName || 'Unknown',
+              breed: pet.breed || 'Unknown',
+              age: ageDisplay,
+              photos:
+                pet.photos && pet.photos.length
+                  ? pet.photos
+                  : ['assets/placeholder-pet.jpg'],
+              gender: pet.gender || 'Unknown',
+            };
+          });
+        console.log('Latest adoptions updated:', this.latestAdoptions);
+        this.loadingAdoptions = false;
+      },
+      (error: any) => {
+        console.error('Error listening to adoptions:', error);
+        this.latestAdoptions = [];
+        this.loadingAdoptions = false;
+      }
+    );
   }
-  
   // async loadLatestAdoptions() {
   //   this.loadingAdoptions = true;
   //   try {

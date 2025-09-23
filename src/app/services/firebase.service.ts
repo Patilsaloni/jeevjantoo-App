@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import {
   getFirestore, collection, doc, setDoc, getDocs, updateDoc, getDoc,
-  addDoc, query, where, deleteDoc, limit, orderBy, startAfter, serverTimestamp, WhereFilterOp
+  addDoc, query, where, deleteDoc, limit, orderBy, startAfter, serverTimestamp, WhereFilterOp, onSnapshot, Unsubscribe
 } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { environment } from '../../environments/environment';
@@ -51,6 +51,16 @@ export class FirebaseService {
       handleCodeInApp: true
     });
   }
+
+
+  // ---------------- Real-Time Listener ----------------
+listenToCollection(collectionName: string, onUpdate: (data: any[]) => void, onError: (error: any) => void): Unsubscribe {
+  const colRef = collection(this.db, collectionName);
+  return onSnapshot(colRef, (snapshot) => {
+    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    onUpdate(data);
+  }, onError);
+}
 
   // ---------------- Firestore Generic Methods ----------------
   async addInformation(docID: string, data: any, collectionName: string) {

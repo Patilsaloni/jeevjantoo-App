@@ -214,44 +214,6 @@ export class AbcPage implements OnInit {
     console.log('Cities for state', this.filters.state, ':', this.cities);
   }
 
-  // async openFilterModal() {
-  //   this.updateCitiesByState();
-  //   const modal = await this.modalController.create({
-  //     component: FilterModalComponent,
-  //     cssClass: 'filter-popup-modal',
-  //     componentProps: {
-  //       filters: { ...this.filters },
-  //       filterType: 'abc',
-  //       filterConfig: [
-  //         {
-  //           key: 'state',
-  //           label: 'State',
-  //           type: 'dropdown',
-  //           options: this.states,
-  //         },
-  //         {
-  //           key: 'city',
-  //           label: 'City',
-  //           type: 'dropdown',
-  //           options: this.citiesByState,
-  //           dependsOn: 'state',
-  //         },
-  //       ],
-  //     },
-  //   });
-
-  //   modal.onDidDismiss().then(({ data }) => {
-  //     if (data) {
-  //       this.filters = { ...data };
-  //       this.updateCities();
-  //       this.applyFilters();
-  //     }
-  //   });
-
-  //   await modal.present();
-  // }
-
-
     async openFilterModal() {
     const modal = await this.modalController.create({
       component: FilterModalComponent,

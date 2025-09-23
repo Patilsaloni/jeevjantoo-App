@@ -119,7 +119,8 @@
             <ion-icon name="location-outline"></ion-icon>
           </button>
           <button class="icon-btn save-btn" (click)="saveRecord()">
-            <ion-icon name="bookmark-outline"></ion-icon>
+            <ion-icon [name]="saved ? 'bookmark' : 'bookmark-outline'"></ion-icon>
+            <!-- <ion-icon name="bookmark-outline"></ion-icon> -->
           </button>
           <button class="icon-btn share-btn" (click)="shareRecord()">
             <ion-icon name="share-social-outline"></ion-icon>

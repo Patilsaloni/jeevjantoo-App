@@ -45,6 +45,11 @@ export class FirebaseService {
     return this.auth.currentUser;
   }
 
+  /** Small helper you can call from components */
+  currentUid(): string | null {
+    return this.auth.currentUser?.uid ?? null;
+  }
+
   async resetPasswordWithEmail(email: string) {
     await sendPasswordResetEmail(this.auth, email, {
       url: 'http://localhost:4200/signin',
@@ -52,15 +57,14 @@ export class FirebaseService {
     });
   }
 
-
   // ---------------- Real-Time Listener ----------------
-listenToCollection(collectionName: string, onUpdate: (data: any[]) => void, onError: (error: any) => void): Unsubscribe {
-  const colRef = collection(this.db, collectionName);
-  return onSnapshot(colRef, (snapshot) => {
-    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    onUpdate(data);
-  }, onError);
-}
+  listenToCollection(collectionName: string, onUpdate: (data: any[]) => void, onError: (error: any) => void): Unsubscribe {
+    const colRef = collection(this.db, collectionName);
+    return onSnapshot(colRef, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      onUpdate(data);
+    }, onError);
+  }
 
   // ---------------- Firestore Generic Methods ----------------
   async addInformation(docID: string, data: any, collectionName: string) {
@@ -123,7 +127,7 @@ listenToCollection(collectionName: string, onUpdate: (data: any[]) => void, onEr
       id: docID,                               // <-- align field with doc id
       status: 'Pending' as PetStatus,
       createdAt: serverTimestamp(),
-      submitterUid: user.uid
+      submitterUid: user.uid                   // <-- used as ownerUid for inquiries
     };
 
     return this.addInformation(docID, dataToSave, 'pet-adoption');
@@ -138,6 +142,16 @@ listenToCollection(collectionName: string, onUpdate: (data: any[]) => void, onEr
 
   async getActivePets() {
     return this.getFilteredInformation('pet-adoption', 'status', '==', 'Active');
+  }
+
+  /** Convenience: fetch a single pet by id (used by details page) */
+  async getPetById(id: string) {
+    return this.getDocument('pet-adoption', id);
+  }
+
+  /** Optional alias if some pages call it this name already */
+  async getAdoptionById(id: string) {
+    return this.getPetById(id);
   }
 
   // ---------------- Storage Methods ----------------
@@ -293,4 +307,57 @@ listenToCollection(collectionName: string, onUpdate: (data: any[]) => void, onEr
     const snapshot = await getDocs(colRef);
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
   }
+
+  // ---------------- Adoption Inquiries (NEW) ----------------
+  /**
+   * Create an inquiry for a pet-adoption post.
+   * - Looks up the post to derive ownerUid (uses submitterUid or ownerUid on the pet doc)
+   * - Requires signed-in user
+   * - Writes to collection: 'adoptionInquiries'
+   */
+  async addAdoptionInquiry(input: {
+    adoptionId: string;
+    message: string;
+    fromName?: string;
+    fromPhone?: string;
+  }) {
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('Please sign in to send an inquiry.');
+
+    const { adoptionId, message, fromName = '', fromPhone = '' } = input;
+    if (!adoptionId || !message?.trim()) {
+      throw new Error('adoptionId and message are required.');
+    }
+
+    // Fetch the pet to identify the owner
+    const petSnap = await this.getDocument('pet-adoption', adoptionId);
+    if (!petSnap) throw new Error('Adoption post not found.');
+
+    const ownerUid: string =
+      (petSnap as any).ownerUid ||
+      (petSnap as any).submitterUid ||
+      '';
+
+    if (!ownerUid) {
+      // still allow write, but warn in console (you can throw instead)
+      console.warn('Owner UID missing on pet doc; writing inquiry without ownerUid.');
+    }
+
+    const colRef = collection(this.db, 'adoptionInquiries');
+    const docRef = await addDoc(colRef, {
+      adoptionId,
+      ownerUid,
+      fromUid: user.uid,
+      message: message.trim(),
+      fromName: fromName || user.displayName || '',
+      fromPhone: fromPhone || user.phoneNumber || '',
+      status: 'pending',
+      createdAt: serverTimestamp()
+    });
+
+    return docRef.id;
+  }
+
+
+  
 }

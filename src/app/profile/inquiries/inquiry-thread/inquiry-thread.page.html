@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profile/inquiries"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Conversation</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let m of messages">
+      <ion-label>
+        <p>{{ m.message }}</p>
+        <ion-note>{{ m.createdAt?.toDate?.() || '' }}</ion-note>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-item lines="none">
+      <ion-input [(ngModel)]="text" placeholder="Type a message"></ion-input>
+      <ion-button slot="end" (click)="send()">Send</ion-button>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>

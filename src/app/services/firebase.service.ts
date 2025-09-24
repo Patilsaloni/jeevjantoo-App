@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import {
   getFirestore, collection, doc, setDoc, getDocs, updateDoc, getDoc,
-  addDoc, query, where, deleteDoc, limit, orderBy, startAfter, serverTimestamp, WhereFilterOp, onSnapshot, Unsubscribe
+  addDoc, query, where, deleteDoc, limit, orderBy, startAfter, serverTimestamp,
+  WhereFilterOp, onSnapshot, Unsubscribe, arrayUnion
 } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { environment } from '../../environments/environment';
@@ -61,7 +62,7 @@ export class FirebaseService {
   listenToCollection(collectionName: string, onUpdate: (data: any[]) => void, onError: (error: any) => void): Unsubscribe {
     const colRef = collection(this.db, collectionName);
     return onSnapshot(colRef, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       onUpdate(data);
     }, onError);
   }
@@ -92,16 +93,16 @@ export class FirebaseService {
 
   async getFilteredInformation(collectionName: string, field: string, operator: WhereFilterOp, value: any) {
     const colRef = collection(this.db, collectionName);
-    const q = query(colRef, where(field, operator, value));
-    const snapshot = await getDocs(q);
+    const qy = query(colRef, where(field, operator, value));
+    const snapshot = await getDocs(qy);
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
   }
 
   async getPaginatedInformation(collectionName: string, pageSize: number, lastDoc: any = null) {
     const colRef = collection(this.db, collectionName);
-    let q = query(colRef, orderBy('createdAt', 'desc'), limit(pageSize));
-    if (lastDoc) q = query(colRef, orderBy('createdAt', 'desc'), startAfter(lastDoc), limit(pageSize));
-    const snapshot = await getDocs(q);
+    let qy = query(colRef, orderBy('createdAt', 'desc'), limit(pageSize));
+    if (lastDoc) qy = query(colRef, orderBy('createdAt', 'desc'), startAfter(lastDoc), limit(pageSize));
+    const snapshot = await getDocs(qy);
     return {
       data: snapshot.docs.map(d => ({ id: d.id, ...d.data() })),
       lastDoc: snapshot.docs[snapshot.docs.length - 1]
@@ -124,10 +125,11 @@ export class FirebaseService {
 
     const dataToSave = {
       ...petData,
-      id: docID,                               // <-- align field with doc id
+      id: docID,                            // align field with doc id
       status: 'Pending' as PetStatus,
       createdAt: serverTimestamp(),
-      submitterUid: user.uid                   // <-- used as ownerUid for inquiries
+      submitterUid: user.uid,
+      ownerUid: user.uid                    // ✅ required for inquiries & rules
     };
 
     return this.addInformation(docID, dataToSave, 'pet-adoption');
@@ -171,11 +173,6 @@ export class FirebaseService {
     return `${userUid}_${petId}`;
   }
 
-  /**
-   * Save/remove favorite for current user.
-   * - Accepts either pet id (string) or full pet object
-   * - Writes minimal safe fields needed for list rendering
-   */
   async setFavorite(collectionName: string, pet: any | string, value: boolean) {
     const user = this.getCurrentUser();
     if (!user) throw new Error('User must be signed in to manage favorites.');
@@ -196,7 +193,6 @@ export class FirebaseService {
     const favRef = doc(this.db, this.favoriteCol(collectionName), this.favoriteDocId(user.uid, petId));
 
     if (value) {
-      // only persist necessary denormalized fields to render favorites quickly
       await setDoc(favRef, {
         id: petId,
         petName: petData.petName ?? '',
@@ -234,10 +230,6 @@ export class FirebaseService {
     return !isFav;
   }
 
-  /**
-   * Fast helper to pre-mark heart icons on listing pages.
-   * Returns Set of petIds that are favorited by current user.
-   */
   async getFavoriteIds(collectionName: string): Promise<Set<string>> {
     const user = this.getCurrentUser();
     if (!user) return new Set();
@@ -250,9 +242,6 @@ export class FirebaseService {
     return new Set(ids);
   }
 
-  /**
-   * Get denormalized favorite pet cards to show in Favorites screen.
-   */
   async getFavoritePets(collectionName: string): Promise<any[]> {
     const user = this.getCurrentUser();
     if (!user) return [];
@@ -277,7 +266,6 @@ export class FirebaseService {
         age: data.age ?? 0,
         gender: data.gender || '',
         image,
-        // normalize category/species for UI
         category: data.category || data.species || 'Unknown',
         favorite: true,
         contact: data.contact || '',
@@ -308,56 +296,229 @@ export class FirebaseService {
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
   }
 
-  // ---------------- Adoption Inquiries (NEW) ----------------
+  // ---------------- Adoption Inquiries (COMPLETE) ----------------
+
   /**
-   * Create an inquiry for a pet-adoption post.
-   * - Looks up the post to derive ownerUid (uses submitterUid or ownerUid on the pet doc)
-   * - Requires signed-in user
-   * - Writes to collection: 'adoptionInquiries'
+   * Create (or reuse) a unique inquiry per (adoptionId, fromUid). Also writes the first message.
+   * Returns the inquiryId.
    */
   async addAdoptionInquiry(input: {
     adoptionId: string;
     message: string;
     fromName?: string;
     fromPhone?: string;
-  }) {
+  }): Promise<string> {
     const user = this.getCurrentUser();
     if (!user) throw new Error('Please sign in to send an inquiry.');
 
-    const { adoptionId, message, fromName = '', fromPhone = '' } = input;
-    if (!adoptionId || !message?.trim()) {
-      throw new Error('adoptionId and message are required.');
-    }
+    const adoptionId = input.adoptionId;
+    const firstMsg = (input.message || '').trim();
+    if (!adoptionId || !firstMsg) throw new Error('adoptionId and message are required.');
 
-    // Fetch the pet to identify the owner
-    const petSnap = await this.getDocument('pet-adoption', adoptionId);
-    if (!petSnap) throw new Error('Adoption post not found.');
+    // Lookup listing to find owner info and denormalize preview fields
+    const pet: any = await this.getDocument('pet-adoption', adoptionId);
+    if (!pet) throw new Error('Adoption post not found.');
 
-    const ownerUid: string =
-      (petSnap as any).ownerUid ||
-      (petSnap as any).submitterUid ||
-      '';
-
+    const ownerUid: string | undefined = pet.ownerUid || pet.submitterUid;
     if (!ownerUid) {
-      // still allow write, but warn in console (you can throw instead)
-      console.warn('Owner UID missing on pet doc; writing inquiry without ownerUid.');
+      // require owner to satisfy rules and visibility
+      throw new Error('Owner info missing on listing. Please ask the owner to update the post.');
+    }
+    if (ownerUid === user.uid) {
+      throw new Error('You cannot inquire on your own listing.');
     }
 
-    const colRef = collection(this.db, 'adoptionInquiries');
-    const docRef = await addDoc(colRef, {
-      adoptionId,
-      ownerUid,
-      fromUid: user.uid,
-      message: message.trim(),
-      fromName: fromName || user.displayName || '',
-      fromPhone: fromPhone || user.phoneNumber || '',
-      status: 'pending',
+    // One inquiry per user per listing
+    const inquiryId = `${adoptionId}_${user.uid}`;
+    const inqRef = doc(this.db, 'adoptionInquiries', inquiryId);
+    const existing = await getDoc(inqRef);
+
+    // Denormalized preview for inbox cards
+    const photos = Array.isArray(pet.photos) ? pet.photos : [];
+    const cover = photos.length ? photos[0] : (pet.image || null);
+
+    if (!existing.exists()) {
+      await setDoc(inqRef, {
+        adoptionId,
+        ownerUid, // ✅ ensure present for rules & filters
+        fromUid: user.uid,
+        status: 'open',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        lastMessage: firstMsg,          // ✅ required by rules on create
+        lastMessageAt: serverTimestamp(),
+
+        // optional inquirer fields
+        fromName: input.fromName || user.displayName || '',
+        fromPhone: input.fromPhone || user.phoneNumber || '',
+
+        // denormalized pet preview
+        petName: pet.petName || '',
+        species: pet.species || '',
+        city: pet.location || '',
+        cover: cover || null
+      });
+    } else {
+      // keep it open and bump last message
+      await updateDoc(inqRef, {
+        status: 'open',
+        updatedAt: serverTimestamp(),
+        lastMessage: firstMsg,
+        lastMessageAt: serverTimestamp()
+      });
+    }
+
+    // Append first message in the subcollection
+    const msgsCol = collection(this.db, `adoptionInquiries/${inquiryId}/messages`);
+    await addDoc(msgsCol, {
+      senderUid: user.uid,
+      message: firstMsg,
       createdAt: serverTimestamp()
     });
 
-    return docRef.id;
+    return inquiryId;
   }
 
+  /** Send a reply into an inquiry thread and update the envelope lastMessage */
+  async addInquiryReply(inquiryId: string, message: string) {
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('Sign in required');
+    const msg = (message || '').trim();
+    if (!inquiryId || !msg) throw new Error('Missing inquiryId/message');
 
-  
+    // Write message
+    const msgsCol = collection(this.db, `adoptionInquiries/${inquiryId}/messages`);
+    await addDoc(msgsCol, {
+      senderUid: user.uid,
+      message: msg,
+      createdAt: serverTimestamp()
+    });
+
+    // Update envelope
+    await updateDoc(doc(this.db, 'adoptionInquiries', inquiryId), {
+      lastMessage: msg,
+      lastMessageAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+  }
+
+  /** Change inquiry status (both participants can close) */
+  async setInquiryStatus(inquiryId: string, status: 'open' | 'closed' | 'pending') {
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('Sign in required');
+    await updateDoc(doc(this.db, 'adoptionInquiries', inquiryId), {
+      status,
+      updatedAt: serverTimestamp()
+    });
+  }
+
+  /** Realtime Inbox – Received (for listing owner) */
+  listenInquiriesReceived(onUpdate: (rows: any[]) => void, onError: (e: any) => void): Unsubscribe {
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('Sign in required');
+    const qy = query(
+      collection(this.db, 'adoptionInquiries'),
+      where('ownerUid', '==', user.uid),
+      orderBy('lastMessageAt', 'desc'),
+      limit(100)
+    );
+    return onSnapshot(qy, snap => {
+      onUpdate(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    }, onError);
+  }
+
+  /** Realtime Inbox – Sent (for inquirer) */
+  listenInquiriesSent(onUpdate: (rows: any[]) => void, onError: (e: any) => void): Unsubscribe {
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('Sign in required');
+    const qy = query(
+      collection(this.db, 'adoptionInquiries'),
+      where('fromUid', '==', user.uid),
+      orderBy('lastMessageAt', 'desc'),
+      limit(100)
+    );
+    return onSnapshot(qy, snap => {
+      onUpdate(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    }, onError);
+  }
+
+  /** Realtime messages in a thread */
+  listenInquiryMessages(inquiryId: string, onUpdate: (msgs: any[]) => void, onError: (e: any) => void): Unsubscribe {
+    const qy = query(
+      collection(this.db, `adoptionInquiries/${inquiryId}/messages`),
+      orderBy('createdAt', 'asc'),
+      limit(500)
+    );
+    return onSnapshot(qy, snap => {
+      onUpdate(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    }, onError);
+  }
+
+  /** Non-realtime list (owner inbox) */
+  async listMyInquiriesReceived(): Promise<any[]> {
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('Sign in required');
+    const snap = await getDocs(query(
+      collection(this.db, 'adoptionInquiries'),
+      where('ownerUid', '==', user.uid),
+      orderBy('lastMessageAt', 'desc'),
+      limit(100)
+    ));
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  }
+
+  /** Non-realtime list (sent by me) */
+  async listMyInquiriesSent(): Promise<any[]> {
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('Sign in required');
+    const snap = await getDocs(query(
+      collection(this.db, 'adoptionInquiries'),
+      where('fromUid', '==', user.uid),
+      orderBy('lastMessageAt', 'desc'),
+      limit(100)
+    ));
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  }
+
+  // ---------------- Push token helper (optional, for Cloud Functions) ---------------
+  async saveFcmToken(token: string) {
+    const user = this.getCurrentUser();
+    if (!user || !token) return;
+    const uref = doc(this.db, 'users', user.uid);
+    await setDoc(uref, {
+      fcmTokens: arrayUnion(token),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  }
+
+  // ---------------- Backfill helpers (optional) ----------------
+  /** One-off: ensure a single pet has ownerUid (copied from submitterUid) */
+  async ensureOwnerUidOnPet(petId: string): Promise<boolean> {
+    const ref = doc(this.db, 'pet-adoption', petId);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) return false;
+    const data: any = snap.data();
+    if (!data.ownerUid && data.submitterUid) {
+      await updateDoc(ref, { ownerUid: data.submitterUid, updatedAt: serverTimestamp() });
+      return true;
+    }
+    return false;
+  }
+
+  /** One-off: backfill all my listings missing ownerUid */
+  async backfillOwnerUidForMyListings(): Promise<number> {
+    const user = this.getCurrentUser();
+    if (!user) throw new Error('Sign in required');
+    const qy = query(collection(this.db, 'pet-adoption'), where('submitterUid', '==', user.uid));
+    const snap = await getDocs(qy);
+    let fixed = 0;
+    await Promise.all(snap.docs.map(async d => {
+      const data: any = d.data();
+      if (!data.ownerUid && data.submitterUid) {
+        await updateDoc(d.ref, { ownerUid: data.submitterUid, updatedAt: serverTimestamp() });
+        fixed++;
+      }
+    }));
+    return fixed;
+  }
 }

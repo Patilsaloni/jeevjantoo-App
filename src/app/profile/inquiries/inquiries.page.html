@@ -1,13 +1,52 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>Inquiries</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Inquiries</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-segment [(ngModel)]="segment" mode="md">
+    <ion-segment-button value="received">Received</ion-segment-button>
+    <ion-segment-button value="sent">Sent</ion-segment-button>
+  </ion-segment>
+
+  <ion-refresher slot="fixed" (ionRefresh)="ngOnInit(); $event.target.complete()">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list *ngIf="segment==='received'">
+    <ion-item *ngFor="let inq of received; trackBy: trackById" (click)="openThread(inq)">
+      <ion-avatar slot="start">
+        <img [src]="inq.cover || 'assets/default-pet.jpg'" alt="cover">
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ inq.petName || (inq.species | titlecase) || 'Adoption' }}</h2>
+        <p>{{ inq.lastMessage || '—' }}</p>
+        <ion-note>{{ inq.city || '' }}</ion-note>
+      </ion-label>
+      <ion-badge slot="end" *ngIf="inq.status==='open'">Open</ion-badge>
+    </ion-item>
+    <ion-item *ngIf="!loading && received.length===0">
+      <ion-label>No received inquiries yet.</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="segment==='sent'">
+    <ion-item *ngFor="let inq of sent; trackBy: trackById" (click)="openThread(inq)">
+      <ion-avatar slot="start">
+        <img [src]="inq.cover || 'assets/default-pet.jpg'" alt="cover">
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ inq.petName || (inq.species | titlecase) || 'Adoption' }}</h2>
+        <p>{{ inq.lastMessage || '—' }}</p>
+        <ion-note>{{ inq.city || '' }}</ion-note>
+      </ion-label>
+      <ion-badge slot="end" *ngIf="inq.status==='open'">Open</ion-badge>
+    </ion-item>
+    <ion-item *ngIf="!loading && sent.length===0">
+      <ion-label>No sent inquiries yet.</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-spinner *ngIf="loading" name="dots" style="display:block;margin:24px auto;"></ion-spinner>
 </ion-content>

@@ -135,7 +135,9 @@ export class NgosPage implements OnInit {
   async loadNGOs() {
     this.loading = true;
     try {
-      const res = await this.firebaseService.getInformation('ngos');
+      const res = await this.firebaseService.getFilteredInformation(
+      'ngos', 'status', '==', 'Active'
+    );
       this.ngos = res
         .filter((ngo: any) => ngo.status?.toLowerCase() === 'active')
         .map((ngo: any, index: number) => ({

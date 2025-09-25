@@ -34,7 +34,6 @@ const routes: Routes = [
       { path: 'directory/clinics/:id', loadComponent: () => import('../directory/clinics/clinics-details/clinics-details.page').then(m => m.ClinicsDetailsPage) },
       { path: 'directory/events/:id', loadComponent: () => import('../directory/events/event-details/event-details.page').then(m => m.EventDetailsPage) },
       { path: 'directory/feeding/:id', loadComponent: () => import('../directory/feeding/feeding-details/feeding-details.page').then(m => m.FeedingDetailsPage) },
-      { path: 'directory/insurance/:id', loadComponent: () => import('../directory/insurance/insurance-details/insurance-details.page').then(m => m.InsuranceDetailsPage) },
       { path: 'directory/ngos/:id', loadComponent: () => import('../directory/ngos/ngos-details/ngos-details.page').then(m => m.NgosDetailsPage) },
 
       // Profile

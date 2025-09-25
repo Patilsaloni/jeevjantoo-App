@@ -302,7 +302,9 @@ export class AmbulancePage implements OnInit {
   async loadAmbulances() {
     this.loading = true;
     try {
-      const res = await this.firebaseService.getInformation('ambulance');
+      const res = await this.firebaseService.getFilteredInformation(
+      'ambulance', 'status', '==', 'Active'
+    );
       this.ambulances = res
         .filter((amb: any) => amb.status?.toLowerCase() === 'active')
         .map((amb: any, idx: number) => ({

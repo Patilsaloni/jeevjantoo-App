@@ -216,7 +216,9 @@ export class FeedingPage implements OnInit {
   async loadFeedingPoints() {
     this.loading = true;
     try {
-      let data: any[] = await this.firebaseService.getInformation('food') || [];
+      let data: any[] = await this.firebaseService.getFilteredInformation(
+      'food', 'status', '==', 'Active'
+    ) || [];
       this.feedingPoints = data.map((fp, index) => {
         let items: string[] = [];
         if (Array.isArray(fp.food_items)) {

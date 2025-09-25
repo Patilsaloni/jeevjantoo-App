@@ -191,20 +191,34 @@ export class AbcDetailsPage implements OnInit {
     this.location.back();
   }
 
-  async loadAbc(id: string) {
-    this.loading = true;
-    try {
-      const abcs = await this.firebaseService.getInformation('abcs');
-      this.abc = abcs.find((a: any) => a.id === id);
-
-      if (!this.abc) alert('Record not found');
-    } catch (err) {
-      console.error('Error loading ABC:', err);
-      this.abc = null;
-    } finally {
-      this.loading = false;
+ async loadAbc(id: string) {
+  this.loading = true;
+  try {
+    const doc = await this.firebaseService.getDocument('abcs', id);
+    this.abc = doc ?? null;
+    if (!this.abc) {
+      const t = await this.toastCtrl.create({
+        message: 'ABC record not found or unavailable.',
+        duration: 2000, color: 'warning'
+      });
+      t.present();
     }
+  } catch (err: any) {
+    if (err.code === 'permission-denied') {
+      const t = await this.toastCtrl.create({
+        message: 'This ABC record is not available to view.',
+        duration: 2000, color: 'warning'
+      });
+      t.present();
+    } else {
+      console.error('Error loading ABC:', err);
+    }
+    this.abc = null;
+  } finally {
+    this.loading = false;
   }
+}
+
 
   callPerson() {
     if (this.abc?.contactNumber) {

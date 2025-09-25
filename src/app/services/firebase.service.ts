@@ -224,6 +224,7 @@ export class FirebaseService {
       status: 'Pending' as PetStatus,
       createdAt: serverTimestamp(),
       submitterUid: user.uid,
+      ownerUid: user.uid 
     };
 
     return this.addInformation(docID, dataToSave, 'pet-adoption');

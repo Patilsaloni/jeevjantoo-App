@@ -295,7 +295,9 @@ export class BoardingPage implements OnInit {
   async loadBoardings() {
     this.loading = true;
     try {
-      const res = await this.firebaseService.getInformation('boardings');
+      const res = await this.firebaseService.getFilteredInformation(
+      'boardings', 'status', '==', 'Active'
+    );
       this.boardingSpas = res
         .filter((b: any) => b.status?.toLowerCase() === 'active')
         .map((b: any, index: number) => ({

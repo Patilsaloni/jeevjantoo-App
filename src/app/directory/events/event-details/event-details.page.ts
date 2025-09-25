@@ -39,19 +39,34 @@ export class EventDetailsPage implements OnInit {
     this.location.back();
   }
 
-  async loadEvent(id: string) {
-    this.loading = true;
-    try {
-      const events = await this.firebaseService.getInformation('events');
-      this.event = events.find((ev: any) => ev.id === id);
-      if (!this.event) alert('Event not found');
-    } catch (err) {
-      console.error(err);
-      this.event = null;
-    } finally {
-      this.loading = false;
+ async loadEvent(id: string) {
+  this.loading = true;
+  try {
+    const ev = await this.firebaseService.getDocument('events', id);
+    this.event = ev ?? null;
+    if (!this.event) {
+      const t = await this.toastCtrl.create({
+        message: 'Event not found or unavailable.',
+        duration: 2000, color: 'warning'
+      });
+      t.present();
     }
+  } catch (err: any) {
+    if (err.code === 'permission-denied') {
+      const t = await this.toastCtrl.create({
+        message: 'This event is not available to view.',
+        duration: 2000, color: 'warning'
+      });
+      t.present();
+    } else {
+      console.error('Error loading event:', err);
+    }
+    this.event = null;
+  } finally {
+    this.loading = false;
   }
+}
+
 
   callOrganizer() {
     if (this.event?.contactPerson)

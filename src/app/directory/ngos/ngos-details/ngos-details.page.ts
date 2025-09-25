@@ -33,18 +33,34 @@ export class NgosDetailsPage implements OnInit {
     this.location.back();
   }
 
-  async loadNGO(id: string) {
-    this.loading = true;
-    try {
-      const ngos = await this.firebaseService.getInformation('ngos');
-      this.ngo = ngos.find((n: any) => n.id === id);
-    } catch (err) {
-      console.error('Error loading NGO:', err);
-      this.ngo = null;
-    } finally {
-      this.loading = false;
+ async loadNGO(id: string) {
+  this.loading = true;
+  try {
+    const doc = await this.firebaseService.getDocument('ngos', id);
+    this.ngo = doc ?? null;
+    if (!this.ngo) {
+      const t = await this.toastCtrl.create({
+        message: 'NGO not found or unavailable.',
+        duration: 2000, color: 'warning'
+      });
+      t.present();
     }
+  } catch (err: any) {
+    if (err.code === 'permission-denied') {
+      const t = await this.toastCtrl.create({
+        message: 'This NGO is not available to view.',
+        duration: 2000, color: 'warning'
+      });
+      t.present();
+    } else {
+      console.error('Error loading NGO:', err);
+    }
+    this.ngo = null;
+  } finally {
+    this.loading = false;
   }
+}
+
 
   callNGO() {
     if (this.ngo?.contact) {

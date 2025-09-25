@@ -136,7 +136,9 @@ export class AbcPage implements OnInit {
   async loadAbcs() {
     this.loading = true;
     try {
-      this.abcs = await this.firebaseService.getInformation('abcs');
+      this.abcs = await this.firebaseService.getFilteredInformation(
+      'abcs', 'status', '==', 'Active'
+    );
       const variants = ['a', 'b', 'c', 'd', 'e'];
       this.abcs.forEach((abc, idx) => {
         abc.expanded = false;

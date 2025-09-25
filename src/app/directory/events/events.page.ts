@@ -314,7 +314,9 @@ export class EventsPage implements OnInit {
   async loadEvents() {
     this.loading = true;
     try {
-      const res = await this.firebaseService.getInformation('events');
+      const res = await this.firebaseService.getFilteredInformation(
+      'events', 'status', '==', 'Active'
+    );
       this.events = res.map((ev: any, index: number) => ({
         id: ev.id,
         name: ev.name || 'Unknown',

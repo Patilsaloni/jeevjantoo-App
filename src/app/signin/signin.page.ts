@@ -4,17 +4,14 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { initializeApp } from 'firebase/app';
-import { 
-  getAuth, 
-  RecaptchaVerifier, 
-  signInWithPhoneNumber, 
-  signInWithEmailAndPassword, 
-  UserCredential, 
-  signOut 
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  signOut
 } from 'firebase/auth';
+
 import { FirebaseService } from '../../app/services/firebase.service';
-import { environment } from '../../environments/environment';
 
 declare global {
   interface Window {
@@ -22,10 +19,7 @@ declare global {
   }
 }
 
-const app = initializeApp(environment.firebaseConfig);
-const auth = getAuth(app);
-
-interface User {
+interface Profile {
   id: string;
   email?: string;
   phone?: string;
@@ -43,6 +37,7 @@ export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
   loginMode: 'email' | 'phone' = 'email';
   emailForm: FormGroup;
   phoneForm: FormGroup;
+
   otpSent = false;
   confirmationResult: any;
   recaptchaVerifier?: RecaptchaVerifier;
@@ -67,9 +62,7 @@ export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     // Redirect if already logged in
     const user = localStorage.getItem('user');
-    if (user) {
-      this.router.navigate(['/tabs/home']);
-    }
+    if (user) this.router.navigate(['/tabs/home']);
   }
 
   ngAfterViewInit() {
@@ -83,85 +76,113 @@ export class SigninPage implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  initializeRecaptcha() {
+  private initializeRecaptcha() {
     if (!window.recaptchaVerifier) {
+      const auth = getAuth(); // use default app initialized in your service
       this.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
       window.recaptchaVerifier = this.recaptchaVerifier;
       this.recaptchaVerifier.render();
     }
   }
 
-  async showToast(message: string, color: string = 'primary') {
+  private async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastCtrl.create({ message, duration: 2000, color });
     toast.present();
   }
 
   // ---------------- Email Login ----------------
   async onEmailLogin() {
-    if (!this.emailForm.valid) return this.showToast('Enter valid email & password', 'warning');
+    if (!this.emailForm.valid) {
+      return this.showToast('Enter valid email & password', 'warning');
+    }
 
     try {
       const { email, password } = this.emailForm.value;
-      const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email.trim(), password.trim());
 
-      // Fetch user data from Firestore
-      const users: User[] = await this.firebaseService.getInformation('user');
-      const currentUser = users.find(u => u.email === email.trim());
+      // 1) Sign in (uses the same app/auth as your service)
+      const user = await this.firebaseService.signIn(email.trim(), password.trim());
 
-      if (!currentUser) return this.showToast('User not found in Firestore', 'danger');
+      // 2) Read ONLY my profile: /users/{uid}
+      let profile = await this.firebaseService.getDocument('users', user.uid) as Profile | null;
 
-      // Save login info
-      localStorage.setItem('user', JSON.stringify(currentUser));
+      // 3) If profile missing, create a minimal one now
+      if (!profile) {
+        await this.firebaseService.addInformation(user.uid, {
+          id: user.uid,
+          email: user.email || email.trim(),
+          createdAt: new Date()
+        }, 'users');
+
+        profile = { id: user.uid, email: user.email || email.trim() };
+      }
+
+      // 4) Save & go
+      localStorage.setItem('user', JSON.stringify(profile));
       localStorage.setItem('isAuthenticated', 'true');
-
       this.router.navigate(['/tabs/home']);
+
     } catch (error: any) {
       console.error('Email login failed:', error);
-      this.showToast(error.message || 'Login failed', 'danger');
+      this.showToast(error?.message || 'Login failed', 'danger');
     }
   }
 
   // ---------------- Phone OTP ----------------
   async onSendOtp() {
-    if (!this.phoneForm.get('phone')?.valid) return this.showToast('Enter valid 10-digit phone', 'warning');
+    if (!this.phoneForm.get('phone')?.valid) {
+      return this.showToast('Enter valid 10-digit phone', 'warning');
+    }
 
     try {
+      const auth = getAuth(); // same default app
       const phoneNumber = '+91' + this.phoneForm.value.phone;
       this.confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier!);
       this.otpSent = true;
       this.showToast('OTP sent', 'success');
     } catch (error: any) {
       console.error('OTP send failed:', error);
-      this.showToast(error.message || 'OTP failed', 'danger');
+      this.showToast(error?.message || 'OTP failed', 'danger');
     }
   }
 
   async onPhoneLogin() {
-    if (!this.phoneForm.valid || !this.otpSent) return this.showToast('Enter valid OTP', 'warning');
+    if (!this.phoneForm.valid || !this.otpSent) {
+      return this.showToast('Enter valid OTP', 'warning');
+    }
 
     try {
       const result = await this.confirmationResult.confirm(this.phoneForm.value.otp);
-      const phone = result.user.phoneNumber?.replace('+91', '');
+      const user = result.user;
 
-      const users: User[] = await this.firebaseService.getInformation('user');
-      const currentUser = users.find(u => u.phone === phone);
+      // 1) Read ONLY my profile: /users/{uid}
+      let profile = await this.firebaseService.getDocument('users', user.uid) as Profile | null;
 
-      if (!currentUser) return this.showToast('User not found in Firestore', 'danger');
+      // 2) If profile missing, create a minimal one
+      if (!profile) {
+        await this.firebaseService.addInformation(user.uid, {
+          id: user.uid,
+          phone: user.phoneNumber,
+          createdAt: new Date()
+        }, 'users');
 
-      // Save login info
-      localStorage.setItem('user', JSON.stringify(currentUser));
+        profile = { id: user.uid, phone: user.phoneNumber ?? '' };
+      }
+
+      // 3) Save & go
+      localStorage.setItem('user', JSON.stringify(profile));
       localStorage.setItem('isAuthenticated', 'true');
-
       this.router.navigate(['/tabs/home']);
+
     } catch (error: any) {
       console.error('OTP verification failed:', error);
-      this.showToast(error.message || 'Invalid OTP', 'danger');
+      this.showToast(error?.message || 'Invalid OTP', 'danger');
     }
   }
 
   // ---------------- Logout ----------------
   async logout() {
     try {
+      const auth = getAuth();
       await signOut(auth);
       localStorage.removeItem('user');
       localStorage.removeItem('isAuthenticated');

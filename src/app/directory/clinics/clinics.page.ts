@@ -265,50 +265,50 @@ export class ClinicsPage implements OnInit {
     this.loadClinics();
   }
 
-  async loadClinics() {
-    this.loading = true;
-    try {
-      const res = await this.firebaseService.getInformation('veterinaryClinic');
-      this.clinics = res.map((c: any, index: number) => ({
-        id: c.id,
-        name: c.name || 'Unknown',
-        type: c.type || 'N/A',
-        area: c.area || 'N/A',
-        pincode: c.pincode || 'N/A',
-        contact: c.contact || 'N/A',
-        timeFrom: c.timeFrom || 'N/A',
-        timeTo: c.timeTo || 'N/A',
-        remarks: c.remarks,
-        lat: c.lat ? parseFloat(c.lat) : undefined,
-        lng: c.lng ? parseFloat(c.lng) : undefined,
-        status: c.status || 'inactive',
-        expanded: false,
-        variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
-      }));
-      this.filteredClinics = [...this.clinics];
-      // this.cities = Array.from(new Set(this.clinics.map(c => c.city).filter(c => c))).sort();
-      this.types = Array.from(new Set(this.clinics.map(c => c.type).filter(t => t))).sort();
-      this.areas = Array.from(new Set(this.clinics.map(c => c.area).filter(a => a))).sort();
-      this.timings = Array.from(
-        new Set(
-          this.clinics
-            .map(c => this.formatTiming(c.timeFrom, c.timeTo))
-            .filter(t => t !== 'Timing not available')
-        )
-      ).sort();
-      console.log('Loaded Clinics:', this.clinics);
-      console.log('Cities:', this.cities);
-      console.log('Types:', this.types);
-      console.log('Areas:', this.areas);
-      console.log('Timings:', this.timings);
-    } catch (error) {
-      console.error('Error loading clinics:', error);
-      this.clinics = [];
-      this.filteredClinics = [];
-    } finally {
-      this.loading = false;
-    }
+async loadClinics() {
+  this.loading = true;
+  try {
+    // 👇 IMPORTANT: only read docs the rules allow
+    const res = await this.firebaseService.getFilteredInformation(
+      'veterinaryClinic', 'status', '==', 'Active'
+    );
+
+    this.clinics = res.map((c: any, index: number) => ({
+      id: c.id,
+      name: c.name || 'Unknown',
+      type: c.type || 'N/A',
+      area: c.area || 'N/A',
+      pincode: c.pincode || 'N/A',
+      contact: c.contact || 'N/A',
+      timeFrom: c.timeFrom || 'N/A',
+      timeTo: c.timeTo || 'N/A',
+      remarks: c.remarks,
+      lat: c.lat ? parseFloat(c.lat) : undefined,
+      lng: c.lng ? parseFloat(c.lng) : undefined,
+      status: c.status || 'Inactive',
+      expanded: false,
+      variant: ['a', 'b', 'c', 'd', 'e'][index % 5]
+    }));
+
+    this.filteredClinics = [...this.clinics];
+    this.types  = Array.from(new Set(this.clinics.map(c => c.type).filter(Boolean))).sort();
+    this.areas  = Array.from(new Set(this.clinics.map(c => c.area).filter(Boolean))).sort();
+    this.timings = Array.from(
+      new Set(
+        this.clinics.map(c => this.formatTiming(c.timeFrom, c.timeTo))
+                    .filter(t => t !== 'Timing not available')
+      )
+    ).sort();
+
+  } catch (error) {
+    console.error('Error loading clinics:', error);
+    this.clinics = [];
+    this.filteredClinics = [];
+  } finally {
+    this.loading = false;
   }
+}
+
 
   filterClinics(event: any) {
     this.searchTerm = event?.target?.value?.toLowerCase().trim() || '';

@@ -52,36 +52,46 @@ export class AmbulanceDetailsPage implements OnInit {
     this.location.back();
   }
 
-  async loadAmbulance(id: string) {
-    this.loading = true;
-    try {
-      const data: any[] = await this.firebaseService.getInformation(
-        'ambulance'
-      );
-      const amb: any = data.find((a) => a.id === id);
-
-      if (amb) {
-        this.ambulance = {
-          id: amb.id,
-          name: amb.name || 'Unknown',
-          contact: amb.contact || 'N/A',
-          vehicle_number: amb.vehicleNumber || 'N/A',
-          governing_body: amb.govtBody || 'N/A',
-          area: amb.area || 'N/A',
-          lat: amb.lat,
-          lng: amb.lng,
-          remarks: amb.remarks || '',
-        };
-      } else {
-        this.ambulance = null;
-      }
-    } catch (err) {
-      console.error('Error loading ambulance:', err);
+ async loadAmbulance(id: string) {
+  this.loading = true;
+  try {
+    const doc: any = await this.firebaseService.getDocument('ambulance', id);
+    if (doc) {
+      this.ambulance = {
+        id: doc.id,
+        name: doc.name || 'Unknown',
+        contact: doc.contact || 'N/A',
+        vehicle_number: doc.vehicleNumber || 'N/A',
+        governing_body: doc.govtBody || 'N/A',
+        area: doc.area || 'N/A',
+        lat: doc.lat,
+        lng: doc.lng,
+        remarks: doc.remarks || '',
+      };
+    } else {
       this.ambulance = null;
-    } finally {
-      this.loading = false;
+      const t = await this.toastCtrl.create({
+        message: 'Ambulance not found or unavailable.',
+        duration: 2000, color: 'warning'
+      });
+      t.present();
     }
+  } catch (err: any) {
+    if (err.code === 'permission-denied') {
+      const t = await this.toastCtrl.create({
+        message: 'This ambulance is not available to view.',
+        duration: 2000, color: 'warning'
+      });
+      t.present();
+    } else {
+      console.error('Error loading ambulance:', err);
+    }
+    this.ambulance = null;
+  } finally {
+    this.loading = false;
   }
+}
+
 
   callAmbulance(contact: string) {
     if (!contact) {

@@ -31,20 +31,36 @@ export class ClinicsDetailsPage implements OnInit {
     }
   }
 
-  async loadClinic(id: string) {
-    this.loading = true;
-    try {
-      const clinics = await this.firebaseService.getInformation(
-        'veterinaryClinic'
-      );
-      this.clinic = clinics.find((c: any) => c.id === id);
-    } catch (err) {
-      console.error('Error loading clinic:', err);
-      this.clinic = null;
-    } finally {
-      this.loading = false;
+ async loadClinic(id: string) {
+  this.loading = true;
+  try {
+    // ✅ read a single doc (allowed if status == "Active")
+    const doc = await this.firebaseService.getDocument('veterinaryClinic', id);
+    this.clinic = doc ?? null;
+    if (!this.clinic) {
+      const t = await this.toastCtrl.create({
+        message: 'Clinic not found or unavailable.',
+        duration: 2000, color: 'warning'
+      });
+      t.present();
     }
+  } catch (err: any) {
+    // Permission error when doc is not Active (or blocked by rules)
+    if (err.code === 'permission-denied') {
+      const t = await this.toastCtrl.create({
+        message: 'This clinic is not available to view.',
+        duration: 2000, color: 'warning'
+      });
+      t.present();
+    } else {
+      console.error('Error loading clinic:', err);
+    }
+    this.clinic = null;
+  } finally {
+    this.loading = false;
   }
+}
+
 
   formatTiming(timeFrom: string, timeTo: string) {
     if (!timeFrom || !timeTo) return 'Timing not available';

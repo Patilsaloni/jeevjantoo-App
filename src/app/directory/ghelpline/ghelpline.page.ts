@@ -138,7 +138,9 @@ export class GhelplinePage implements OnInit {
   async loadHelplines() {
     this.loading = true;
     try {
-      const res = await this.firebaseService.getInformation('government-helpline');
+      const res = await this.firebaseService.getFilteredInformation(
+      'government-helpline', 'status', '==', 'Active'
+    );
       console.log('Raw Firebase Data:', res); // Debug: Log raw data
       this.helplines = res
         .filter((h: any) => h.status?.toLowerCase() === 'active')

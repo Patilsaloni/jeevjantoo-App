@@ -135,7 +135,6 @@
 //   background: #995f18;
 // }
 
-
 .submit-pet-content {
   display: flex;
   align-items: center;
@@ -161,6 +160,147 @@
   width: 110px;
   margin-bottom: -24px;
   user-select: none;
+}
+
+.photo-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+
+  ion-label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  ion-button {
+    --padding-start: 10px;
+    --padding-end: 10px;
+    --min-width: 32px;
+    border-radius: 6px;
+    background: #ffe5e5;
+     border: 1px solid #ff6800;
+    ion-icon {
+      font-size: 22px;
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+.image-card-swiper {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  gap: 12px;
+
+  .swiper-wrapper {
+    display: flex;
+  }
+
+  .swiper-slide {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.photo-preview-card {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .remove-photo-btn {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    --color: var(--ion-color-danger);
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+.image-card-swiper {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  .swiper-wrapper {
+    display: flex;
+    gap: 12px;
+    .swiper-slide {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+.checklist-item {
+  margin-top: 20px;
+  ion-checkbox {
+    --checkbox-size: 22px;
+    margin-right: 12px;
+    font-size: 1.08em;
+  }
+}
+.image-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.label-button-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: -webkit-fill-available;
+  height: 100%;
+  ion-label {
+    display: block !important;
+    font-size: 1rem;
+    color: #393232;
+    margin-bottom: 3px;
+    line-height: 1.2;
+    text-wrap: nowrap;
+  }
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  border: 1px dashed #ccc;
+  cursor: pointer;
+  font-size: 1em;
+  ion-icon {
+    font-size: 22px;
+  }
+}
+.two-col {
+  display: flex;
+  gap: 16px;
+  > ion-item {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+@media (max-width: 600px) {
+  ion-label {
+    display: block !important;
+    font-size: 1rem;
+    color: #393232;
+    margin-bottom: 3px;
+    line-height: 1.2;
+    text-wrap: nowrap;
+  }
 }
 
 .submit-pet-card {

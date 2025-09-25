@@ -1,0 +1,139 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Edit Adoption</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ion-padding">
+    <form *ngIf="step === 1">
+      <ion-item>
+        <ion-label position="floating">Pet Name</ion-label>
+        <ion-input formControlName="petName"></ion-input>
+      </ion-item>
+      <div *ngIf="f1['petName'].invalid && f1['petName'].touched" class="ion-padding">
+        <ion-text color="danger">Minimum 2 characters required.</ion-text>
+      </div>
+
+      <ion-item>
+        <ion-label>Species</ion-label>
+        <ion-select formControlName="species">
+          <ion-select-option *ngFor="let s of speciesOptions" [value]="s.code">{{s.label}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Gender</ion-label>
+        <ion-select formControlName="gender">
+          <ion-select-option value="Male">Male</ion-select-option>
+          <ion-select-option value="Female">Female</ion-select-option>
+          <ion-select-option value="Unknown">Unknown</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Breed</ion-label>
+        <ion-input formControlName="breed"></ion-input>
+      </ion-item>
+      <div *ngIf="f1['breed'].invalid && f1['breed'].touched" class="ion-padding">
+        <ion-text color="danger">Minimum 2 characters required.</ion-text>
+      </div>
+
+      <ion-item>
+        <ion-label>Health</ion-label>
+        <ion-select formControlName="health" multiple="true">
+          <ion-select-option *ngFor="let h of healthOptions" [value]="h">{{h}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Age Years</ion-label>
+        <ion-input formControlName="ageYears" type="number"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Age Months</ion-label>
+        <ion-input formControlName="ageMonths" type="number"></ion-input>
+      </ion-item>
+      <div *ngIf="petFormStep1.hasError('ageRequired') && (f1['ageYears'].touched || f1['ageMonths'].touched)" class="ion-padding">
+        <ion-text color="danger">Please enter at least one of Years or Months.</ion-text>
+      </div>
+      <div *ngIf="petFormStep1.hasError('ageInvalid') && (f1['ageYears'].touched || f1['ageMonths'].touched)" class="ion-padding">
+        <ion-text color="danger">Age must be non-negative numbers.</ion-text>
+      </div>
+
+      <ion-item>
+        <ion-label>Temperament</ion-label>
+        <ion-select formControlName="temperament" multiple="true">
+          <ion-select-option *ngFor="let t of temperamentOptions" [value]="t">{{t}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Description</ion-label>
+        <ion-textarea formControlName="description"></ion-textarea>
+      </ion-item>
+      <div *ngIf="f1['description'].invalid && f1['description'].touched" class="ion-padding">
+        <ion-text color="danger">Description is required. Minimum 10 characters required.</ion-text>
+      </div>
+
+      <ion-button expand="block" (click)="goNext()">Next</ion-button>
+    </form>
+
+    <form *ngIf="step === 2">
+      <ion-item>
+        <ion-label position="floating">Location</ion-label>
+        <ion-input formControlName="location"></ion-input>
+      </ion-item>
+      <div *ngIf="f2['location'].invalid && f2['location'].touched" class="ion-padding">
+        <ion-text color="danger">Location is required.</ion-text>
+      </div>
+
+      <ion-button fill="outline" (click)="openInMaps()">Open in Maps</ion-button>
+
+      <ion-item>
+        <ion-label position="floating">Contact Name</ion-label>
+        <ion-input formControlName="contactName"></ion-input>
+      </ion-item>
+      <div *ngIf="f2['contactName'].invalid && f2['contactName'].touched" class="ion-padding">
+        <ion-text color="danger">Minimum 2 characters required.</ion-text>
+      </div>
+
+      <ion-item>
+        <ion-label position="floating">Contact Phone</ion-label>
+        <ion-input formControlName="contactPhone" type="tel"></ion-input>
+      </ion-item>
+      <div *ngIf="f2['contactPhone'].invalid && f2['contactPhone'].touched" class="ion-padding">
+        <ion-text color="danger">Enter a valid phone number.</ion-text>
+      </div>
+
+      <ion-item>
+        <ion-label>Pet Photos</ion-label>
+        <ion-button fill="outline" (click)="triggerFileInput()">Add Photos</ion-button>
+      </ion-item>
+      <input type="file" #petImageInput multiple accept="image/*" (change)="onFileChange($event)" style="display:none">
+
+      <div *ngIf="imageFileNames.length">
+        <ion-chip *ngFor="let name of imageFileNames; let i = index">
+          {{ name }}
+          <ion-icon name="close-circle" (click)="removePetImage(i)"></ion-icon>
+        </ion-chip>
+      </div>
+
+      <ion-item lines="none">
+        <ion-checkbox formControlName="contactPublic"></ion-checkbox>
+        <ion-label>Make Contact Public</ion-label>
+      </ion-item>
+
+      <ion-button expand="block" color="medium" (click)="goBack()">Back</ion-button>
+      <ion-button expand="block" (click)="updatePet()">Update</ion-button>
+    </form>
+
+    <ion-button fill="clear" (click)="closeModal()">Back to My Listings</ion-button>
+  </div>
+</ion-content>

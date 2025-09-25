@@ -1,13 +1,54 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>my-listings</ion-title>
+    <ion-title>My Listings</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">my-listings</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-refresher slot="fixed">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list>
+    <ion-card *ngFor="let pet of pets">
+      <div class="summary-row">
+        <ion-img *ngIf="pet.photos && pet.photos.length > 0" [src]="pet.photos[0]" class="pet-photo"></ion-img>
+        <div class="summary-content">
+          <div>
+            <div class="pet-title">{{ pet.petName }}</div>
+            <div class="pet-subtitle">
+              {{ getSpeciesLabel(pet.species) }} <br> {{ getAgeDisplay(pet) }}
+            </div>
+          </div>
+          <div class="action-icons">
+            <ion-button fill="clear" size="small" (click)="editPet(pet)">
+              <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" (click)="toggleAccordion(pet.id)">
+              <ion-icon [name]="isAccordionOpen(pet.id) ? 'remove-outline' : 'add-outline'"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion Details -->
+      <div *ngIf="isAccordionOpen(pet.id)" class="accordion-details">
+        <div class="info-row"><b>Description</b>: <span>{{ pet.description }}</span></div>
+        <div class="info-row"><b>Location</b>: <span>{{ pet.location }}</span></div>
+        <div class="info-row" *ngIf="pet.contactName && pet.contactPublic"><b>Contact Name</b>: <span>{{ pet.contactName
+            }}</span></div>
+        <div class="info-row" *ngIf="pet.contactPhone && pet.contactPublic"><b>Contact Phone</b>: <span>{{
+            pet.contactPhone }}</span></div>
+        <div class="info-row"><b>Health</b>: <span>{{ pet.health || 'Not specified' }}</span></div>
+        <div class="info-row"><b>Temperament</b>: <span>{{ pet.temperament || 'Not specified' }}</span></div>
+        <div class="info-row"><b>Status</b>: <span class="status"
+            [ngClass]="{'pending': pet.status === 'Pending', 'active': pet.status === 'Active'}">
+            {{ pet.status }} </span></div>
+      </div>
+    </ion-card>
+  </ion-list>
+
+  <ion-text *ngIf="pets.length === 0" class="ion-text-center ion-padding">
+    <p>No adoption listings found. Add one via the submission form!</p>
+  </ion-text>
 </ion-content>

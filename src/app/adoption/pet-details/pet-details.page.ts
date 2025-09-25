@@ -1,191 +1,38 @@
-// import { Component, OnInit } from '@angular/core';
-// import { IonicModule, ToastController } from '@ionic/angular';
-// import { CommonModule } from '@angular/common';
-// import { ActivatedRoute, Router } from '@angular/router';
-// import { FormsModule } from '@angular/forms';
-// import { FirebaseService } from '../../../app/services/firebase.service';
-
-// type PetEx = any & {
-//   id?: string;
-//   petName?: string;
-//   species?: string;
-//   breed?: string;
-//   age?: number;
-//   gender?: string;
-//   vaccinated?: boolean;
-//   location?: string;
-//   area?: string;
-//   ownerName?: string;
-//   ownerPhone?: string;
-//   photos?: string[];
-//   image?: string;
-//   lat?: number;
-//   lng?: number;
-//   favorite?: boolean;
-// };
-
-// @Component({
-//   selector: 'app-pet-details',
-//   standalone: true,
-//   imports: [IonicModule, CommonModule, FormsModule],
-//   templateUrl: './pet-details.page.html',
-//   styleUrls: ['./pet-details.page.scss'],
-// })
-// export class PetDetailsPage implements OnInit {
-//   pet?: PetEx;
-//   loading = true;
-
-//   showActionsPanel = false; // For paw icon panel toggle
-//   mainImageIdx = 0;         // Index for main image in gallery
-
-//   constructor(
-//     private route: ActivatedRoute,
-//     private router: Router,
-//     private firebase: FirebaseService,
-//     private toast: ToastController,
-//   ) {}
-
-//   async ngOnInit() {
-//     try {
-//       const id = this.route.snapshot.paramMap.get('id')!;
-
-//       // Prefer navigation state for instant data
-//       const fromState = (history.state && history.state.pet) ? history.state.pet : null;
-
-//       if (fromState && fromState.id === id) {
-//         this.pet = fromState;
-//       } else {
-//         // Fallback: fetch by id (rename to your actual service method)
-//         this.pet = await this.safeGetPetById(id);
-//       }
-//     } catch (e) {
-//       console.error(e);
-//       await this.toastQuick('Unable to load pet');
-//       this.router.navigate(['/adoption']);
-//     } finally {
-//       this.loading = false;
-//     }
-//   }
-
-//   private async safeGetPetById(id: string): Promise<PetEx | undefined> {
-//     if ((this.firebase as any).getPetById) {
-//       return (this.firebase as any).getPetById(id);
-//     }
-//     if ((this.firebase as any).getAdoptionById) {
-//       return (this.firebase as any).getAdoptionById(id);
-//     }
-//     // As a last resort, try to search in active pets list
-//     try {
-//       const all: any[] = await (this.firebase as any).getActivePets?.();
-//       return (all || []).find(p => p.id === id);
-//     } catch {
-//       return undefined;
-//     }
-//   }
-
-//   photoList(): string[] {
-//     if (!this.pet) return [];
-//     const arr = Array.isArray(this.pet.photos) ? this.pet.photos : [];
-//     const primary = this.pet.image ? [this.pet.image] : [];
-//     // de-dup primary if already present
-//     const merged = [...primary, ...arr];
-//     return merged.filter((v, i) => merged.indexOf(v) === i);
-//   }
-
-//   openInMaps() {
-//     if (!this.pet) return;
-//     if (Number.isFinite(Number(this.pet.lat)) && Number.isFinite(Number(this.pet.lng))) {
-//       window.open(`https://maps.google.com/?q=${this.pet.lat},${this.pet.lng}`, '_system');
-//     } else if (this.pet.location) {
-//       window.open(`https://maps.google.com/?q=${encodeURIComponent(this.pet.location)}`, '_system');
-//     }
-//   }
-
-//   callOwner() {
-//     if (!this.pet?.ownerPhone) return;
-//     window.open(`tel:${this.pet.ownerPhone}`, '_system');
-//   }
-
-//   whatsappOwner() {
-//     if (!this.pet?.ownerPhone) return;
-//     const phone = String(this.pet.ownerPhone).replace(/[^\d+]/g, '');
-//     window.open(`https://wa.me/${phone}`, '_system');
-//   }
-
-//   async sharePet() {
-//     if (!this.pet) return;
-//     const url = window.location.href;
-//     const text = `${this.pet.petName || 'Pet'} • ${this.pet.species || ''} • ${this.pet.location || ''}`;
-//     try {
-//       if (navigator.share) await navigator.share({ title: this.pet.petName || 'Adoption', text, url });
-//       else {
-//         await navigator.clipboard.writeText(`${text}\n${url}`);
-//         this.toastQuick('Link copied');
-//       }
-//     } catch {}
-//   }
-
-//   async toggleFavorite() {
-//     if (!this.pet?.id) return;
-//     try {
-//       const newVal = !this.pet.favorite;
-//       await this.firebase.setFavorite('pet-adoption', this.pet.id, newVal);
-//       this.pet.favorite = newVal;
-//       this.toastQuick(newVal ? 'Saved to favorites' : 'Removed from favorites');
-//     } catch {
-//       this.toastQuick('Failed to update favorite');
-//     }
-//   }
-
-//   async markAdopted() {
-//     // Owner-only flow — implement permission check in real app
-//     this.toastQuick('Marked as adopted (demo)');
-//   }
-
-//   private async toastQuick(message: string) {
-//     const t = await this.toast.create({ message, duration: 1500, position: 'bottom' });
-//     await t.present();
-//   }
-// }
-
-
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FirebaseService } from '../../../app/services/firebase.service';
-import { register } from 'swiper/element/bundle';
+import { LocalNotifications } from '@capacitor/local-notifications';
+import { AppLauncher } from '@capacitor/app-launcher';
 
 type PetEx = any & {
   id?: string;
   petName?: string;
   species?: string;
   breed?: string;
-  age?: number;           
-  ageYears?: number;
-  ageMonths?: number;
-  ageInMonths?: number;
-  gender?: string;
+  age?: number;                 // months
+  gender?: string;              // 'male' | 'female' | ''
   vaccinated?: boolean;
   dewormed?: boolean;
   neutered?: boolean;
-  health?: string | string[];
-  temperament?: string | string[];
+  tags?: string[];
   location?: string;
   area?: string;
   ownerName?: string;
   ownerPhone?: string;
-  contactPublic?: boolean;
+  ownerWhatsApp?: string;
+  phone_public?: boolean;
+  whatsapp_public?: boolean;
   photos?: string[];
   image?: string;
   lat?: number;
   lng?: number;
   favorite?: boolean;
-  createdAt?: any;
-  views?: number;
-  postedBy?: string;
+  status?: 'Pending' | 'Active' | 'Adopted' | 'Inactive';
+  submitterUid?: string;
+  ownerUid?: string;
 };
 
 @Component({
@@ -194,61 +41,136 @@ type PetEx = any & {
   imports: [IonicModule, CommonModule, FormsModule],
   templateUrl: './pet-details.page.html',
   styleUrls: ['./pet-details.page.scss'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class PetDetailsPage implements OnInit {
   pet?: PetEx;
   loading = true;
 
-  photos: string[] = [];
-
-  // gallery
-  galleryOpen = false;
-  galleryIndex = 0;
-
-  // inquiry/report
-  inquiryOpen = false;
-  inquiryText = '';
-  reportOpen = false;
-  reportText = '';
-
-  // map
-  mapSafeUrl?: SafeResourceUrl | null;
+  showActionsPanel = false;
+  mainImageIdx = 0;
+  inquiryMessage = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private firebase: FirebaseService,
     private toast: ToastController,
-    private sanitizer: DomSanitizer
-  ) {
-    try {
-      const w = window as any;
-      if (!w.__swiper_registered__) {
-        register();
-        w.__swiper_registered__ = true;
-      }
-    } catch {}
-  }
+  ) {}
 
   async ngOnInit() {
     try {
       const id = this.route.snapshot.paramMap.get('id')!;
-      const fromState = history.state?.pet ?? null;
+      const fromState = (history.state && (history.state as any).pet) ? (history.state as any).pet : null;
 
-      this.pet = (fromState && fromState.id === id)
-        ? fromState
-        : await this.safeGetPetById(id);
+      if (fromState && fromState.id === id) {
+        this.pet = this.normalizePet(fromState);
+      } else {
+        const fetched = await this.safeGetPetById(id);
+        this.pet = this.normalizePet(fetched);
+      }
 
-      this.photos = this.photoList();
-      this.buildMapUrl();
+      await this.ensureLocalNotifPermission();
+      // console.log('PET NORMALIZED:', this.pet);
     } catch (e) {
       console.error(e);
       await this.toastQuick('Unable to load pet');
-      this.router.navigate(['/tabs/adoption']);
+      this.router.navigate(['/adoption']);
     } finally {
       this.loading = false;
     }
+  }
+
+  // ---------- Normalization helpers ----------
+  private toBool(v: any): boolean {
+    if (typeof v === 'boolean') return v;
+    if (typeof v === 'number') return v === 1;
+    if (typeof v === 'string') {
+      const s = v.trim().toLowerCase();
+      return ['true','yes','y','1'].includes(s);
+    }
+    return !!v;
+  }
+
+  private toTagsArray(v: any): string[] {
+    if (!v) return [];
+    if (Array.isArray(v)) return v.map(x => String(x).trim()).filter(Boolean);
+    return String(v).split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  // ✅ NEW: handle health as string ("Dewormed") or object
+  private parseHealthFlags(health: any) {
+    if (!health) return { vaccinated: false, dewormed: false, neutered: false };
+    if (typeof health === 'object') {
+      return {
+        vaccinated: this.toBool(health.vaccinated),
+        dewormed: this.toBool(health.dewormed),
+        neutered: this.toBool(health.neutered || health.spayed),
+      };
+    }
+    const h = String(health).toLowerCase();
+    return {
+      vaccinated: /vaccin/.test(h),
+      dewormed: /deworm/.test(h),
+      neutered: /neuter|spay|spayed/.test(h),
+    };
+  }
+
+  // ✅ UPDATED: map contact fields, age, gender, health, tags
+  private normalizePet(raw: any): PetEx | undefined {
+    if (!raw) return raw;
+
+    // health flags can come from either raw.health (string/object) or boolean fields
+    const parsed = this.parseHealthFlags(raw.health);
+    const vaccinated = parsed.vaccinated || this.toBool(raw.vaccinated);
+    const dewormed  = parsed.dewormed  || this.toBool(raw.dewormed);
+    const neutered  = parsed.neutered  || this.toBool(raw.neutered);
+
+    // age in months from multiple possible fields
+    const months = Number(
+      raw.ageInMonths ?? raw.ageMonths ?? (raw.ageYears != null ? Number(raw.ageYears) * 12 : NaN)
+    );
+    const age = Number.isFinite(months) ? months : (typeof raw.age === 'number' ? raw.age : undefined);
+
+    return {
+      ...raw,
+      // contact mapping
+      ownerName: raw.ownerName ?? raw.contactName ?? raw.contactPerson ?? '',
+      ownerPhone: raw.ownerPhone ?? raw.contactPhone ?? '',
+      // normalize gender to lowercase for icon checks
+      gender: String(raw.gender || '').toLowerCase(),
+      // health flags + tags
+      vaccinated,
+      dewormed,
+      neutered,
+      tags: this.toTagsArray(raw.tags ?? raw.temperament ?? raw.traits),
+      // final age used by template ("{{ age }} months old")
+      age,
+    };
+  }
+
+  // convenient flags for HTML
+  get hasHealthTags(): boolean {
+    return !!(this.pet && (this.pet.vaccinated || this.pet.dewormed || this.pet.neutered));
+  }
+  get hasOtherTags(): boolean {
+    return !!(this.pet?.tags && this.pet.tags.length);
+  }
+
+  // contact/privacy
+  get canCall(): boolean {
+    return !!this.pet?.ownerPhone && (this.pet?.phone_public ?? !!this.pet?.ownerPhone);
+  }
+  get canWhatsApp(): boolean {
+    const hasNumber = !!(this.pet?.ownerWhatsApp || this.pet?.ownerPhone);
+    const allowed = this.pet?.whatsapp_public ?? !!this.pet?.ownerPhone;
+    return hasNumber && !!allowed;
+  }
+
+  private async ensureLocalNotifPermission() {
+    try {
+      const perm = await LocalNotifications.checkPermissions();
+      if (perm.display !== 'granted') await LocalNotifications.requestPermissions();
+    } catch {}
   }
 
   private async safeGetPetById(id: string): Promise<PetEx | undefined> {
@@ -257,7 +179,9 @@ export class PetDetailsPage implements OnInit {
     try {
       const all: any[] = await (this.firebase as any).getActivePets?.();
       return (all || []).find(p => p.id === id);
-    } catch { return undefined; }
+    } catch {
+      return undefined;
+    }
   }
 
   photoList(): string[] {
@@ -268,138 +192,46 @@ export class PetDetailsPage implements OnInit {
     return merged.filter((v, i) => merged.indexOf(v) === i);
   }
 
-  openGallery(index: number) {
-    this.galleryIndex = index;
-    this.galleryOpen = true;
-  }
-
-  displayAge(p: PetEx | undefined): string {
-    if (!p) return '';
-    let months = typeof p.ageInMonths === 'number'
-      ? p.ageInMonths
-      : (Number(p.ageYears) || 0) * 12 + (Number(p.ageMonths) || 0);
-
-    if ((!months || months <= 0) && typeof p.age === 'number') {
-      months = Math.max(0, Math.floor(p.age * 12));
-    }
-    if (!months || months < 0) return '';
-
-    const y = Math.floor(months / 12);
-    const m = months % 12;
-
-    if (y >= 1) {
-      const yearsFloat = +(y + m / 12).toFixed(m ? 1 : 0);
-      return yearsFloat === 1 ? '1 year' : `${yearsFloat} years`;
-    }
-    return m <= 1 ? '1 month' : `${m} months`;
-  }
-
-  speciesLabel(val: any): string {
-    const s = String(val || '').toLowerCase();
-    if (s.includes('dog')) return 'Dog';
-    if (s.includes('cat')) return 'Cat';
-    if (s.includes('bird')) return 'Bird';
-    if (s.includes('fish')) return 'Fish';
-    if (s.includes('rabbit')) return 'Rabbit';
-    return 'Other';
-  }
-
-  private inHealth(term: string): boolean {
-    const h = this.pet?.health;
-    if (!h) return false;
-    if (Array.isArray(h)) return h.some(x => String(x).toLowerCase().includes(term));
-    return String(h).toLowerCase().includes(term);
-  }
-  hasVaccinated(): boolean { return !!(this.pet?.vaccinated || this.inHealth('vaccin')); }
-  hasDewormed(): boolean { return !!(this.pet?.dewormed || this.inHealth('deworm')); }
-  hasNeutered(): boolean { return !!(this.pet?.neutered || this.inHealth('neuter') || this.inHealth('spay')); }
-
-  temperamentList(): string[] {
-    const t = this.pet?.temperament;
-    if (!t) return [];
-    return Array.isArray(t) ? t : String(t).split(',').map(s => s.trim()).filter(Boolean);
-  }
-
-  private buildMapUrl() {
-    if (!this.pet) { this.mapSafeUrl = null; return; }
-    let url = '';
-    if (Number.isFinite(Number(this.pet.lat)) && Number.isFinite(Number(this.pet.lng))) {
-      const lat = Number(this.pet.lat), lng = Number(this.pet.lng);
-      url = `https://maps.google.com/maps?q=${lat},${lng}&z=14&output=embed`;
-    } else if (this.pet.location) {
-      const q = encodeURIComponent(this.pet.location);
-      url = `https://maps.google.com/maps?q=${q}&z=14&output=embed`;
-    }
-    this.mapSafeUrl = url ? this.sanitizer.bypassSecurityTrustResourceUrl(url) : null;
-  }
-
-  openInMaps() {
+  // ---------- MAP / CALL / WHATSAPP ----------
+  async openInMaps() {
     if (!this.pet) return;
-    if (Number.isFinite(Number(this.pet.lat)) && Number.isFinite(Number(this.pet.lng))) {
-      window.open(`https://maps.google.com/?q=${this.pet.lat},${this.pet.lng}`, '_system');
-    } else if (this.pet.location) {
-      window.open(`https://maps.google.com/?q=${encodeURIComponent(this.pet.location)}`, '_system');
-    }
+    const url = (Number.isFinite(Number(this.pet.lat)) && Number.isFinite(Number(this.pet.lng)))
+      ? `https://maps.google.com/?q=${this.pet.lat},${this.pet.lng}`
+      : (this.pet.location ? `https://maps.google.com/?q=${encodeURIComponent(this.pet.location)}` : '');
+    if (!url) return;
+    try { await AppLauncher.openUrl({ url }); } catch { window.open(url, '_system'); }
   }
 
-  /** Only allow phone actions if contactPublic is true and ownerPhone exists */
-  showPhone(): boolean { return !!(this.pet?.contactPublic && this.pet?.ownerPhone); }
-
-  callOwner() {
-    if (!this.showPhone() || !this.pet?.ownerPhone) return;
-    window.open(`tel:${this.pet.ownerPhone}`, '_system');
+  async callOwner() {
+    if (!this.canCall || !this.pet?.ownerPhone) return this.toastQuick('Phone number not available');
+    const tel = `tel:${this.pet.ownerPhone}`;
+    try { await AppLauncher.openUrl({ url: tel }); } catch { window.open(tel, '_system'); }
   }
 
-  whatsappOwner() {
-    if (!this.showPhone() || !this.pet?.ownerPhone) return;
-    const phone = String(this.pet.ownerPhone).replace(/[^\d+]/g, '');
-    window.open(`https://wa.me/${phone}`, '_system');
-  }
-
-  openInquiry() { this.inquiryOpen = true; }
-  async sendInquiry() {
-    if (!this.inquiryText.trim() || !this.pet?.id) return;
+  async whatsappOwner() {
+    if (!this.canWhatsApp) return this.toastQuick('WhatsApp not available');
+    const raw = this.pet?.ownerWhatsApp || this.pet?.ownerPhone!;
+    const phone = String(raw).replace(/[^\d+]/g, '');
+    const text = `Hi! I'm interested in ${this.pet?.petName || (this.pet?.species || 'your pet')}.`;
+    const deep = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(text)}`;
     try {
-      const payload = {
-        petId: this.pet.id,
-        message: this.inquiryText.trim(),
-        createdAt: Date.now(),
-        location: this.pet.location || null
-      };
-      const id = `inq_${this.pet.id}_${Date.now()}`;
-      await this.firebase.addInformation(id, payload, 'adoption-inquiries');
-      this.inquiryText = '';
-      this.inquiryOpen = false;
-      this.toastQuick('Inquiry sent');
-    } catch (e) {
-      console.error(e);
-      this.toastQuick('Failed to send inquiry');
+      const can = await AppLauncher.canOpenUrl({ url: 'whatsapp://send' });
+      const url = can.value ? deep : `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+      await AppLauncher.openUrl({ url });
+    } catch {
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_system');
     }
   }
 
-  openReport() { this.reportOpen = true; }
-  async sendReport() {
-    if (!this.reportText.trim() || !this.pet?.id) return;
-    try {
-      const payload = { petId: this.pet.id, reason: this.reportText.trim(), createdAt: Date.now() };
-      const id = `rpt_${this.pet.id}_${Date.now()}`;
-      await this.firebase.addInformation(id, payload, 'adoption-reports');
-      this.reportText = '';
-      this.reportOpen = false;
-      this.toastQuick('Report submitted');
-    } catch (e) {
-      console.error(e);
-      this.toastQuick('Failed to submit report');
-    }
-  }
-
+  // ---------- FAVORITES / SHARE / ADOPTED ----------
   async sharePet() {
-    if (!this.pet) return;
-    const url = window.location.href;
-    const text = `${this.pet.petName || 'Pet'} • ${this.speciesLabel(this.pet.species)} • ${this.pet.location || ''}`;
+    if (!this.pet?.id) return;
+    const url = `${location.origin}/adoptions/${this.pet.id}`;
+    const text = `${this.pet.petName || 'Pet'} • ${this.pet.species || ''} • ${this.pet.location || ''}`;
     try {
-      if (navigator.share) await navigator.share({ title: this.pet.petName || 'Adoption', text, url });
-      else {
+      if ((navigator as any).share) {
+        await (navigator as any).share({ title: this.pet.petName || 'Adoption', text, url });
+      } else {
         await navigator.clipboard.writeText(`${text}\n${url}`);
         this.toastQuick('Link copied');
       }
@@ -410,7 +242,7 @@ export class PetDetailsPage implements OnInit {
     if (!this.pet?.id) return;
     try {
       const newVal = !this.pet.favorite;
-      await this.firebase.setFavorite('pet-adoption', this.pet.id, newVal);
+      await this.firebase.setFavorite?.('pet-adoption', this.pet.id, newVal);
       this.pet.favorite = newVal;
       this.toastQuick(newVal ? 'Saved to favorites' : 'Removed from favorites');
     } catch {
@@ -418,22 +250,69 @@ export class PetDetailsPage implements OnInit {
     }
   }
 
-  isOwner(): boolean { return false; }
-
   async markAdopted() {
     if (!this.pet?.id) return;
-    this.toastQuick('Marked as adopted (demo)');
-  }
-
-  postedOn(): string | null {
-    const c = this.pet?.createdAt;
-    if (!c) return null;
+    const me = this.firebase.getCurrentUser();
+    const isOwner = !!me && (this.pet.submitterUid === me.uid || this.pet.ownerUid === me.uid);
+    if (!isOwner) return this.toastQuick('Only the owner can mark as adopted');
     try {
-      const date = (c?.toDate?.() ? c.toDate() : new Date(c)) as Date;
-      return date.toLocaleString();
-    } catch { return null; }
+      await this.firebase.updatePetStatus(this.pet.id, 'Adopted');
+      this.pet.status = 'Adopted';
+      this.toastQuick('Marked as adopted');
+    } catch {
+      this.toastQuick('Failed to update status');
+    }
   }
 
+  // ---------- REPORT ----------
+  async reportPet() {
+    if (!this.pet?.id) return;
+    try {
+      await this.firebase.reportEntry('pet-adoption', this.pet.id, 'Incorrect information');
+      this.toastQuick('Thanks! We’ll review this.');
+    } catch {
+      this.toastQuick('Could not submit report');
+    }
+  }
+
+  // ---------- SEND INQUIRY + LOCAL NOTIFICATION ----------
+  async sendInquiry() {
+    if (!this.pet?.id) return this.toastQuick('Post not loaded');
+
+    // ✅ Guard: only active listings can be contacted
+    if (this.pet?.status && this.pet.status !== 'Active') {
+      return this.toastQuick('This listing is not active');
+    }
+
+    const msg = this.inquiryMessage.trim();
+    if (!msg) return this.toastQuick('Please write a message');
+
+    try {
+      await this.firebase.addAdoptionInquiry?.({
+        adoptionId: this.pet.id,
+        message: msg
+      });
+
+      this.inquiryMessage = '';
+      await this.toastQuick('Inquiry sent to the owner');
+
+      try {
+        await LocalNotifications.schedule({
+          notifications: [{
+            id: Date.now(),
+            title: 'Inquiry sent ✅',
+            body: 'The owner will be notified.',
+            schedule: { at: new Date(Date.now() + 300) }
+          }]
+        });
+      } catch {}
+    } catch (e) {
+      console.error(e);
+      this.toastQuick('Failed to send inquiry');
+    }
+  }
+
+  // ---------- UTIL ----------
   private async toastQuick(message: string) {
     const t = await this.toast.create({ message, duration: 1500, position: 'bottom' });
     await t.present();

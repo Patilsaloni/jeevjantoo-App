@@ -130,7 +130,7 @@ export class ProfilePage implements OnInit {
     'Edit Profile': '/tabs/profile/edit-profile',
     'My Listings': '/tabs/profile/my-listings',
     'Favorites': '/tabs/profile/favorites',
-    'Messages': '/tabs/profile/inquiries',
+    'Inquiries'   : '/tabs/profile/inquiries',
     'Verification': '/tabs/profile/verification',
     'Settings': '/tabs/profile/settings',
     'Invite a friend': '/tabs/profile/invite-friend',

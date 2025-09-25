@@ -1,13 +1,17 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
-import { InquiriesPage } from './inquiries.page';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
     path: '',
-    component: InquiriesPage
-  }
+    loadComponent: () =>
+      import('./inquiries.page').then(m => m.InquiriesPage),
+  },
+  {
+    path: ':id',
+    loadComponent: () =>
+      import('./inquiry-thread/inquiry-thread.page').then(m => m.InquiryThreadPage),
+  },
 ];
 
 @NgModule({

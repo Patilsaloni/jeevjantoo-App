@@ -72,6 +72,7 @@ ion-content {
   padding-bottom: 8px;
   gap: 10px;
   white-space: nowrap;
+  justify-content: space-evenly;
 
   ion-chip {
     flex: 0 0 auto; // prevent shrinking

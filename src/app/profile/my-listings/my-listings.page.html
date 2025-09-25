@@ -1,16 +1,33 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button href="/tabs/profile">
+        <ion-icon size="medium" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>My Listings</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
   <ion-refresher slot="fixed">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <!-- Search and Filter Bar -->
+  <div class="nav-container">
+    <ion-searchbar [(ngModel)]="searchText" placeholder="Quick search by pet name, species, or city." debounce="300"
+      animated="true" class="mylist-search">
+    </ion-searchbar>
+    <ion-button fill="clear" shape="round" color="primary" (click)="openFilterModal()">
+      <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <!-- Pets Card -->
   <ion-list>
-    <ion-card *ngFor="let pet of pets">
+    <ion-card *ngFor="let pet of filteredPets">
       <div class="summary-row">
         <ion-img *ngIf="pet.photos && pet.photos.length > 0" [src]="pet.photos[0]" class="pet-photo"></ion-img>
         <div class="summary-content">
@@ -48,7 +65,9 @@
     </ion-card>
   </ion-list>
 
-  <ion-text *ngIf="pets.length === 0" class="ion-text-center ion-padding">
+  <div *ngIf="filteredPets.length === 0" class="no-data">
+    <ion-icon name="alert-circle-outline"></ion-icon>
     <p>No adoption listings found. Add one via the submission form!</p>
-  </ion-text>
+  </div>
+
 </ion-content>
